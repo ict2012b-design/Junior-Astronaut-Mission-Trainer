@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NASA Junior Astronaut Mission Trainer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { theme: { extend: { colors: {
+      nasaBlue: '#0b3d91', nasaRed: '#fc3d21', spaceDark: '#070b14',
+      panelBg: 'rgba(15, 23, 42, 0.75)', panelBorder: 'rgba(255, 255, 255, 0.12)'
+    }, fontFamily: { sans: ['Roboto','sans-serif'] } } } }
+  </script>
+  <style>
+    body { background: radial-gradient(circle at center, #0f172a 0%, #070b14 100%); color: #f1f5f9; min-height: 100vh; overflow-x: hidden; font-family: 'Roboto', sans-serif; }
+    .glass-panel { background: rgba(15, 23, 42, 0.78); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 8px 32px 0 rgba(0,0,0,0.5); border-radius: 16px; }
+    .glass-card { background: rgba(30,41,59,0.6); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; }
+    input[type=range] { -webkit-appearance: none; background: rgba(255,255,255,0.1); border-radius: 8px; height: 8px; }
+    input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; height: 20px; width: 20px; border-radius: 50%; background: #38bdf8; cursor: pointer; box-shadow: 0 0 10px #38bdf8; }
+    @keyframes glow-pulse { 0%,100% { box-shadow: 0 0 20px rgba(16,185,129,0.4); } 50% { box-shadow: 0 0 60px rgba(16,185,129,0.8); } }
+    .trophy-glow { animation: glow-pulse 2s infinite; }
+    @keyframes trophy-bounce { 0%,100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-6px) scale(1.05); } }
+    .trophy-bounce { animation: trophy-bounce 1.5s ease-in-out infinite; }
+    @keyframes mode-float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+    .mode-card { animation: mode-float 3s ease-in-out infinite; }
+    .mode-card:nth-child(2) { animation-delay: 0.5s; }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: rgba(15,23,42,0.6); }
+    ::-webkit-scrollbar-thumb { background: rgba(56,189,248,0.3); border-radius: 4px; }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+  </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+  <header class="w-full glass-panel border-b border-panelBorder sticky top-0 z-40 px-4 py-3">
+    <div class="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-3">
+      <div class="flex items-center space-x-3">
+        <div class="bg-nasaBlue p-2 rounded-xl border border-white/20 flex items-center justify-center shadow-lg">
+          <i class="fa-solid font-black fa-rocket text-2xl text-white"></i>
+        </div>
+        <div>
+          <h1 class="text-xl font-bold tracking-wide flex items-center gap-2">
+            NASA Junior Mission Trainer
+            <span class="bg-nasaRed/20 text-nasaRed text-xs font-semibold px-2 py-0.5 rounded-full border border-nasaRed/40">2026 Challenge</span>
+          </h1>
+          <p class="text-xs text-slate-400">Engineering Trade-off & Survival Simulator</p>
+        </div>
+      </div>
+      <div class="flex flex-wrap items-center gap-2">
+        <div id="modeBadge" class="bg-slate-900/80 px-3 py-1.5 rounded-xl border border-slate-600 flex items-center gap-1.5 text-xs transition-all">
+          <span id="modeBadgeIcon">❓</span>
+          <span id="modeBadgeText" class="text-slate-400 font-bold">No Mode Selected</span>
+        </div>
+        <div class="bg-slate-900/90 border border-cyan-500/30 px-3 py-1.5 rounded-xl text-center">
+          <div class="text-[10px] text-cyan-400 uppercase font-bold tracking-wider">Mission Time</div>
+          <div class="text-lg font-black text-white" id="displaySol">Sol 1</div>
+        </div>
+        <button onclick="openEventLibrary()" class="bg-slate-800 hover:bg-slate-700 text-xs px-3 py-2 rounded-xl border border-purple-500/50 text-purple-300 font-bold flex items-center gap-1.5 transition">
+          <i class="fa-solid fa-list"></i><span class="hidden md:inline">Event Library</span>
+        </button>
+        <button onclick="showTutorial()" class="bg-slate-800 hover:bg-slate-700 text-xs px-3 py-2 rounded-xl border border-slate-600 flex items-center gap-1.5 transition">
+          <i class="fa-solid fa-circle-question text-cyan-400"></i><span class="hidden md:inline">How to Play</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-grow max-w-7xl w-full mx-auto p-3 sm:p-4 md:p-6 grid grid-cols-1 lg:grid-cols-12 gap-5">
+    <div class="lg:col-span-4 flex flex-col gap-4">
+      <div class="glass-panel p-4 flex flex-col items-center">
+        <div class="w-full flex justify-between items-center mb-2">
+          <span class="text-xs font-bold text-slate-300 uppercase tracking-wide flex items-center gap-2"><i class="fa-solid fa-shield-halved text-cyan-400"></i> Outpost Telemetry</span>
+          <span id="locationBadge" class="text-[11px] font-semibold bg-slate-500/10 text-slate-400 border border-slate-500/30 px-2 py-0.5 rounded-full">Awaiting Mode</span>
+        </div>
+        <div class="relative w-full h-48 rounded-xl overflow-hidden bg-slate-950 border border-white/10 flex items-center justify-center">
+          <canvas id="outpostCanvas" class="w-full h-full block"></canvas>
+          <div id="panelStatusBadge" class="absolute top-2 left-2 bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[10px] font-bold px-2 py-0.5 rounded-full backdrop-blur">Panels: Deployed</div>
+          <div class="absolute bottom-2 left-2 right-2 bg-slate-900/85 backdrop-blur border border-white/10 rounded-lg p-2 flex justify-between items-center text-[11px]">
+            <div><span class="text-slate-400">Temp:</span> <span id="envTemp" class="font-mono text-cyan-300 font-bold">—</span></div>
+            <div><span class="text-slate-400">Rad:</span> <span id="envRad" class="font-mono text-amber-400 font-bold">—</span></div>
+            <div><span class="text-slate-400">Tau:</span> <span id="envTau" class="font-mono text-emerald-400 font-bold">—</span></div>
+          </div>
+        </div>
+        <div id="outpostModifiers" class="w-full mt-2 text-[10px] text-center bg-slate-900/60 rounded-lg px-2 py-1.5 border border-white/5 text-slate-400">
+          Select a mission mode to begin
+        </div>
+      </div>
+
+      <div class="glass-panel p-4 flex flex-col gap-3">
+        <h2 class="text-xs font-bold text-slate-300 uppercase tracking-wide flex items-center justify-between">
+          <span><i class="fa-solid fa-heart-pulse text-nasaRed"></i> Vital Life Support</span>
+          <span class="text-[10px] text-red-400 font-bold">⚠️ Keep All > 0%</span>
+        </h2>
+        <div class="glass-card p-3">
+          <div class="flex justify-between items-center text-xs mb-1">
+            <span class="font-medium text-slate-300"><i class="fa-solid fa-wind text-cyan-400"></i> Oxygen (O₂)</span>
+            <span id="valO2" class="font-mono font-bold text-cyan-400">100%</span>
+          </div>
+          <div class="w-full h-2.5 bg-slate-900 rounded-full overflow-hidden border border-white/5">
+            <div id="barO2" class="h-full bg-gradient-to-r from-cyan-500 to-blue-500" style="width: 100%"></div>
+          </div>
+        </div>
+        <div class="glass-card p-3">
+          <div class="flex justify-between items-center text-xs mb-1">
+            <span class="font-medium text-slate-300"><i class="fa-solid fa-battery-three-quarters text-yellow-400"></i> Grid Battery Storage</span>
+            <span id="valBattery" class="font-mono font-bold text-yellow-400">100 / 100%</span>
+          </div>
+          <div class="w-full h-2.5 bg-slate-900 rounded-full overflow-hidden border border-white/5">
+            <div id="barBattery" class="h-full bg-gradient-to-r from-yellow-500 to-amber-400" style="width: 100%"></div>
+          </div>
+        </div>
+        <div class="glass-card p-3">
+          <div class="flex justify-between items-center text-xs mb-1">
+            <span class="font-medium text-slate-300"><i class="fa-solid fa-shield-cat text-amber-400"></i> Radiation Shielding</span>
+            <span id="valShield" class="font-mono font-bold text-amber-400">100%</span>
+          </div>
+          <div class="w-full h-2.5 bg-slate-900 rounded-full overflow-hidden border border-white/5">
+            <div id="barShield" class="h-full bg-gradient-to-r from-amber-500 to-yellow-400" style="width: 100%"></div>
+          </div>
+        </div>
+        <div class="glass-card p-3">
+          <div class="flex justify-between items-center text-xs mb-1">
+            <span class="font-medium text-slate-300"><i class="fa-solid fa-user-astronaut text-emerald-400"></i> Crew Health & Food</span>
+            <span id="valHealth" class="font-mono font-bold text-emerald-400">100%</span>
+          </div>
+          <div class="w-full h-2.5 bg-slate-900 rounded-full overflow-hidden border border-white/5">
+            <div id="barHealth" class="h-full bg-gradient-to-r from-emerald-500 to-teal-400" style="width: 100%"></div>
+          </div>
+        </div>
+        <div class="glass-card p-3 bg-indigo-950/40 border-indigo-500/20">
+          <div class="flex justify-between items-center text-xs mb-1">
+            <span class="font-medium text-indigo-300"><i class="fa-solid fa-microscope text-indigo-400"></i> Science Yield (🎯 Goal 500)</span>
+            <span id="valScience" class="font-mono font-bold text-indigo-300">0 / 500 PTS</span>
+          </div>
+          <div class="w-full h-2.5 bg-slate-900 rounded-full overflow-hidden border border-white/5">
+            <div id="barScience" class="h-full bg-gradient-to-r from-indigo-500 to-purple-500" style="width: 0%"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="lg:col-span-8 flex flex-col gap-4">
+      <div class="glass-panel p-5">
+        <div class="flex flex-wrap justify-between items-center mb-4 gap-2">
+          <div>
+            <h2 class="text-sm font-bold text-slate-200 uppercase tracking-wider flex items-center gap-2"><i class="fa-solid fa-bolt text-yellow-400"></i> Power Grid Distribution Hub</h2>
+            <p class="text-xs text-slate-400">Total Grid Capacity: <span id="valPowerGen" class="font-mono text-yellow-400 font-bold">100 kW</span></p>
+          </div>
+          <div class="bg-slate-900 px-3 py-1.5 rounded-xl border border-white/10 text-xs">
+            Routed: <span id="valPowerUsed" class="font-mono font-bold text-emerald-400">100</span> / <span id="valPowerCap" class="font-mono font-bold">100 kW</span>
+          </div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="glass-card p-3">
+            <div class="flex justify-between items-center text-xs mb-2">
+              <span class="font-bold text-slate-300"><i class="fa-solid fa-mask-ventilator text-cyan-400"></i> O₂ Life Support</span>
+              <span id="powerO2Val" class="font-mono font-bold text-cyan-400">35 kW</span>
+            </div>
+            <input type="range" id="sliderO2" min="10" max="60" value="35" class="w-full mb-2" oninput="updatePowerAllocation()">
+            <div class="text-[11px] text-slate-400">Powers O₂ generators and CO₂ scrubbers.</div>
+          </div>
+          <div class="glass-card p-3">
+            <div class="flex justify-between items-center text-xs mb-2">
+              <span class="font-bold text-slate-300"><i class="fa-solid fa-shield-virus text-amber-400"></i> Rad Shielding</span>
+              <span id="powerShieldVal" class="font-mono font-bold text-amber-400">35 kW</span>
+            </div>
+            <input type="range" id="sliderShield" min="10" max="60" value="35" class="w-full mb-2" oninput="updatePowerAllocation()">
+            <div class="text-[11px] text-slate-400">Magnetic coils deflect solar protons.</div>
+          </div>
+          <div class="glass-card p-3">
+            <div class="flex justify-between items-center text-xs mb-2">
+              <span class="font-bold text-slate-300"><i class="fa-solid fa-satellite-dish text-indigo-400"></i> Comms & Science</span>
+              <span id="powerScienceVal" class="font-mono font-bold text-indigo-400">30 kW</span>
+            </div>
+            <input type="range" id="sliderScience" min="0" max="60" value="30" class="w-full mb-2" oninput="updatePowerAllocation()">
+            <div class="text-[11px] text-slate-400">Sends research data to Earth (yields science).</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass-panel p-5 flex flex-col flex-grow">
+        <div id="timerContainer" class="hidden w-full bg-red-950/80 border border-red-500/50 p-2 rounded-xl mb-3 flex justify-between items-center text-xs">
+          <span class="text-red-300 font-bold flex items-center gap-2"><i class="fa-solid fa-stopwatch animate-spin"></i> TIME CRITICAL DILEMMA!</span>
+          <span id="countdownTimer" class="font-mono font-black text-lg text-red-400 px-2 py-0.5 bg-slate-950 rounded border border-red-500/40">10s</span>
+        </div>
+        <div class="flex justify-between items-center mb-3">
+          <span id="eventCategoryBadge" class="bg-nasaBlue text-cyan-300 text-[11px] font-bold px-2.5 py-0.5 rounded-full border border-cyan-400/30 flex items-center gap-1"><i class="fa-solid fa-clipboard-question"></i> DAILY TRADE-OFF</span>
+          <span class="text-xs text-slate-400" id="eventSolLabel">Awaiting Mode Selection</span>
+        </div>
+        <div class="bg-slate-900/90 rounded-xl p-4 border border-white/10 mb-4 flex-grow">
+          <h3 id="eventTitle" class="text-lg font-bold text-amber-300 mb-2"><i class="fa-solid fa-hourglass-half"></i> Waiting for Mission Launch...</h3>
+          <p id="eventDescription" class="text-sm text-slate-300 leading-relaxed mb-3">Please select Mars (EASY) or Moon (HARD) on the start screen to begin your mission.</p>
+          <div class="bg-cyan-950/40 border border-cyan-500/30 rounded-lg p-2.5 flex items-start gap-2.5 text-xs">
+            <i class="fa-solid fa-circle-info text-cyan-400 mt-0.5"></i>
+            <div>
+              <span class="font-bold text-cyan-300" id="dataInsightTitle">NASA Insight:</span>
+              <span class="text-slate-300" id="dataInsightText">Your choice cannot be changed once the mission begins.</span>
+            </div>
+          </div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3" id="eventOptionsContainer"></div>
+      </div>
+
+      <div class="glass-panel p-4 flex flex-wrap justify-between items-center gap-3">
+        <div class="text-xs text-slate-400"><i class="fa-solid fa-list-check text-cyan-400"></i> Pick a trade-off to unlock "Advance Sol".</div>
+        <button id="btnAdvanceSol" onclick="advanceSol()" disabled class="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-slate-950 font-black text-sm px-6 py-3 rounded-xl shadow-lg transition-all flex items-center gap-2">
+          <span>ADVANCE SOL</span><i class="fa-solid fa-forward"></i>
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <!-- ============ MODE SELECTION MODAL (EASY LEFT / HARD RIGHT) ============ -->
+  <div id="modeSelectModal" class="fixed inset-0 backdrop-blur-lg z-[70] hidden items-center justify-center p-4" style="background: radial-gradient(circle at center, rgba(15,23,42,0.98) 0%, rgba(5,8,20,0.99) 100%);">
+    <div class="max-w-3xl w-full">
+      <div class="text-center mb-6">
+        <div class="text-5xl mb-3">🚀</div>
+        <h1 class="text-3xl font-black text-white mb-2">Choose Your Mission</h1>
+        <p class="text-sm text-slate-400">This choice is <span class="text-amber-400 font-bold">permanent</span> — you cannot change modes once the mission starts.</p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- EASY (LEFT) -->
+        <button onclick="selectMode('mars')" class="glass-panel mode-card p-6 border-2 border-emerald-500/40 hover:border-emerald-400 transition-all text-left group">
+          <div class="text-5xl mb-3">🔴</div>
+          <div class="text-2xl font-black text-emerald-400 mb-1">MARS</div>
+          <div class="text-xs font-bold text-emerald-300 mb-3 tracking-widest">EASY MODE</div>
+          <ul class="text-[11px] text-slate-300 space-y-1 leading-relaxed mb-4">
+            <li>• Thin CO₂ atmosphere shields radiation</li>
+            <li>• 233 mSv/yr radiation (lower than Moon)</li>
+            <li>• CO₂ + nitrogen available for food</li>
+            <li>• Weathered, less toxic dust</li>
+            <li>• O₂ drains −4% per Sol</li>
+            <li>• Science ×1.2 · Battery +4/Sol</li>
+            <li class="text-emerald-300 font-bold">• Standard events only</li>
+          </ul>
+          <div class="mt-3 pt-3 border-t border-emerald-500/20 text-[10px] text-emerald-300 font-bold flex items-center gap-1">
+            <i class="fa-solid fa-seedling"></i> Recommended for first missions
+          </div>
+        </button>
+
+        <!-- HARD (RIGHT) -->
+        <button onclick="selectMode('moon')" class="glass-panel mode-card p-6 border-2 border-red-500/40 hover:border-red-400 transition-all text-left group">
+          <div class="text-5xl mb-3">🌙</div>
+          <div class="text-2xl font-black text-red-400 mb-1">MOON</div>
+          <div class="text-xs font-bold text-red-300 mb-3 tracking-widest">HARD MODE</div>
+          <ul class="text-[11px] text-slate-300 space-y-1 leading-relaxed mb-4">
+            <li>• No atmosphere, no magnetic field</li>
+            <li>• 380 mSv/yr radiation (highest in solar system)</li>
+            <li>• No carbon or nitrogen for food</li>
+            <li>• Toxic abrasive dust (like glass shards)</li>
+            <li>• O₂ drains −6% per Sol</li>
+            <li>• Science ×0.7 · Battery +2/Sol</li>
+            <li class="text-red-300 font-bold">• 6 extra Moon-only disasters</li>
+          </ul>
+          <div class="mt-3 pt-3 border-t border-red-500/20 text-[10px] text-red-300 font-bold flex items-center gap-1">
+            <i class="fa-solid fa-skull-crossbones"></i> For experienced commanders
+          </div>
+        </button>
+      </div>
+      <div class="mt-6 text-center text-[10px] text-slate-500 italic">
+        Real-world basis: Moon's surface is harsher than Mars due to no atmosphere, no resources, worse radiation, and toxic dust — despite being closer to Earth.
+      </div>
+    </div>
+  </div>
+
+  <!-- TUTORIAL MODAL -->
+  <div id="tutorialModal" class="fixed inset-0 backdrop-blur-lg z-[60] hidden items-center justify-center p-4 overflow-y-auto" style="background: rgba(0,0,0,0.9);">
+    <div class="glass-panel max-w-3xl w-full p-6 border border-cyan-500/40 my-auto">
+      <div class="text-center mb-4">
+        <div class="text-4xl mb-2">🚀</div>
+        <h1 class="text-2xl font-black text-white mb-1">Mission Briefing</h1>
+        <p class="text-xs text-slate-400">Goal: 500 Science Points</p>
+      </div>
+      <div id="selectedModeBanner" class="text-center text-sm font-bold py-2 rounded-xl mb-4"></div>
+      <div class="text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">Your 5 Vital Systems</div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-2 mb-4">
+        <div class="glass-card p-3 border-l-4 border-cyan-400"><div class="font-bold text-cyan-300 text-xs">💨 Oxygen (O₂)</div><div class="text-[11px] text-slate-300">Air for crew. 0% → mission lost.</div></div>
+        <div class="glass-card p-3 border-l-4 border-yellow-400"><div class="font-bold text-yellow-300 text-xs">🔋 Grid Battery Storage</div><div class="text-[11px] text-slate-300">Absorbs power events. Below 30% → science halves. 0% → mission lost.</div></div>
+        <div class="glass-card p-3 border-l-4 border-amber-400"><div class="font-bold text-amber-300 text-xs">🛡️ Radiation Shielding</div><div class="text-[11px] text-slate-300">Blocks solar protons. 0% → crew irradiated.</div></div>
+        <div class="glass-card p-3 border-l-4 border-emerald-400"><div class="font-bold text-emerald-300 text-xs">🌱 Crew Health & Food</div><div class="text-[11px] text-slate-300">Nutrition + fitness. 0% → crew collapses.</div></div>
+        <div class="glass-card p-3 border-l-4 border-indigo-400 md:col-span-2"><div class="font-bold text-indigo-300 text-xs">🔬 Science Yield — 🎯 WIN CONDITION</div><div class="text-[11px] text-slate-300">Reach 500 PTS to complete the mission.</div></div>
+      </div>
+      <button onclick="startMissionFromTutorial()" class="w-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-black text-sm py-3 rounded-xl shadow-lg uppercase tracking-wider">🚀 Launch Mission</button>
+    </div>
+  </div>
+
+  <!-- EVENT LIBRARY MODAL -->
+  <div id="eventLibraryModal" class="fixed inset-0 backdrop-blur-lg z-[55] hidden items-center justify-center p-4" style="background: rgba(0,0,0,0.9);">
+    <div class="glass-panel max-w-3xl w-full p-6 border border-purple-500/40 max-h-[90vh] flex flex-col">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-lg font-bold text-white flex items-center gap-2"><i class="fa-solid fa-list text-purple-400"></i> Event Library</h3>
+        <button onclick="closeEventLibrary()" class="text-slate-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="bg-slate-900/60 border border-slate-700 rounded-lg p-2 mb-3 text-[11px] text-slate-300">
+        <i class="fa-solid fa-info-circle text-cyan-400"></i> Moon mode adds 6 extra crisis events (not shown in Mars mode).
+      </div>
+      <div id="eventLibraryBody" class="overflow-y-auto flex-grow pr-1"></div>
+      <button onclick="closeEventLibrary()" class="w-full mt-3 bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs py-2.5 rounded-lg border border-slate-600">Close</button>
+    </div>
+  </div>
+
+  <!-- SCIENCE MODAL -->
+  <div id="scienceExplanationModal" class="fixed inset-0 backdrop-blur-md z-50 hidden items-center justify-center p-4" style="background: rgba(0,0,0,0.8);">
+    <div class="glass-panel max-w-md w-full p-5 border border-indigo-500/40">
+      <h3 class="text-base font-bold text-indigo-300 flex items-center gap-2 mb-3"><i class="fa-solid fa-graduation-cap"></i> Why This Science Matters</h3>
+      <p id="scienceModalText" class="text-xs text-slate-200 leading-relaxed mb-4">...</p>
+      <div class="bg-indigo-950/60 p-2.5 rounded-lg text-[11px] text-indigo-300 border border-indigo-500/30" id="scienceModalSource">...</div>
+      <button onclick="closeScienceModal()" class="w-full mt-4 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs py-2 rounded-lg">Resume</button>
+    </div>
+  </div>
+
+  <!-- DEBRIEF MODAL -->
+  <div id="debriefModal" class="fixed inset-0 backdrop-blur-lg z-50 hidden items-center justify-center p-4" style="background: rgba(0,0,0,0.9);">
+    <div class="glass-panel max-w-lg w-full p-6 border-2 border-emerald-500/50 text-center shadow-2xl shadow-emerald-500/20">
+      <div id="debriefIconWrap" class="w-20 h-20 bg-gradient-to-br from-emerald-400 to-teal-600 text-white rounded-full flex items-center justify-center mx-auto mb-3 text-4xl shadow-lg shadow-emerald-500/50 trophy-bounce trophy-glow">
+        <i class="fa-solid fa-trophy" id="debriefIcon"></i>
+      </div>
+      <h2 id="debriefHeader" class="text-2xl font-black text-emerald-400 mb-1">MISSION ACCOMPLISHED</h2>
+      <p id="debriefSubtitle" class="text-sm font-bold text-emerald-300 mb-4">🏆 You are now a Certified NASA Flight Director!</p>
+      <div class="grid grid-cols-3 gap-2 mb-4">
+        <div class="bg-slate-900 p-3 rounded-xl border border-cyan-500/30"><div class="text-[10px] text-slate-400">Sols</div><div class="text-xl font-black text-cyan-400" id="debriefSols">Sol 1</div></div>
+        <div class="bg-slate-900 p-3 rounded-xl border border-indigo-500/30"><div class="text-[10px] text-slate-400">Science</div><div class="text-xl font-black text-indigo-400" id="debriefScience">0 PTS</div></div>
+        <div class="bg-slate-900 p-3 rounded-xl border border-emerald-500/30"><div class="text-[10px] text-slate-400">Rating</div><div class="text-base font-black text-emerald-400" id="debriefScore">FLIGHT DIRECTOR</div></div>
+      </div>
+      <div class="bg-slate-900/80 rounded-xl p-4 border border-emerald-500/20 text-left text-xs mb-5" id="debriefEvaluation">...</div>
+      <button onclick="restartMission()" class="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-slate-950 font-black text-sm py-3 rounded-xl shadow-lg uppercase tracking-wider">🚀 Return to Mode Selection</button>
+    </div>
+  </div>
+
+<script>
+/* ============ STATE ============ */
+let currentOutpost = null;
+let missionStarted = false;
+let sol = 1;
+let sciencePoints = 0;
+const targetScience = 500;
+
+let o2Level = 100;
+let batteryLevel = 100;
+let batteryMax = 100;
+let shieldIntegrity = 100;
+let crewHealth = 100;
+let panelsRetracted = false;
+
+let powerGridMax = 100;
+let powerO2 = 35, powerShield = 35, powerScience = 30;
+
+let o2DrainPerSol = 4;
+let scienceMult = 1.0;
+let batteryRechargePerSol = 4;
+
+let currentEvent = null;
+let chosenOptionThisSol = false;
+let timerInterval = null;
+let countdownSecs = 10;
+
+/* ============ EVENTS ============ */
+const eventPool = [
+  { id:'DUST', type:'crisis', title:'Dust Storm!',
+    desc:'A high-velocity dust storm is burying solar panels! Retract them (preserve hardware) or leave exposed (risk damage)?',
+    timed:true, insightTitle:'NASA Mission Control:',
+    insightText:'Dust reduces solar irradiance by up to 99%.',
+    scienceExplanation:'Retracting arrays preserves hardware but forces reliance on battery reserves.',
+    options:[
+      { text:'Retract Panels (Save Hardware, Drain Battery)', action:'retract', o2Effect:-5, powerMod:-20, sciEffect:-5 },
+      { text:'Leave Exposed (Risk Damage, +Science)', action:'expose', shieldEffect:-15, healthEffect:-5, sciEffect:+10 }
+    ]
+  },
+  { id:'SPE', type:'crisis', title:'☀️ Solar Particle Event',
+    desc:'A real M-class solar flare detected. High-energy protons will strike within hours.',
+    insightTitle:'NASA DONKI:',
+    insightText:'Astronauts must weigh mission timelines against lifetime radiation dose.',
+    scienceExplanation:'Storm shelters use water/polyethylene to absorb solar protons.',
+    options:[
+      { text:'🛡️ Activate Storm Shelter', o2Effect:-5, shieldEffect:+25, powerMod:-20 },
+      { text:'⚡ Normal Ops (take radiation dose)', shieldEffect:-35, healthEffect:-10, sciEffect:-5 },
+      { text:'📡 Monitor DONKI Live', shieldEffect:-10, healthEffect:-5, powerMod:-8 }
+    ]
+  },
+  { id:'BAT-EXP', type:'opportunity', title:'🔋 Battery Expansion Module',
+    desc:'A new modular battery pack has arrived. Permanently expands energy storage.',
+    insightTitle:'ISS Battery Upgrade:',
+    insightText:'NASA replaced 48 Ni-H batteries with 24 Li-ion over 4 spacewalks.',
+    scienceExplanation:'More capacity absorbs bigger storms and night cycles.',
+    options:[
+      { text:'🔋 Install Full (+30% max, drains current)', powerMod:-10, batteryMaxUp:+30 },
+      { text:'🧪 Test in Lab (+15% max, +8 sci)', sciEffect:+8, batteryMaxUp:+15 },
+      { text:'📦 Store for Later (+3 sci)', sciEffect:+3 }
+    ]
+  },
+  { id:'MICRO', type:'crisis', title:'🌪️ Micrometeorite Hull Breach',
+    desc:'A 2mm micrometeoroid punctured the outer hull. Slow pressure leak!',
+    insightTitle:'ISS Impact Logs:',
+    insightText:'Impacts up to 70 km/s punch clean holes in aluminum.',
+    scienceExplanation:'EVAs carry vacuum hazards; robots minimize human risk.',
+    options:[
+      { text:'🔧 Emergency EVA Patch', o2Effect:-15, shieldEffect:-5, healthEffect:-5, powerMod:-10 },
+      { text:'🚪 Seal Greenhouse Module', o2Effect:+5, healthEffect:-20 },
+      { text:'🤖 Internal Repair Robot', o2Effect:-3, powerMod:-25 }
+    ]
+  },
+  { id:'GRID-EXP', type:'opportunity', title:'⚡ Second Reactor Online',
+    desc:'A compact fission surface power unit has arrived. Connecting it expands your electrical budget.',
+    insightTitle:'NASA Fission Surface Power:',
+    insightText:'NASA plans 10+ kW lunar reactors for 2030s sustained presence.',
+    scienceExplanation:'More power lets you run life support, shielding, and science simultaneously.',
+    options:[
+      { text:'⚡ Connect Full (+50 kW grid)', powerMod:-25, powerGridUp:+50 },
+      { text:'🔧 Half Power (+25 kW grid, +5 sci)', powerMod:-10, powerGridUp:+25, sciEffect:+5 },
+      { text:'📋 Defer to Next Sol (+3 sci)', sciEffect:+3 }
+    ]
+  },
+  { id:'CO2', type:'crisis', title:'🔌 CO₂ Scrubber Failure',
+    desc:'Primary CO₂ removal jammed! Carbon dioxide rising to toxic levels.',
+    insightTitle:'Apollo 13 / ISS ECLSS:',
+    insightText:'In 1970, crew adapted square LiOH canisters with tape!',
+    scienceExplanation:'Without active absorption, air becomes unbreathable in hours.',
+    options:[
+      { text:'🛠️ Improvise (Apollo 13 fix)', o2Effect:-5, healthEffect:-5, sciEffect:+5, powerMod:-10 },
+      { text:'🔋 Backup LiOH Canisters', o2Effect:+10, healthEffect:+5, powerMod:-20 },
+      { text:'🚪 Seal Non-Essential Modules', o2Effect:+15, healthEffect:-10, sciEffect:-5 }
+    ]
+  },
+  { id:'SOLAR-EFF', type:'opportunity', title:'🧪 Dust-Resistant Solar Upgrade',
+    desc:'Crew optimized panel coating, boosting efficiency by 15%!',
+    insightTitle:'ISS Solar Array Optimization:',
+    insightText:'Nanomaterial coatings prevent dust from clinging.',
+    scienceExplanation:'Higher efficiency provides extra battery margin.',
+    options:[
+      { text:'✅ Install Across All Arrays (+20 battery)', sciEffect:+10, powerMod:+20 },
+      { text:'🔬 Continue Lab Testing (+15 sci)', sciEffect:+15, powerMod:+5 },
+      { text:'📤 Transmit Patent Telemetry (+15 sci)', sciEffect:+15, powerMod:-5 }
+    ]
+  },
+  { id:'QUIET', type:'opportunity', title:'🛰️ Quiet Space Weather Window',
+    desc:'NASA DONKI reports zero flares for next 3 Sols.',
+    insightTitle:'DONKI Monitoring:',
+    insightText:'Calm weather allows safe long-range EVAs.',
+    scienceExplanation:'Low solar flux lets you drop shielding power.',
+    options:[
+      { text:'🚀 Extended EVA Science (+15 sci)', o2Effect:-10, sciEffect:+15, powerMod:-10 },
+      { text:'🔧 Upgrade Grid Wiring (+20 grid, +10 battery)', shieldEffect:+5, powerMod:+10, powerGridUp:+20 },
+      { text:'🌱 Focus on Hydroponics', healthEffect:+5, sciEffect:+10 }
+    ]
+  },
+  { id:'HARVEST', type:'opportunity', title:'🌱 First Agriculture Harvest!',
+    desc:'Fresh lettuce and radishes are ready in the hydroponics bay!',
+    insightTitle:'ISS Veggie (2015):',
+    insightText:'First space-grown "Outredgeous" red romaine lettuce eaten on ISS.',
+    scienceExplanation:'Fresh greens provide antioxidants protecting eyes.',
+    options:[
+      { text:'🥗 Feast on Fresh Greens', healthEffect:+15, sciEffect:+5 },
+      { text:'🧪 Lab Analyze Nutrients', healthEffect:+5, sciEffect:+15 },
+      { text:'🌿 Save Top Seeds', healthEffect:+8, sciEffect:+3, powerMod:+5 }
+    ]
+  },
+  { id:'SAMPLE', type:'tradeoff', title:'🔬 Core Sample Return',
+    desc:'Pristine regolith core may contain ancient water signatures.',
+    insightTitle:'Mars Sample Return:',
+    insightText:'Earth labs have far more precise instruments.',
+    scienceExplanation:'In-situ saves fuel, Earth labs offer higher precision.',
+    options:[
+      { text:'📦 Launch to Earth (+20 sci, -20 battery)', sciEffect:+20, powerMod:-20 },
+      { text:'🧪 Analyze in Habitat Lab (+12 sci)', sciEffect:+12, powerMod:-10 },
+      { text:'📋 Vault for Future Mission (+3 sci)', sciEffect:+3 }
+    ]
+  },
+  { id:'EVA-REST', type:'tradeoff', title:'🧑‍🚀 Emergency EVA vs. Rest',
+    desc:'Rover stuck 1 km away; crew worked 14 hours straight.',
+    insightTitle:'NASA Safety Rules:',
+    insightText:'Fatigued spacewalkers make 40% more errors.',
+    scienceExplanation:'Exhaustion reduces motor skills in suit gloves.',
+    options:[
+      { text:'🚀 Push Crew for Spacewalk (+10 sci)', o2Effect:-10, shieldEffect:-5, healthEffect:-10, sciEffect:+10 },
+      { text:'😴 Order Mandatory Rest', healthEffect:+5, sciEffect:-3, powerMod:+5 },
+      { text:'🤖 Send Repair Robot (+3 sci)', sciEffect:+3, powerMod:-15 }
+    ]
+  },
+
+  /* ===== MOON-ONLY EVENTS ===== */
+  { id:'MOON-TOXIC-DUST', type:'crisis', title:'☠️ Toxic Lunar Dust Infiltration',
+    desc:'Abrasive lunar dust has breached the airlock seals. The dust is sharp like tiny glass shards and toxic to breathe.',
+    insightTitle:'Apollo Dust Findings:',
+    insightText:'Apollo astronauts reported dust causing "lunar hay fever" — sneezing, sore throats, lung irritation.',
+    scienceExplanation:'Lunar regolith contains fine silica particles that damage lung tissue.',
+    options:[
+      { text:'🧹 Full Habitat Decontamination', o2Effect:-15, healthEffect:-5, powerMod:-20 },
+      { text:'🚪 Seal Off Affected Modules', o2Effect:-5, healthEffect:-15 },
+      { text:'💨 Run High-Power Air Filtration', powerMod:-25, healthEffect:-10 }
+    ]
+  },
+  { id:'MOON-SOLAR-FLARE', type:'crisis', title:'☀️ Massive Solar Flare — No Atmosphere',
+    desc:'An X-class solar flare is heading directly for the Moon. No atmosphere to absorb radiation — surface will be bathed in deadly protons.',
+    insightTitle:'NASA DONKI:',
+    insightText:'The Moon receives 380 mSv/yr — worse than Mars (233 mSv/yr) because there is zero atmospheric shielding.',
+    scienceExplanation:'No atmosphere, no magnetic field. During a solar storm, astronauts must retreat to shielded shelters.',
+    options:[
+      { text:'🛡️ Retreat to Deep Regolith Shelter', o2Effect:-20, shieldEffect:+20, powerMod:-30 },
+      { text:'⚡ Stay Operational (Risk Radiation)', shieldEffect:-50, healthEffect:-20 },
+      { text:'📡 Emergency Power Down & Hide', powerMod:-40, shieldEffect:-15 }
+    ]
+  },
+  { id:'MOON-LUNAR-NIGHT', type:'crisis', title:'🌑 14-Day Lunar Night Begins',
+    desc:'The Sun has set for 14 Earth days. Temperatures plunge to −173°C. Solar panels are useless. Survive on stored power.',
+    insightTitle:'Lunar Reconnaissance Orbiter:',
+    insightText:'Lunar night lasts 14 Earth days — a brutal test of battery and thermal systems.',
+    scienceExplanation:'Without sunlight, all power must come from batteries or nuclear sources.',
+    options:[
+      { text:'🔋 Full Battery Conservation Mode', o2Effect:-15, healthEffect:-10, powerMod:+15 },
+      { text:'☢️ Activate RTG Nuclear Backup', shieldEffect:-15, powerMod:+25 },
+      { text:'🔥 Reduce Non-Critical Heating', healthEffect:-20, powerMod:+10 }
+    ]
+  },
+  { id:'MOON-NO-CARBON', type:'crisis', title:'🍽️ Food Production Crisis — No Carbon',
+    desc:'Hydroponic gardens failing. Lunar soil has no carbon and no nitrogen — building blocks of life. Plants cannot grow without imported nutrients.',
+    insightTitle:'Lunar Resource Scarcity:',
+    insightText:'Unlike Mars, the Moon has essentially no carbon or nitrogen. Every gram of food needs imported nutrients.',
+    scienceExplanation:'Mars has CO₂ and nitrogen — the Moon has neither. Food self-sufficiency requires massive closed-loop recycling.',
+    options:[
+      { text:'📦 Ration Food Heavily', healthEffect:-25, o2Effect:-5 },
+      { text:'🚀 Emergency Food Resupply (slow)', healthEffect:-10, powerMod:-20, sciEffect:-5 },
+      { text:'🧪 Divert Power to Nutrient Recycling', powerMod:-30, healthEffect:-15 }
+    ]
+  },
+  { id:'MOON-MOONQUAKE', type:'crisis', title:'🌋 Moonquake Damages Base',
+    desc:'A shallow moonquake has shaken the outpost. Structural cracks appearing. Pressure dropping.',
+    insightTitle:'Apollo Seismic Data:',
+    insightText:'Moonquakes can last up to an hour and reach magnitude 5.5.',
+    scienceExplanation:'No water to dampen seismic waves. Moonquakes ring through dry rock for a very long time.',
+    options:[
+      { text:'🔧 Emergency Structural Repair', o2Effect:-10, powerMod:-25 },
+      { text:'🚪 Seal Off Damaged Modules', healthEffect:-20, o2Effect:+5 },
+      { text:'📡 Assess Damage from Orbit (slow)', sciEffect:-8, powerMod:-15 }
+    ]
+  },
+  { id:'MOON-MICRO-SWARM', type:'crisis', title:'💨 Micrometeoroid Swarm — No Burn-Up',
+    desc:'A dense micrometeoroid swarm passing through. On Earth they would burn in the atmosphere. On the Moon they hit the surface directly.',
+    insightTitle:'Lunar Meteorite Flux:',
+    insightText:'Without an atmosphere, the Moon receives thousands of micrometeoroid impacts per square meter yearly.',
+    scienceExplanation:'Every tiny particle becomes a high-velocity bullet, slowly degrading the outer shell.',
+    options:[
+      { text:'🛡️ Full Shielding Mode', powerMod:-30, shieldEffect:+15, o2Effect:-5 },
+      { text:'🤖 Deploy Repair Robots', powerMod:-20, shieldEffect:-10 },
+      { text:'⚡ Accept Minor Damage', shieldEffect:-25, healthEffect:-10 }
+    ]
+  }
+];
+
+/* ============ MODE SELECTION ============ */
+function showModeSelect() {
+  const m = document.getElementById('modeSelectModal');
+  m.classList.remove('hidden');
+  m.classList.add('flex');
+}
+
+function selectMode(type) {
+  currentOutpost = type;
+  applyModeModifiers(type);
+
+  const badgeIcon = document.getElementById('modeBadgeIcon');
+  const badgeText = document.getElementById('modeBadgeText');
+  const badge = document.getElementById('modeBadge');
+  if (type === 'moon') {
+    badgeIcon.textContent = '🌙';
+    badgeText.textContent = 'Moon · HARD';
+    badgeText.className = 'text-red-300 font-bold';
+    badge.className = 'bg-red-950/60 px-3 py-1.5 rounded-xl border border-red-500/50 flex items-center gap-1.5 text-xs transition-all';
+  } else {
+    badgeIcon.textContent = '🔴';
+    badgeText.textContent = 'Mars · EASY';
+    badgeText.className = 'text-emerald-300 font-bold';
+    badge.className = 'bg-emerald-950/60 px-3 py-1.5 rounded-xl border border-emerald-500/50 flex items-center gap-1.5 text-xs transition-all';
+  }
+
+  const banner = document.getElementById('selectedModeBanner');
+  if (type === 'moon') {
+    banner.className = 'text-center text-sm font-bold py-2 rounded-xl mb-4 bg-red-950/50 border border-red-500/40 text-red-300';
+    banner.innerHTML = '🌙 You selected MOON — HARD MODE';
+  } else {
+    banner.className = 'text-center text-sm font-bold py-2 rounded-xl mb-4 bg-emerald-950/50 border border-emerald-500/40 text-emerald-300';
+    banner.innerHTML = '🔴 You selected MARS — EASY MODE';
+  }
+
+  document.getElementById('modeSelectModal').classList.add('hidden');
+  document.getElementById('modeSelectModal').classList.remove('flex');
+  document.getElementById('tutorialModal').classList.remove('hidden');
+  document.getElementById('tutorialModal').classList.add('flex');
+}
+
+function applyModeModifiers(type) {
+  const badge = document.getElementById('locationBadge');
+  const mods = document.getElementById('outpostModifiers');
+
+  if (type === 'moon') {
+    badge.innerText = 'Lunar South Pole · HARD';
+    badge.className = 'text-[11px] font-semibold bg-red-500/10 text-red-300 border border-red-500/30 px-2 py-0.5 rounded-full';
+    document.getElementById('envTemp').innerText = '-160°C';
+    document.getElementById('envTau').innerText = '0.0';
+    o2DrainPerSol = 6;
+    scienceMult = 0.7;
+    batteryRechargePerSol = 2;
+    mods.innerHTML = '🌙 <span class="text-red-300 font-bold">Moon (HARD)</span>: O₂ −6/Sol · Science ×0.7 · Battery +2/Sol';
+  } else {
+    badge.innerText = 'Jezero Crater · EASY';
+    badge.className = 'text-[11px] font-semibold bg-emerald-500/10 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded-full';
+    document.getElementById('envTemp').innerText = '-62°C';
+    document.getElementById('envTau').innerText = '0.4';
+    o2DrainPerSol = 4;
+    scienceMult = 1.2;
+    batteryRechargePerSol = 4;
+    mods.innerHTML = '🔴 <span class="text-emerald-300 font-bold">Mars (EASY)</span>: O₂ −4/Sol · Science ×1.2 · Battery +4/Sol';
+  }
+}
+
+/* ============ EVENT LIBRARY ============ */
+function openEventLibrary() {
+  const body = document.getElementById('eventLibraryBody');
+  const groups = { crisis: [], opportunity: [], tradeoff: [] };
+  eventPool.forEach(ev => groups[ev.type].push(ev));
+  const labels = {
+    crisis: { name: '🔴 Crisis Events', border: 'border-red-500/40', color: 'text-red-300' },
+    opportunity: { name: '🟢 Opportunities', border: 'border-emerald-500/40', color: 'text-emerald-300' },
+    tradeoff: { name: '🟡 Trade-offs', border: 'border-amber-500/40', color: 'text-amber-300' }
+  };
+  let html = '';
+  for (const type of ['crisis', 'opportunity', 'tradeoff']) {
+    const evs = groups[type];
+    if (!evs.length) continue;
+    html += `<div class="mb-4"><div class="text-sm font-bold ${labels[type].color} mb-2">${labels[type].name} (${evs.length})</div><div class="space-y-2">`;
+    evs.forEach(ev => {
+      const isMoonOnly = ev.id.startsWith('MOON-');
+      const moonTag = isMoonOnly ? '<span class="text-[9px] bg-red-500/20 text-red-300 px-1.5 py-0.5 rounded ml-1">MOON ONLY</span>' : '';
+      html += `<div class="glass-card p-3 ${labels[type].border} border-l-4"><div class="font-bold text-xs text-slate-100 mb-1">${ev.title}${moonTag}</div><div class="space-y-1">`;
+      ev.options.forEach((opt, i) => {
+        const badges = [];
+        if (opt.o2Effect) badges.push(`<span class="${opt.o2Effect>=0?'text-emerald-400':'text-red-400'} font-mono">💨${opt.o2Effect>=0?'+':''}${opt.o2Effect}</span>`);
+        if (opt.powerMod) badges.push(`<span class="${opt.powerMod>=0?'text-emerald-400':'text-red-400'} font-mono">🔋${opt.powerMod>=0?'+':''}${opt.powerMod}</span>`);
+        if (opt.batteryMaxUp) badges.push(`<span class="text-yellow-400 font-mono">🔋MAX+${opt.batteryMaxUp}</span>`);
+        if (opt.powerGridUp) badges.push(`<span class="text-purple-400 font-mono">⚡MAX+${opt.powerGridUp}</span>`);
+        if (opt.shieldEffect) badges.push(`<span class="${opt.shieldEffect>=0?'text-emerald-400':'text-red-400'} font-mono">🛡️${opt.shieldEffect>=0?'+':''}${opt.shieldEffect}</span>`);
+        if (opt.healthEffect) badges.push(`<span class="${opt.healthEffect>=0?'text-emerald-400':'text-red-400'} font-mono">🌱${opt.healthEffect>=0?'+':''}${opt.healthEffect}</span>`);
+        if (opt.sciEffect) badges.push(`<span class="${opt.sciEffect>=0?'text-emerald-400':'text-red-400'} font-mono">🔬${opt.sciEffect>=0?'+':''}${opt.sciEffect}</span>`);
+        html += `<div class="text-[10px] text-slate-300 flex justify-between bg-slate-900/60 rounded px-2 py-1"><span class="flex-1">${i+1}. ${opt.text}</span><span class="flex gap-1">${badges.join('')}</span></div>`;
+      });
+      html += `</div></div>`;
+    });
+    html += `</div></div>`;
+  }
+  body.innerHTML = html;
+  document.getElementById('eventLibraryModal').classList.remove('hidden');
+  document.getElementById('eventLibraryModal').classList.add('flex');
+}
+function closeEventLibrary() {
+  document.getElementById('eventLibraryModal').classList.add('hidden');
+  document.getElementById('eventLibraryModal').classList.remove('flex');
+}
+
+function showTutorial() {
+  if (!currentOutpost) return;
+  const m = document.getElementById('tutorialModal');
+  m.classList.remove('hidden');
+  m.classList.add('flex');
+}
+function startMissionFromTutorial() {
+  document.getElementById('tutorialModal').classList.add('hidden');
+  document.getElementById('tutorialModal').classList.remove('flex');
+  if (!currentEvent) loadSolEvent();
+  missionStarted = true;
+}
+
+/* ============ CANVAS ============ */
+function initCanvas() {
+  const canvas = document.getElementById('outpostCanvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = canvas.parentElement.clientWidth;
+  canvas.height = canvas.parentElement.clientHeight;
+  let radarAngle = 0;
+  function render() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    if (currentOutpost === 'moon') {
+      ctx.fillStyle = '#030712'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#ffffff';
+      for (let i = 0; i < 30; i++) ctx.fillRect((i*47)%canvas.width, (i*23)%(canvas.height*0.6), (i%2)+1, (i%2)+1);
+      ctx.fillStyle = '#334155';
+      ctx.beginPath(); ctx.ellipse(canvas.width/2, canvas.height+40, canvas.width*0.7, 100, 0, 0, Math.PI*2); ctx.fill();
+    } else if (currentOutpost === 'mars') {
+      let g = ctx.createLinearGradient(0,0,0,canvas.height);
+      g.addColorStop(0,'#7c2d12'); g.addColorStop(1,'#451a03');
+      ctx.fillStyle = g; ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#9a3412';
+      ctx.beginPath(); ctx.ellipse(canvas.width/2, canvas.height+30, canvas.width*0.7, 90, 0, 0, Math.PI*2); ctx.fill();
+    } else {
+      ctx.fillStyle = '#0b1020'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#ffffff';
+      for (let i = 0; i < 20; i++) ctx.fillRect((i*67)%canvas.width, (i*31)%(canvas.height*0.7), 1, 1);
+    }
+    if (currentOutpost) {
+      const cx = canvas.width/2, cy = canvas.height - 35;
+      ctx.fillStyle = 'rgba(224,242,254,0.2)'; ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 3;
+      ctx.beginPath(); ctx.arc(cx, cy, 50, Math.PI, 0); ctx.fill(); ctx.stroke();
+      if (shieldIntegrity > 20) {
+        ctx.strokeStyle = 'rgba(56,189,248,0.4)'; ctx.lineWidth = 5;
+        ctx.beginPath(); ctx.arc(cx, cy, 62, Math.PI*1.1, Math.PI*1.9); ctx.stroke();
+      }
+      if (!panelsRetracted) {
+        ctx.fillStyle = '#1e3a8a'; ctx.strokeStyle = '#60a5fa'; ctx.lineWidth = 1;
+        ctx.fillRect(cx-95, cy-12, 35, 12); ctx.strokeRect(cx-95, cy-12, 35, 12);
+        ctx.fillRect(cx+60, cy-12, 35, 12); ctx.strokeRect(cx+60, cy-12, 35, 12);
+      } else {
+        ctx.fillStyle = '#475569'; ctx.fillRect(cx-65, cy-8, 12, 8); ctx.fillRect(cx+53, cy-8, 12, 8);
+      }
+      ctx.strokeStyle = 'rgba(16,185,129,0.3)'; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.arc(30, 30, 18, 0, Math.PI*2); ctx.stroke();
+      ctx.strokeStyle = '#10b981';
+      ctx.beginPath(); ctx.moveTo(30, 30); ctx.lineTo(30+Math.cos(radarAngle)*18, 30+Math.sin(radarAngle)*18); ctx.stroke();
+      radarAngle += 0.05;
+    }
+    requestAnimationFrame(render);
+  }
+  render();
+}
+
+function updatePowerAllocation() {
+  powerO2 = parseInt(document.getElementById('sliderO2').value);
+  powerShield = parseInt(document.getElementById('sliderShield').value);
+  powerScience = parseInt(document.getElementById('sliderScience').value);
+  document.getElementById('powerO2Val').innerText = powerO2 + ' kW';
+  document.getElementById('powerShieldVal').innerText = powerShield + ' kW';
+  document.getElementById('powerScienceVal').innerText = powerScience + ' kW';
+  document.getElementById('valPowerUsed').innerText = powerO2 + powerShield + powerScience;
+  document.getElementById('valPowerGen').innerText = powerGridMax + ' kW';
+  document.getElementById('valPowerCap').innerText = powerGridMax + ' kW';
+}
+
+function loadSolEvent() {
+  chosenOptionThisSol = false;
+  clearInterval(timerInterval);
+  document.getElementById('timerContainer').classList.add('hidden');
+  document.getElementById('btnAdvanceSol').disabled = true;
+
+  let availableEvents = eventPool.filter(ev => {
+    if (currentOutpost === 'mars' && ev.id.startsWith('MOON-')) return false;
+    return true;
+  });
+
+  const idx = (sol - 1) % availableEvents.length;
+  currentEvent = availableEvents[idx];
+
+  document.getElementById('eventSolLabel').innerText = `Sol ${sol} Trade-Off`;
+  document.getElementById('eventTitle').innerText = currentEvent.title;
+  document.getElementById('eventDescription').innerText = currentEvent.desc;
+  document.getElementById('dataInsightTitle').innerText = currentEvent.insightTitle;
+  document.getElementById('dataInsightText').innerText = currentEvent.insightText;
+
+  if (currentEvent.timed) startCountdownTimer();
+
+  const container = document.getElementById('eventOptionsContainer');
+  container.innerHTML = '';
+  currentEvent.options.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'glass-card p-3 text-left hover:border-cyan-400 transition-all';
+    btn.onclick = () => selectEventOption(i);
+    const badges = [];
+    if (opt.o2Effect) badges.push(`<span class="${opt.o2Effect>=0?'text-emerald-400':'text-red-400'}">💨${opt.o2Effect>=0?'+':''}${opt.o2Effect}</span>`);
+    if (opt.powerMod) badges.push(`<span class="${opt.powerMod>=0?'text-emerald-400':'text-red-400'}">🔋${opt.powerMod>=0?'+':''}${opt.powerMod}</span>`);
+    if (opt.batteryMaxUp) badges.push(`<span class="text-yellow-400">🔋MAX+${opt.batteryMaxUp}</span>`);
+    if (opt.powerGridUp) badges.push(`<span class="text-purple-400">⚡MAX+${opt.powerGridUp}</span>`);
+    if (opt.shieldEffect) badges.push(`<span class="${opt.shieldEffect>=0?'text-emerald-400':'text-red-400'}">🛡️${opt.shieldEffect>=0?'+':''}${opt.shieldEffect}</span>`);
+    if (opt.healthEffect) badges.push(`<span class="${opt.healthEffect>=0?'text-emerald-400':'text-red-400'}">🌱${opt.healthEffect>=0?'+':''}${opt.healthEffect}</span>`);
+    if (opt.sciEffect) badges.push(`<span class="${opt.sciEffect>=0?'text-emerald-400':'text-red-400'}">🔬${opt.sciEffect>=0?'+':''}${opt.sciEffect}</span>`);
+    btn.innerHTML = `<div class="font-bold text-xs text-cyan-300 mb-1">Option ${i + 1}: ${opt.text}</div><div class="flex flex-wrap gap-1 mt-1 text-[10px] font-mono">${badges.join('')}</div>`;
+    container.appendChild(btn);
+  });
+}
+
+function startCountdownTimer() {
+  countdownSecs = 10;
+  document.getElementById('timerContainer').classList.remove('hidden');
+  document.getElementById('countdownTimer').innerText = countdownSecs + 's';
+  timerInterval = setInterval(() => {
+    countdownSecs--;
+    document.getElementById('countdownTimer').innerText = countdownSecs + 's';
+    if (countdownSecs <= 0) { clearInterval(timerInterval); selectEventOption(0); }
+  }, 1000);
+}
+
+function selectEventOption(i) {
+  if (chosenOptionThisSol) return;
+  chosenOptionThisSol = true;
+  clearInterval(timerInterval);
+  document.getElementById('timerContainer').classList.add('hidden');
+
+  const opt = currentEvent.options[i];
+
+  if (opt.action === 'retract') panelsRetracted = true;
+  if (opt.action === 'expose') panelsRetracted = false;
+
+  if (opt.powerGridUp) powerGridMax += opt.powerGridUp;
+  if (opt.batteryMaxUp) batteryMax += opt.batteryMaxUp;
+  if (opt.powerMod !== undefined) batteryLevel = Math.max(0, Math.min(batteryMax, batteryLevel + opt.powerMod));
+
+  o2Level = Math.min(100, Math.max(0, o2Level + (opt.o2Effect || 0)));
+  shieldIntegrity = Math.min(100, Math.max(0, shieldIntegrity + (opt.shieldEffect || 0)));
+  crewHealth = Math.min(100, Math.max(0, crewHealth + (opt.healthEffect || 0)));
+  sciencePoints = Math.min(targetScience, Math.max(0, sciencePoints + (opt.sciEffect || 0)));
+
+  updatePowerAllocation();
+  updateUI();
+  document.getElementById('btnAdvanceSol').disabled = false;
+  showScienceModal(currentEvent.scienceExplanation, currentEvent.insightTitle);
+
+  if (sciencePoints >= targetScience) { setTimeout(() => triggerDebrief(true), 600); return; }
+  if (o2Level <= 0 || batteryLevel <= 0 || shieldIntegrity <= 0 || crewHealth <= 0) {
+    setTimeout(() => triggerDebrief(false), 600);
+  }
+}
+
+function showScienceModal(text, source) {
+  document.getElementById('scienceModalText').innerText = text;
+  document.getElementById('scienceModalSource').innerText = source;
+  document.getElementById('scienceExplanationModal').classList.remove('hidden');
+  document.getElementById('scienceExplanationModal').classList.add('flex');
+}
+function closeScienceModal() {
+  document.getElementById('scienceExplanationModal').classList.add('hidden');
+  document.getElementById('scienceExplanationModal').classList.remove('flex');
+}
+
+function advanceSol() {
+  if (!chosenOptionThisSol) return;
+  if (sciencePoints >= targetScience) { triggerDebrief(true); return; }
+
+  o2Level = Math.max(0, o2Level - o2DrainPerSol);
+  batteryLevel = panelsRetracted ? Math.max(0, batteryLevel - 15) : Math.min(batteryMax, batteryLevel + batteryRechargePerSol);
+
+  let scienceGain = Math.round(powerScience * 0.7 * scienceMult);
+  if (batteryLevel / batteryMax < 0.3) scienceGain = Math.round(scienceGain * 0.5);
+  sciencePoints = Math.min(targetScience, sciencePoints + scienceGain);
+
+  sol++;
+  document.getElementById('displaySol').innerText = `Sol ${sol}`;
+  updateUI();
+
+  if (sciencePoints >= targetScience) { triggerDebrief(true); return; }
+  if (o2Level <= 0 || batteryLevel <= 0 || shieldIntegrity <= 0 || crewHealth <= 0) { triggerDebrief(false); return; }
+  loadSolEvent();
+}
+
+function updateUI() {
+  document.getElementById('valO2').innerText = Math.round(o2Level) + '%';
+  document.getElementById('barO2').style.width = Math.round(o2Level) + '%';
+  document.getElementById('valBattery').innerText = Math.round(batteryLevel) + ' / ' + batteryMax + '%';
+  document.getElementById('barBattery').style.width = ((batteryLevel / batteryMax) * 100) + '%';
+  document.getElementById('valShield').innerText = Math.round(shieldIntegrity) + '%';
+  document.getElementById('barShield').style.width = Math.round(shieldIntegrity) + '%';
+  document.getElementById('valHealth').innerText = Math.round(crewHealth) + '%';
+  document.getElementById('barHealth').style.width = Math.round(crewHealth) + '%';
+  document.getElementById('valScience').innerText = sciencePoints + ' / ' + targetScience + ' PTS';
+  document.getElementById('barScience').style.width = ((sciencePoints/targetScience)*100) + '%';
+}
+
+function triggerDebrief(won) {
+  const modal = document.getElementById('debriefModal');
+  const container = modal.firstElementChild;
+  const iconWrap = document.getElementById('debriefIconWrap');
+  const icon = document.getElementById('debriefIcon');
+  const header = document.getElementById('debriefHeader');
+  const subtitle = document.getElementById('debriefSubtitle');
+  const scoreEl = document.getElementById('debriefScore');
+  const evalEl = document.getElementById('debriefEvaluation');
+
+  document.getElementById('debriefSols').innerText = `Sol ${sol}`;
+  document.getElementById('debriefScience').innerText = `${sciencePoints} PTS`;
+  const avg = Math.round((o2Level + (batteryLevel/batteryMax)*100 + shieldIntegrity + crewHealth) / 4);
+
+  if (won) {
+    container.className = 'glass-panel max-w-lg w-full p-6 border-2 border-emerald-500/50 text-center shadow-2xl shadow-emerald-500/20';
+    iconWrap.className = 'w-20 h-20 bg-gradient-to-br from-emerald-400 to-teal-600 text-white rounded-full flex items-center justify-center mx-auto mb-3 text-4xl shadow-lg shadow-emerald-500/50 trophy-bounce trophy-glow';
+    icon.className = 'fa-solid fa-trophy';
+    header.innerText = '🎉 MISSION ACCOMPLISHED';
+    header.className = 'text-2xl font-black text-emerald-400 mb-1';
+    subtitle.innerText = '🏆 You are now a Certified NASA Flight Director!';
+    subtitle.className = 'text-sm font-bold text-emerald-300 mb-4';
+
+    let rating = 'COMPETENT DIRECTOR', ratingColor = 'text-cyan-400', ratingEmoji = '🎖️';
+    if (avg >= 95) { rating = 'EXCEPTIONAL LEADER'; ratingColor = 'text-yellow-400'; ratingEmoji = '🌟'; }
+    else if (avg >= 85) { rating = 'OUTSTANDING COMMANDER'; ratingColor = 'text-emerald-400'; ratingEmoji = '🏅'; }
+    else if (avg >= 70) { rating = 'STRONG FLIGHT DIRECTOR'; ratingColor = 'text-cyan-400'; ratingEmoji = '🎖️'; }
+    else if (avg >= 50) { rating = 'FLIGHT DIRECTOR'; ratingColor = 'text-cyan-400'; ratingEmoji = '✨'; }
+    scoreEl.innerText = rating;
+    scoreEl.className = `text-base font-black ${ratingColor} leading-tight`;
+
+    const baseName = currentOutpost === 'moon' ? 'Artemis Moon Base (HARD)' : 'Mars Jezero Outpost (EASY)';
+    const baseEmoji = currentOutpost === 'moon' ? '🌙' : '🔴';
+    const difficultyNote = currentOutpost === 'moon' ? 'You conquered the most hostile surface in the solar system.' : 'You mastered the Martian frontier.';
+
+    evalEl.innerHTML = `
+      <div class="text-center mb-4 pb-3 border-b border-emerald-500/20">
+        <div class="text-sm font-black text-emerald-300 mb-2">🚀 You have successfully completed the mission!</div>
+        <div class="text-[11px] text-slate-300 leading-relaxed">
+          You commanded the <strong class="text-cyan-300">${baseEmoji} ${baseName}</strong> for <strong class="text-white">${sol} Sol${sol===1?'':'s'}</strong>, collected <strong class="text-indigo-300">${sciencePoints} Science Point${sciencePoints===1?'':'s'}</strong>, and kept all <strong class="text-white">4 crew members</strong> alive. ${difficultyNote}
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-2 mb-3">
+        <div class="bg-emerald-950/60 rounded-lg p-2 border border-emerald-500/30 text-center">
+          <div class="text-lg leading-none mb-0.5">${ratingEmoji}</div>
+          <div class="text-[9px] text-emerald-300 font-bold uppercase">Flight Rating</div>
+          <div class="text-[10px] ${ratingColor} font-black">${rating}</div>
+        </div>
+        <div class="bg-cyan-950/60 rounded-lg p-2 border border-cyan-500/30 text-center">
+          <div class="text-lg leading-none mb-0.5">👥</div>
+          <div class="text-[9px] text-cyan-300 font-bold uppercase">Crew Survival</div>
+          <div class="text-[10px] text-cyan-400 font-black">${avg}%</div>
+        </div>
+        <div class="bg-yellow-950/60 rounded-lg p-2 border border-yellow-500/30 text-center">
+          <div class="text-lg leading-none mb-0.5">🔋</div>
+          <div class="text-[9px] text-yellow-300 font-bold uppercase">Battery Max</div>
+          <div class="text-[10px] text-yellow-400 font-black">${batteryMax}%</div>
+        </div>
+        <div class="bg-purple-950/60 rounded-lg p-2 border border-purple-500/30 text-center">
+          <div class="text-lg leading-none mb-0.5">⚡</div>
+          <div class="text-[9px] text-purple-300 font-bold uppercase">Grid Capacity</div>
+          <div class="text-[10px] text-purple-400 font-black">${powerGridMax} kW</div>
+        </div>
+      </div>
+      <div class="bg-emerald-950/40 border border-emerald-500/30 rounded-lg p-2.5 text-[10px] text-emerald-200 italic text-center leading-relaxed">
+        "Every trade-off you made reflects the real logic NASA flight directors use to keep humans alive beyond Earth."
+      </div>
+    `;
+  } else {
+    container.className = 'glass-panel max-w-lg w-full p-6 border-2 border-red-500/50 text-center shadow-2xl shadow-red-500/20';
+    iconWrap.className = 'w-20 h-20 bg-gradient-to-br from-red-400 to-red-700 text-white rounded-full flex items-center justify-center mx-auto mb-3 text-4xl shadow-lg shadow-red-500/50';
+    icon.className = 'fa-solid fa-triangle-exclamation';
+    header.innerText = '💥 MISSION FAILED';
+    header.className = 'text-2xl font-black text-red-400 mb-1';
+    subtitle.innerText = 'Crew safety protocols were not maintained';
+    subtitle.className = 'text-sm font-bold text-red-300 mb-4';
+    scoreEl.innerText = 'TRAINEE';
+    scoreEl.className = 'text-xl font-black text-red-400';
+
+    const failed = [];
+    if (o2Level <= 0) failed.push('💨 Oxygen depleted');
+    if (batteryLevel <= 0) failed.push('🔋 Battery drained');
+    if (shieldIntegrity <= 0) failed.push('🛡️ Shielding collapsed');
+    if (crewHealth <= 0) failed.push('🌱 Crew health failed');
+    const reason = failed.length ? failed.join(' · ') : 'Mission terminated';
+
+    evalEl.innerHTML = `
+      <div class="text-center mb-3">
+        <div class="text-sm font-black text-red-300 mb-2">Cause of failure:</div>
+        <div class="text-[11px] text-slate-300">${reason}</div>
+      </div>
+      <div class="bg-slate-950/60 rounded-lg p-2.5 text-[10px] text-slate-400 text-center">
+        You reached Sol ${sol} with ${sciencePoints}/${targetScience} science points.<br>
+        Flight score: ${avg}%. Try prioritizing life-support options earlier.
+      </div>
+    `;
+  }
+  modal.classList.remove('hidden');
+  modal.classList.add('flex');
+}
+
+function restartMission() {
+  sol = 1;
+  o2Level = 100; batteryLevel = 100; batteryMax = 100;
+  shieldIntegrity = 100; crewHealth = 100;
+  sciencePoints = 0;
+  panelsRetracted = false;
+  powerGridMax = 100;
+  currentOutpost = null;
+  currentEvent = null;
+  missionStarted = false;
+  chosenOptionThisSol = false;
+
+  document.getElementById('displaySol').innerText = 'Sol 1';
+  const badgeIcon = document.getElementById('modeBadgeIcon');
+  const badgeText = document.getElementById('modeBadgeText');
+  const badge = document.getElementById('modeBadge');
+  badgeIcon.textContent = '❓';
+  badgeText.textContent = 'No Mode Selected';
+  badgeText.className = 'text-slate-400 font-bold';
+  badge.className = 'bg-slate-900/80 px-3 py-1.5 rounded-xl border border-slate-600 flex items-center gap-1.5 text-xs transition-all';
+
+  document.getElementById('locationBadge').innerText = 'Awaiting Mode';
+  document.getElementById('locationBadge').className = 'text-[11px] font-semibold bg-slate-500/10 text-slate-400 border border-slate-500/30 px-2 py-0.5 rounded-full';
+  document.getElementById('outpostModifiers').innerHTML = 'Select a mission mode to begin';
+  document.getElementById('outpostModifiers').className = 'w-full mt-2 text-[10px] text-center bg-slate-900/60 rounded-lg px-2 py-1.5 border border-white/5 text-slate-400';
+  document.getElementById('envTemp').innerText = '—';
+  document.getElementById('envTau').innerText = '—';
+
+  document.getElementById('eventSolLabel').innerText = 'Awaiting Mode Selection';
+  document.getElementById('eventTitle').innerHTML = '<i class="fa-solid fa-hourglass-half"></i> Waiting for Mission Launch...';
+  document.getElementById('eventDescription').innerText = 'Please select Mars (EASY) or Moon (HARD) on the start screen to begin your mission.';
+  document.getElementById('dataInsightTitle').innerText = 'NASA Insight:';
+  document.getElementById('dataInsightText').innerText = 'Your choice cannot be changed once the mission begins.';
+  document.getElementById('eventOptionsContainer').innerHTML = '';
+  document.getElementById('btnAdvanceSol').disabled = true;
+
+  document.getElementById('debriefModal').classList.add('hidden');
+  document.getElementById('debriefModal').classList.remove('flex');
+
+  updatePowerAllocation();
+  updateUI();
+  showModeSelect();
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  initCanvas();
+  updatePowerAllocation();
+  updateUI();
+  showModeSelect();
+});
+</script>
+</body>
+</html>
