@@ -29,18 +29,11 @@
     @keyframes new-badge-pulse { 0%,100% { box-shadow: 0 0 15px rgba(234,179,8,0.4); } 50% { box-shadow: 0 0 30px rgba(234,179,8,0.9); } }
     .new-badge { animation: new-badge-pulse 1.5s ease-in-out infinite; }
     .badge-locked { filter: grayscale(100%); opacity: 0.55; }
-    @keyframes crisis-pulse {
-      0%, 100% { box-shadow: inset 0 0 20px rgba(239,68,68,0.2); }
-      50% { box-shadow: inset 0 0 45px rgba(239,68,68,0.8); }
-    }
+    @keyframes crisis-pulse { 0%,100% { box-shadow: inset 0 0 20px rgba(239,68,68,0.2); } 50% { box-shadow: inset 0 0 45px rgba(239,68,68,0.8); } }
     .crisis-pulse { animation: crisis-pulse 0.6s ease-in-out 4; border-color: rgba(239,68,68,0.6) !important; }
-    @keyframes good-pulse {
-      0%, 100% { box-shadow: inset 0 0 20px rgba(16,185,129,0.2); }
-      50% { box-shadow: inset 0 0 45px rgba(16,185,129,0.7); }
-    }
+    @keyframes good-pulse { 0%,100% { box-shadow: inset 0 0 20px rgba(16,185,129,0.2); } 50% { box-shadow: inset 0 0 45px rgba(16,185,129,0.7); } }
     .good-pulse { animation: good-pulse 0.6s ease-in-out 3; border-color: rgba(16,185,129,0.5) !important; }
 
-    /* A.R.I.A. Companion */
     .aria-companion { position: fixed; bottom: 20px; right: 20px; z-index: 45; display: flex; flex-direction: column; align-items: flex-end; gap: 12px; pointer-events: none; }
     @media (max-width: 768px) {
       .aria-companion { bottom: 90px; right: 12px; }
@@ -115,6 +108,10 @@
           <div class="text-[10px] text-cyan-400 uppercase font-bold tracking-wider">Mission Time</div>
           <div class="text-lg font-black text-white" id="displaySol">Sol 1</div>
         </div>
+        <button id="muteBtn" onclick="toggleMute()" title="Toggle sound & music" class="bg-slate-800 hover:bg-slate-700 text-xs px-3 py-2 rounded-xl border border-slate-600 flex items-center gap-1.5 transition">
+          <i id="muteIcon" class="fa-solid fa-volume-high text-cyan-400"></i>
+          <span id="muteText" class="hidden md:inline text-slate-300 font-bold">Sound On</span>
+        </button>
         <button onclick="openBadgeCollection()" class="bg-slate-800 hover:bg-slate-700 text-xs px-3 py-2 rounded-xl border border-yellow-500/50 text-yellow-300 font-bold flex items-center gap-1.5 transition">
           <i class="fa-solid fa-trophy text-yellow-400"></i>
           <span class="hidden md:inline">Badges</span>
@@ -216,7 +213,6 @@
           </div>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <!-- O2 SLIDER -->
           <div class="glass-card p-3">
             <div class="flex justify-between items-center text-xs mb-2">
               <span class="font-bold text-slate-300"><i class="fa-solid fa-mask-ventilator text-cyan-400"></i> O₂ Life Support</span>
@@ -229,7 +225,6 @@
             <input type="range" id="sliderO2" min="10" max="100" value="35" class="w-full mb-2" oninput="updatePowerAllocation()">
             <div class="text-[11px] text-slate-400">Powers O₂ generators and CO₂ scrubbers.</div>
           </div>
-          <!-- SHIELD SLIDER -->
           <div class="glass-card p-3">
             <div class="flex justify-between items-center text-xs mb-2">
               <span class="font-bold text-slate-300"><i class="fa-solid fa-shield-virus text-amber-400"></i> Rad Shielding</span>
@@ -242,7 +237,6 @@
             <input type="range" id="sliderShield" min="10" max="100" value="35" class="w-full mb-2" oninput="updatePowerAllocation()">
             <div class="text-[11px] text-slate-400">Magnetic coils deflect solar protons.</div>
           </div>
-          <!-- SCIENCE SLIDER -->
           <div class="glass-card p-3">
             <div class="flex justify-between items-center text-xs mb-2">
               <span class="font-bold text-slate-300"><i class="fa-solid fa-satellite-dish text-indigo-400"></i> Comms & Science</span>
@@ -290,7 +284,6 @@
     </div>
   </main>
 
-  <!-- Mode Selection -->
   <div id="modeSelectModal" class="fixed inset-0 backdrop-blur-lg z-[70] hidden items-center justify-center p-4" style="background: radial-gradient(circle at center, rgba(15,23,42,0.98) 0%, rgba(5,8,20,0.99) 100%);">
     <div class="max-w-3xl w-full">
       <div class="text-center mb-6">
@@ -340,7 +333,6 @@
     </div>
   </div>
 
-  <!-- Tutorial -->
   <div id="tutorialModal" class="fixed inset-0 backdrop-blur-lg z-[60] hidden items-center justify-center p-4 overflow-y-auto" style="background: rgba(0,0,0,0.9);">
     <div class="glass-panel max-w-3xl w-full p-6 border border-cyan-500/40 my-auto">
       <div class="text-center mb-4">
@@ -361,7 +353,7 @@
         <span class="text-xl">⚡</span>
         <div>
           <div class="font-bold text-amber-300">Power Grid Tip</div>
-          <div class="text-[11px] text-slate-300 mt-0.5">Each slider goes up to 100 kW. But your total grid capacity is 100 kW! Routing more than you have causes a <strong>BROWNOUT</strong> — life support underperforms on your next Sol. Watch the "Routed" counter.</div>
+          <div class="text-[11px] text-slate-300 mt-0.5">Each slider goes up to 100 kW. But your total grid capacity is 100 kW! Routing more than you have causes a <strong>BROWNOUT</strong>.</div>
         </div>
       </div>
       <div class="bg-cyan-950/40 border border-cyan-500/30 rounded-lg p-3 mb-4 text-xs text-cyan-200 flex items-start gap-2">
@@ -375,7 +367,6 @@
     </div>
   </div>
 
-  <!-- Event Library -->
   <div id="eventLibraryModal" class="fixed inset-0 backdrop-blur-lg z-[55] hidden items-center justify-center p-4" style="background: rgba(0,0,0,0.9);">
     <div class="glass-panel max-w-3xl w-full p-6 border border-purple-500/40 max-h-[90vh] flex flex-col">
       <div class="flex justify-between items-center mb-4">
@@ -390,7 +381,6 @@
     </div>
   </div>
 
-  <!-- Badge Collection -->
   <div id="badgeModal" class="fixed inset-0 backdrop-blur-lg z-[58] hidden items-center justify-center p-4" style="background: rgba(0,0,0,0.92);">
     <div class="glass-panel max-w-3xl w-full p-6 border border-yellow-500/40 max-h-[90vh] flex flex-col">
       <div class="flex justify-between items-center mb-3">
@@ -418,7 +408,6 @@
     </div>
   </div>
 
-  <!-- Science Modal -->
   <div id="scienceExplanationModal" class="fixed inset-0 backdrop-blur-md z-50 hidden items-center justify-center p-4" style="background: rgba(0,0,0,0.8);">
     <div class="glass-panel max-w-md w-full p-5 border border-indigo-500/40">
       <h3 class="text-base font-bold text-indigo-300 flex items-center gap-2 mb-3"><i class="fa-solid fa-graduation-cap"></i> Why This Science Matters</h3>
@@ -428,12 +417,10 @@
     </div>
   </div>
 
-  <!-- Debrief -->
   <div id="debriefModal" class="fixed inset-0 backdrop-blur-lg z-50 hidden items-center justify-center p-4 overflow-y-auto" style="background: rgba(0,0,0,0.92);">
     <div id="debriefContent" class="glass-panel max-w-lg w-full p-6 border-2 my-auto"></div>
   </div>
 
-  <!-- A.R.I.A. Companion -->
   <div id="ariaCompanion" class="aria-companion">
     <div id="ariaBubble" class="aria-bubble hidden">
       <div class="aria-bubble-name">A.R.I.A.</div>
@@ -443,6 +430,124 @@
   </div>
 
 <script>
+/* ============ SFX (short retro beeps) ============ */
+const SFX = {
+  ctx: null,
+  muted: (() => { try { return localStorage.getItem('astro_muted') === '1'; } catch(e) { return false; } })(),
+  init() { try { const AC = window.AudioContext || window.webkitAudioContext; if (AC) this.ctx = new AC(); } catch(e) {} },
+  ensure() { if (!this.ctx) this.init(); if (this.ctx && this.ctx.state === 'suspended') { try { this.ctx.resume(); } catch(e) {} } },
+  toggleMute() { this.muted = !this.muted; try { localStorage.setItem('astro_muted', this.muted ? '1' : '0'); } catch(e) {} updateMuteUI(); },
+  tone(freq, duration, type = 'sine', volume = 0.15, delay = 0, detune = 0) {
+    if (this.muted || !this.ctx) return;
+    try {
+      const now = this.ctx.currentTime + delay;
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, now);
+      if (detune) osc.detune.setValueAtTime(detune, now);
+      gain.gain.setValueAtTime(0.0001, now);
+      gain.gain.linearRampToValueAtTime(volume, now + 0.015);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+      osc.connect(gain); gain.connect(this.ctx.destination);
+      osc.start(now); osc.stop(now + duration + 0.05);
+    } catch(e) {}
+  },
+  seq(notes) { notes.forEach(n => this.tone(n.f, n.d, n.t || 'sine', n.v || 0.15, n.s || 0)); },
+  click()      { this.ensure(); this.tone(660, 0.045, 'square', 0.06); },
+  science()    { this.ensure(); this.seq([{f:523,d:0.09,t:'square',v:0.1},{f:659,d:0.09,t:'square',v:0.1,s:0.07},{f:784,d:0.14,t:'square',v:0.1,s:0.14}]); },
+  milestone()  { this.ensure(); this.seq([{f:523,d:0.1,t:'triangle',v:0.13},{f:659,d:0.1,t:'triangle',v:0.13,s:0.09},{f:784,d:0.1,t:'triangle',v:0.13,s:0.18},{f:1047,d:0.4,t:'triangle',v:0.13,s:0.27},{f:1319,d:0.5,t:'sine',v:0.07,s:0.4}]); },
+  warning()    { this.ensure(); this.seq([{f:880,d:0.1,t:'sawtooth',v:0.07},{f:660,d:0.1,t:'sawtooth',v:0.07,s:0.15},{f:880,d:0.1,t:'sawtooth',v:0.07,s:0.3}]); },
+  panic()      { this.ensure(); for (let i = 0; i < 3; i++) { this.tone(1200, 0.06, 'square', 0.11, i * 0.16); this.tone(900, 0.06, 'square', 0.11, i * 0.16 + 0.08); } },
+  crisis()     { this.ensure(); this.seq([{f:220,d:0.22,t:'sawtooth',v:0.1},{f:165,d:0.35,t:'sawtooth',v:0.1,s:0.18}]); },
+  opportunity(){ this.ensure(); this.seq([{f:660,d:0.1,t:'sine',v:0.11},{f:880,d:0.18,t:'sine',v:0.11,s:0.09}]); },
+  brownout()   { this.ensure(); this.seq([{f:200,d:0.3,t:'sawtooth',v:0.13},{f:140,d:0.3,t:'sawtooth',v:0.13,s:0.12},{f:90,d:0.5,t:'sawtooth',v:0.13,s:0.24}]); },
+  win()        { this.ensure(); this.seq([{f:523,d:0.15,t:'triangle',v:0.14},{f:659,d:0.15,t:'triangle',v:0.14,s:0.12},{f:784,d:0.15,t:'triangle',v:0.14,s:0.24},{f:1047,d:0.45,t:'triangle',v:0.14,s:0.36},{f:1319,d:0.6,t:'sine',v:0.08,s:0.55},{f:1568,d:0.7,t:'sine',v:0.06,s:0.75}]); },
+  lose()       { this.ensure(); this.seq([{f:440,d:0.22,t:'sawtooth',v:0.1},{f:349,d:0.22,t:'sawtooth',v:0.1,s:0.22},{f:261,d:0.35,t:'sawtooth',v:0.1,s:0.44},{f:196,d:0.7,t:'sawtooth',v:0.1,s:0.75}]); },
+  badge()      { this.ensure(); this.seq([{f:1047,d:0.07,t:'sine',v:0.12},{f:1319,d:0.07,t:'sine',v:0.12,s:0.06},{f:1568,d:0.12,t:'sine',v:0.12,s:0.12},{f:2093,d:0.35,t:'sine',v:0.1,s:0.22}]); },
+  toggleOn()   { this.ensure(); this.seq([{f:523,d:0.08,t:'sine',v:0.1},{f:784,d:0.12,t:'sine',v:0.1,s:0.06}]); },
+  toggleOff()  { this.ensure(); this.seq([{f:784,d:0.08,t:'sine',v:0.1},{f:523,d:0.12,t:'sine',v:0.1,s:0.06}]); }
+};
+
+/* ============ BGM (procedural space ambient) ============ */
+const BGM = {
+  ctx: null, master: null, playing: false, stepIdx: 0, timer: null, currentVol: 0.28,
+  init() { if (this.ctx) return; try { const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return; this.ctx = new AC(); this.master = this.ctx.createGain(); this.master.gain.value = 0; this.master.connect(this.ctx.destination); } catch(e) {} },
+  start() {
+    if (this.playing) return; this.init(); if (!this.ctx) return;
+    if (this.ctx.state === 'suspended') { try { this.ctx.resume(); } catch(e) {} }
+    this.playing = true; this.stepIdx = 0;
+    const t = this.ctx.currentTime;
+    this.master.gain.cancelScheduledValues(t); this.master.gain.setValueAtTime(this.master.gain.value, t);
+    const target = SFX.muted ? 0 : this.currentVol;
+    this.master.gain.linearRampToValueAtTime(target, t + 4);
+    this.schedule();
+  },
+  stop() { this.playing = false; clearTimeout(this.timer); if (!this.ctx) return; const t = this.ctx.currentTime; this.master.gain.cancelScheduledValues(t); this.master.gain.setValueAtTime(this.master.gain.value, t); this.master.gain.linearRampToValueAtTime(0, t + 2); },
+  setMuted(m) { if (!this.ctx) return; const t = this.ctx.currentTime; this.master.gain.cancelScheduledValues(t); this.master.gain.setValueAtTime(this.master.gain.value, t); if (m) this.master.gain.linearRampToValueAtTime(0, t + 0.4); else if (this.playing) this.master.gain.linearRampToValueAtTime(this.currentVol, t + 0.8); },
+  note(freq, dur, type, vol, start) {
+    if (!this.playing || !this.ctx || SFX.muted) return;
+    try {
+      const osc = this.ctx.createOscillator();
+      const g = this.ctx.createGain();
+      const filter = this.ctx.createBiquadFilter();
+      filter.type = 'lowpass'; filter.frequency.setValueAtTime(1800, start);
+      osc.type = type; osc.frequency.setValueAtTime(freq, start);
+      g.gain.setValueAtTime(0.0001, start);
+      g.gain.linearRampToValueAtTime(vol, start + Math.min(0.6, dur * 0.15));
+      g.gain.exponentialRampToValueAtTime(0.0001, start + dur);
+      osc.connect(filter); filter.connect(g); g.connect(this.master);
+      osc.start(start); osc.stop(start + dur + 0.1);
+    } catch(e) {}
+  },
+  schedule() {
+    if (!this.playing) return;
+    const now = this.ctx.currentTime;
+    const chords = [[220.00, 261.63, 329.63], [174.61, 220.00, 261.63], [261.63, 329.63, 392.00], [196.00, 246.94, 293.66]];
+    const cycle = Math.floor(this.stepIdx / 2);
+    const chord = chords[cycle % 4];
+    const isChordStart = this.stepIdx % 2 === 0;
+    if (isChordStart) {
+      chord.forEach((f, i) => this.note(f, 4.5, 'triangle', 0.03, now + i * 0.08));
+      this.note(chord[0] * 2, 4.5, 'sine', 0.015, now);
+      this.note(chord[0] / 2, 4.2, 'sine', 0.04, now);
+    }
+    const arpNote = chord[this.stepIdx % chord.length] * 2;
+    this.note(arpNote, 1.3, 'sine', 0.018, now + 0.2);
+    const arpNote2 = chord[(this.stepIdx + 1) % chord.length] * 2;
+    this.note(arpNote2, 1.0, 'sine', 0.012, now + 0.9);
+    if (this.stepIdx % 3 === 1) this.note(chord[2] * 4, 0.6, 'sine', 0.01, now + 1.4);
+    this.stepIdx++;
+    this.timer = setTimeout(() => this.schedule(), 2000);
+  }
+};
+
+function updateMuteUI() {
+  const icon = document.getElementById('muteIcon');
+  const text = document.getElementById('muteText');
+  if (!icon || !text) return;
+  if (SFX.muted) { icon.className = 'fa-solid fa-volume-xmark text-red-400'; text.textContent = 'Sound Off'; text.className = 'hidden md:inline text-slate-400 font-bold'; }
+  else { icon.className = 'fa-solid fa-volume-high text-cyan-400'; text.textContent = 'Sound On'; text.className = 'hidden md:inline text-slate-300 font-bold'; }
+}
+function toggleMute() {
+  SFX.toggleMute(); BGM.setMuted(SFX.muted);
+  if (!SFX.muted) SFX.toggleOn();
+}
+function buzz(pattern) { try { if ('vibrate' in navigator) navigator.vibrate(pattern); } catch(e) {} }
+
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('button');
+  if (!btn) return;
+  if (btn.id === 'muteBtn') return;
+  if (btn.id === 'ariaBody' || e.target.closest('#ariaBody')) return;
+  SFX.ensure(); SFX.click();
+}, true);
+
+document.addEventListener('visibilitychange', () => {
+  if (!BGM.ctx || !BGM.playing) return;
+  try { if (document.hidden) BGM.ctx.suspend(); else BGM.ctx.resume(); } catch(e) {}
+});
+
 /* ============ STATE ============ */
 let currentOutpost = null;
 let missionStarted = false;
@@ -456,6 +561,7 @@ let batteryMax = 100;
 let shieldIntegrity = 100;
 let crewHealth = 100;
 let panelsRetracted = false;
+let panelsRetractCountdown = 0;
 
 let powerGridMax = 100;
 let powerO2 = 35, powerShield = 35, powerScience = 30;
@@ -474,163 +580,94 @@ let ariaO2Warned = false, ariaBatteryWarned = false, ariaShieldWarned = false, a
 let ariaSci100 = false, ariaSci200 = false, ariaSci300 = false, ariaSci400 = false;
 let ariaFirstEventShown = false;
 
-/* ============ EVENTS ============ */
+/* ============ EVENTS (with descriptions) ============ */
 const eventPool = [
-  { id:'DUST', type:'crisis', title:'Dust Storm!', desc:'A high-velocity dust storm is burying solar panels!', timed:true,
-    insightTitle:'NASA Mission Control:', insightText:'Dust reduces solar irradiance by up to 99%.',
-    scienceExplanation:'Retracting arrays preserves hardware but forces reliance on battery reserves.',
-    options:[
-      { text:'Retract Panels (Save Hardware, Drain Battery)', action:'retract', o2Effect:-5, powerMod:-20, sciEffect:-5 },
-      { text:'Leave Exposed (Risk Damage, +Science)', action:'expose', shieldEffect:-15, healthEffect:-5, sciEffect:+10 }
-    ]
-  },
-  { id:'SPE', type:'crisis', title:'☀️ Solar Particle Event', desc:'Real M-class solar flare detected.',
-    insightTitle:'NASA DONKI:', insightText:'Astronauts must weigh mission timelines against lifetime radiation dose.',
-    scienceExplanation:'Storm shelters use water/polyethylene to absorb solar protons.',
-    options:[
-      { text:'🛡️ Activate Storm Shelter', o2Effect:-5, shieldEffect:+25, powerMod:-20 },
-      { text:'⚡ Normal Ops (take radiation dose)', shieldEffect:-35, healthEffect:-10, sciEffect:-5 },
-      { text:'📡 Monitor DONKI Live', shieldEffect:-10, healthEffect:-5, powerMod:-8 }
-    ]
-  },
-  { id:'BAT-EXP', type:'opportunity', title:'🔋 Battery Expansion Module', desc:'New battery module. Permanently expands storage.',
-    insightTitle:'ISS Battery Upgrade:', insightText:'NASA replaced 48 Ni-H batteries with 24 Li-ion.',
-    scienceExplanation:'More capacity absorbs bigger storms.',
-    options:[
-      { text:'🔋 Install Full (+30% max)', powerMod:-10, batteryMaxUp:+30 },
-      { text:'🧪 Test in Lab (+15% max, +8 sci)', sciEffect:+8, batteryMaxUp:+15 },
-      { text:'📦 Store for Later (+3 sci)', sciEffect:+3 }
-    ]
-  },
-  { id:'MICRO', type:'crisis', title:'🌪️ Micrometeorite Hull Breach', desc:'2mm micrometeoroid punctured outer hull. Pressure leak!',
-    insightTitle:'ISS Impact Logs:', insightText:'Impacts up to 70 km/s punch clean holes in aluminum.',
-    scienceExplanation:'EVAs carry vacuum hazards; robots minimize human risk.',
-    options:[
-      { text:'🔧 Emergency EVA Patch', o2Effect:-15, shieldEffect:-5, healthEffect:-5, powerMod:-10 },
-      { text:'🚪 Seal Greenhouse Module', o2Effect:+5, healthEffect:-20 },
-      { text:'🤖 Internal Repair Robot', o2Effect:-3, powerMod:-25 }
-    ]
-  },
-  { id:'GRID-EXP', type:'opportunity', title:'⚡ Second Reactor Online', desc:'Compact fission surface power unit arrived.',
-    insightTitle:'NASA Fission Surface Power:', insightText:'10+ kW lunar reactors planned for 2030s.',
-    scienceExplanation:'More power lets you run all systems at once.',
-    options:[
-      { text:'⚡ Connect Full (+50 kW grid)', powerMod:-25, powerGridUp:+50 },
-      { text:'🔧 Half Power (+25 kW, +5 sci)', powerMod:-10, powerGridUp:+25, sciEffect:+5 },
-      { text:'📋 Defer (+3 sci)', sciEffect:+3 }
-    ]
-  },
-  { id:'CO2', type:'crisis', title:'🔌 CO₂ Scrubber Failure', desc:'CO₂ rising to toxic levels.',
-    insightTitle:'Apollo 13 / ISS ECLSS:', insightText:'In 1970, crew adapted square LiOH canisters with tape!',
-    scienceExplanation:'Without active absorption, air becomes unbreathable in hours.',
-    options:[
-      { text:'🛠️ Improvise (Apollo 13 fix)', o2Effect:-5, healthEffect:-5, sciEffect:+5, powerMod:-10 },
-      { text:'🔋 Backup LiOH Canisters', o2Effect:+10, healthEffect:+5, powerMod:-20 },
-      { text:'🚪 Seal Non-Essential Modules', o2Effect:+15, healthEffect:-10, sciEffect:-5 }
-    ]
-  },
-  { id:'SOLAR-EFF', type:'opportunity', title:'🧪 Dust-Resistant Solar Upgrade', desc:'Panel coating improved 15%!',
-    insightTitle:'ISS Solar Array Optimization:', insightText:'Nanomaterial coatings prevent dust from clinging.',
-    scienceExplanation:'Higher efficiency provides extra battery margin.',
-    options:[
-      { text:'✅ Install (+20 battery)', sciEffect:+10, powerMod:+20 },
-      { text:'🔬 Continue Testing (+15 sci)', sciEffect:+15, powerMod:+5 },
-      { text:'📤 Transmit Telemetry (+15 sci)', sciEffect:+15, powerMod:-5 }
-    ]
-  },
-  { id:'QUIET', type:'opportunity', title:'🛰️ Quiet Space Weather', desc:'DONKI reports zero flares for 3 Sols.',
-    insightTitle:'DONKI Monitoring:', insightText:'Calm weather allows safe long-range EVAs.',
-    scienceExplanation:'Low solar flux lets you drop shielding power.',
-    options:[
-      { text:'🚀 Extended EVA (+15 sci)', o2Effect:-10, sciEffect:+15, powerMod:-10 },
-      { text:'🔧 Upgrade Grid (+20 grid, +10 battery)', shieldEffect:+5, powerMod:+10, powerGridUp:+20 },
-      { text:'🌱 Focus Hydroponics', healthEffect:+5, sciEffect:+10 }
-    ]
-  },
-  { id:'HARVEST', type:'opportunity', title:'🌱 First Agriculture Harvest!', desc:'Fresh greens ready!',
-    insightTitle:'ISS Veggie (2015):', insightText:'First space-grown lettuce eaten on ISS.',
-    scienceExplanation:'Fresh greens provide antioxidants protecting eyes.',
-    options:[
-      { text:'🥗 Feast on Fresh Greens', healthEffect:+15, sciEffect:+5 },
-      { text:'🧪 Lab Analyze', healthEffect:+5, sciEffect:+15 },
-      { text:'🌿 Save Top Seeds', healthEffect:+8, sciEffect:+3, powerMod:+5 }
-    ]
-  },
-  { id:'SAMPLE', type:'tradeoff', title:'🔬 Core Sample Return', desc:'Regolith core may contain ancient water.',
-    insightTitle:'Mars Sample Return:', insightText:'Earth labs have far more precise instruments.',
-    scienceExplanation:'In-situ saves fuel, Earth labs offer higher precision.',
-    options:[
-      { text:'📦 Launch to Earth (+20 sci)', sciEffect:+20, powerMod:-20 },
-      { text:'🧪 Analyze in Lab (+12 sci)', sciEffect:+12, powerMod:-10 },
-      { text:'📋 Vault (+3 sci)', sciEffect:+3 }
-    ]
-  },
-  { id:'EVA-REST', type:'tradeoff', title:'🧑‍🚀 Emergency EVA vs. Rest', desc:'Rover stuck 1 km away. Crew worked 14 hrs.',
-    insightTitle:'NASA Safety Rules:', insightText:'Fatigued spacewalkers make 40% more errors.',
-    scienceExplanation:'Exhaustion reduces motor skills in suit gloves.',
-    options:[
-      { text:'🚀 Push Crew for Spacewalk (+10 sci)', o2Effect:-10, shieldEffect:-5, healthEffect:-10, sciEffect:+10 },
-      { text:'😴 Order Rest', healthEffect:+5, sciEffect:-3, powerMod:+5 },
-      { text:'🤖 Send Robot (+3 sci)', sciEffect:+3, powerMod:-15 }
-    ]
-  },
-  { id:'MOON-TOXIC-DUST', type:'crisis', title:'☠️ Toxic Lunar Dust Infiltration', desc:'Abrasive dust breached airlock seals.',
-    insightTitle:'Apollo Dust Findings:', insightText:'Apollo astronauts reported "lunar hay fever."',
-    scienceExplanation:'Lunar regolith silica damages lung tissue.',
-    options:[
-      { text:'🧹 Full Decontamination', o2Effect:-15, healthEffect:-5, powerMod:-20 },
-      { text:'🚪 Seal Off Modules', o2Effect:-5, healthEffect:-15 },
-      { text:'💨 Air Filtration', powerMod:-25, healthEffect:-10 }
-    ]
-  },
-  { id:'MOON-SOLAR-FLARE', type:'crisis', title:'☀️ Massive Solar Flare — No Atmosphere', desc:'X-class flare heading for the Moon.',
-    insightTitle:'NASA DONKI:', insightText:'Moon gets 380 mSv/yr vs Mars 233 — no atmospheric shielding.',
-    scienceExplanation:'No atmosphere, no magnetic field. Astronauts must shelter.',
-    options:[
-      { text:'🛡️ Retreat to Shelter', o2Effect:-20, shieldEffect:+20, powerMod:-30 },
-      { text:'⚡ Stay Operational', shieldEffect:-50, healthEffect:-20 },
-      { text:'📡 Emergency Power Down', powerMod:-40, shieldEffect:-15 }
-    ]
-  },
-  { id:'MOON-LUNAR-NIGHT', type:'crisis', title:'🌑 14-Day Lunar Night Begins', desc:'Sun sets for 14 days. −173°C. Solar useless.',
-    insightTitle:'LRO Data:', insightText:'Lunar night lasts 14 Earth days — brutal for batteries.',
-    scienceExplanation:'Without sunlight, all power from batteries or nuclear.',
-    options:[
-      { text:'🔋 Conservation Mode', o2Effect:-15, healthEffect:-10, powerMod:+15 },
-      { text:'☢️ RTG Nuclear Backup', shieldEffect:-15, powerMod:+25 },
-      { text:'🔥 Reduce Heating', healthEffect:-20, powerMod:+10 }
-    ]
-  },
-  { id:'MOON-NO-CARBON', type:'crisis', title:'🍽️ Food Crisis — No Carbon', desc:'Hydroponics failing. Lunar soil has no C or N.',
-    insightTitle:'Lunar Resource Scarcity:', insightText:'Moon lacks carbon/nitrogen. Every gram needs resupply.',
-    scienceExplanation:'Mars has CO₂ and N₂ — the Moon has neither.',
-    options:[
-      { text:'📦 Ration Food', healthEffect:-25, o2Effect:-5 },
-      { text:'🚀 Emergency Resupply', healthEffect:-10, powerMod:-20, sciEffect:-5 },
-      { text:'🧪 Divert to Recycling', powerMod:-30, healthEffect:-15 }
-    ]
-  },
-  { id:'MOON-MOONQUAKE', type:'crisis', title:'🌋 Moonquake Damages Base', desc:'Shallow moonquake shaking outpost.',
-    insightTitle:'Apollo Seismic Data:', insightText:'Moonquakes last up to an hour, magnitude 5.5.',
-    scienceExplanation:'No water dampens seismic waves.',
-    options:[
-      { text:'🔧 Structural Repair', o2Effect:-10, powerMod:-25 },
-      { text:'🚪 Seal Damaged Modules', healthEffect:-20, o2Effect:+5 },
-      { text:'📡 Assess from Orbit', sciEffect:-8, powerMod:-15 }
-    ]
-  },
-  { id:'MOON-MICRO-SWARM', type:'crisis', title:'💨 Micrometeoroid Swarm', desc:'Dense swarm passing through. No atmosphere to burn up.',
-    insightTitle:'Lunar Meteorite Flux:', insightText:'Thousands of impacts per m² yearly without atmosphere.',
-    scienceExplanation:'Every tiny particle becomes a high-velocity bullet.',
-    options:[
-      { text:'🛡️ Full Shielding', powerMod:-30, shieldEffect:+15, o2Effect:-5 },
-      { text:'🤖 Deploy Repair Robots', powerMod:-20, shieldEffect:-10 },
-      { text:'⚡ Accept Damage', shieldEffect:-25, healthEffect:-10 }
-    ]
-  }
+  { id:'DUST', type:'crisis', title:'Dust Storm!', desc:'A high-velocity dust storm is burying solar panels!', timed:true, insightTitle:'NASA Mission Control:', insightText:'Dust reduces solar irradiance by up to 99%.', scienceExplanation:'Retracting arrays preserves hardware but forces reliance on battery reserves.', options:[
+    { text:'Retract Panels', desc:'Save the panels for future Sols, but the grid runs on battery only for 3 Sols.', action:'retract', o2Effect:-5, powerMod:-20, sciEffect:-5 },
+    { text:'Leave Exposed', desc:'Keep the grid online, but the storm may damage hardware and crew.', action:'expose', shieldEffect:-15, healthEffect:-5, sciEffect:+10 }
+  ]},
+  { id:'SPE', type:'crisis', title:'☀️ Solar Particle Event', desc:'Real M-class solar flare detected.', insightTitle:'NASA DONKI:', insightText:'Astronauts must weigh mission timelines against lifetime radiation dose.', scienceExplanation:'Storm shelters use water/polyethylene to absorb solar protons.', options:[
+    { text:'🛡️ Activate Storm Shelter', desc:'Full crew protection — but eats a big chunk of battery.', o2Effect:-5, shieldEffect:+25, powerMod:-20 },
+    { text:'⚡ Normal Ops', desc:'Save power, but expose the crew to dangerous radiation.', shieldEffect:-35, healthEffect:-10, sciEffect:-5 },
+    { text:'📡 Monitor DONKI Live', desc:'Partial protection at a modest power cost.', shieldEffect:-10, healthEffect:-5, powerMod:-8 }
+  ]},
+  { id:'BAT-EXP', type:'opportunity', title:'🔋 Battery Expansion Module', desc:'New battery module. Permanently expands storage.', insightTitle:'ISS Battery Upgrade:', insightText:'NASA replaced 48 Ni-H batteries with 24 Li-ion.', scienceExplanation:'More capacity absorbs bigger storms.', options:[
+    { text:'🔋 Install Full', desc:'Permanently expand the battery bank, at a steep current cost.', powerMod:-10, batteryMaxUp:+30 },
+    { text:'🧪 Test in Lab', desc:'Safer partial upgrade — smaller boost, plus some science.', sciEffect:+8, batteryMaxUp:+15 },
+    { text:'📦 Store for Later', desc:'Pocket a small amount of data, save the module for later.', sciEffect:+3 }
+  ]},
+  { id:'MICRO', type:'crisis', title:'🌪️ Micrometeorite Hull Breach', desc:'2mm micrometeoroid punctured outer hull. Pressure leak!', insightTitle:'ISS Impact Logs:', insightText:'Impacts up to 70 km/s punch clean holes in aluminum.', scienceExplanation:'EVAs carry vacuum hazards; robots minimize human risk.', options:[
+    { text:'🔧 Emergency EVA Patch', desc:'Send crew outside to seal the breach — risky but direct.', o2Effect:-15, shieldEffect:-5, healthEffect:-5, powerMod:-10 },
+    { text:'🚪 Seal Greenhouse', desc:'Cut food production to protect oxygen — crew takes a hit.', o2Effect:+5, healthEffect:-20 },
+    { text:'🤖 Repair Robot', desc:'Safe for the crew, but heavy on battery power.', o2Effect:-3, powerMod:-25 }
+  ]},
+  { id:'GRID-EXP', type:'opportunity', title:'⚡ Second Reactor Online', desc:'Compact fission surface power unit arrived.', insightTitle:'NASA Fission Surface Power:', insightText:'10+ kW lunar reactors planned for 2030s.', scienceExplanation:'More power lets you run all systems at once.', options:[
+    { text:'⚡ Connect Full', desc:'Big permanent power boost at a heavy battery cost.', powerMod:-25, powerGridUp:+50 },
+    { text:'🔧 Half Power', desc:'Moderate grid upgrade with a bit of science.', powerMod:-10, powerGridUp:+25, sciEffect:+5 },
+    { text:'📋 Defer', desc:'Save the reactor for later — small science gain now.', sciEffect:+3 }
+  ]},
+  { id:'CO2', type:'crisis', title:'🔌 CO₂ Scrubber Failure', desc:'CO₂ rising to toxic levels.', insightTitle:'Apollo 13 / ISS ECLSS:', insightText:'In 1970, crew adapted square LiOH canisters with tape!', scienceExplanation:'Without active absorption, air becomes unbreathable in hours.', options:[
+    { text:'🛠️ Improvise', desc:'Apollo-style tape-and-parts fix. Cheap but imperfect.', o2Effect:-5, healthEffect:-5, sciEffect:+5, powerMod:-10 },
+    { text:'🔋 Backup LiOH Canisters', desc:'Reliable chemical canisters — heavy battery drain.', o2Effect:+10, healthEffect:+5, powerMod:-20 },
+    { text:'🚪 Seal Non-Essential Modules', desc:'Save oxygen by sealing rooms off, crew suffers.', o2Effect:+15, healthEffect:-10, sciEffect:-5 }
+  ]},
+  { id:'SOLAR-EFF', type:'opportunity', title:'🧪 Dust-Resistant Solar Upgrade', desc:'Panel coating improved 15%!', insightTitle:'ISS Solar Array Optimization:', insightText:'Nanomaterial coatings prevent dust from clinging.', scienceExplanation:'Higher efficiency provides extra battery margin.', options:[
+    { text:'✅ Install Now', desc:'Boost battery reserve and gain some science.', sciEffect:+10, powerMod:+20 },
+    { text:'🔬 Continue Testing', desc:'Slower approach — more science, less battery gain.', sciEffect:+15, powerMod:+5 },
+    { text:'📤 Transmit Telemetry', desc:'Send data home — heavy science, small battery cost.', sciEffect:+15, powerMod:-5 }
+  ]},
+  { id:'QUIET', type:'opportunity', title:'🛰️ Quiet Space Weather', desc:'DONKI reports zero flares for 3 Sols.', insightTitle:'DONKI Monitoring:', insightText:'Calm weather allows safe long-range EVAs.', scienceExplanation:'Low solar flux lets you drop shielding power.', options:[
+    { text:'🚀 Extended EVA', desc:'Deep-field research — costs O₂ and battery.', o2Effect:-10, sciEffect:+15, powerMod:-10 },
+    { text:'🔧 Upgrade Grid', desc:'Boost grid capacity and battery reserve together.', shieldEffect:+5, powerMod:+10, powerGridUp:+20 },
+    { text:'🌱 Focus Hydroponics', desc:'Focus on crew health and food — no power cost.', healthEffect:+5, sciEffect:+10 }
+  ]},
+  { id:'HARVEST', type:'opportunity', title:'🌱 First Agriculture Harvest!', desc:'Fresh greens ready!', insightTitle:'ISS Veggie (2015):', insightText:'First space-grown lettuce eaten on ISS.', scienceExplanation:'Fresh greens provide antioxidants protecting eyes.', options:[
+    { text:'🥗 Feast on Greens', desc:'Fresh food for the crew — big health boost.', healthEffect:+15, sciEffect:+5 },
+    { text:'🧪 Lab Analyze', desc:'Trade nutrition for scientific data.', healthEffect:+5, sciEffect:+15 },
+    { text:'🌿 Save Seeds', desc:'Small health boost now, more food later.', healthEffect:+8, sciEffect:+3, powerMod:+5 }
+  ]},
+  { id:'SAMPLE', type:'tradeoff', title:'🔬 Core Sample Return', desc:'Regolith core may contain ancient water.', insightTitle:'Mars Sample Return:', insightText:'Earth labs have far more precise instruments.', scienceExplanation:'In-situ saves fuel, Earth labs offer higher precision.', options:[
+    { text:'📦 Launch to Earth', desc:'Maximum science from Earth labs — heavy battery cost.', sciEffect:+20, powerMod:-20 },
+    { text:'🧪 Analyze in Lab', desc:'Moderate science for a modest power cost.', sciEffect:+12, powerMod:-10 },
+    { text:'📋 Vault', desc:'Save the sample — only a small data gain.', sciEffect:+3 }
+  ]},
+  { id:'EVA-REST', type:'tradeoff', title:'🧑‍🚀 Emergency EVA vs. Rest', desc:'Rover stuck 1 km away. Crew worked 14 hrs.', insightTitle:'NASA Safety Rules:', insightText:'Fatigued spacewalkers make 40% more errors.', scienceExplanation:'Exhaustion reduces motor skills in suit gloves.', options:[
+    { text:'🚀 Push Crew', desc:'Push for science at the cost of O₂, shielding, and health.', o2Effect:-10, shieldEffect:-5, healthEffect:-10, sciEffect:+10 },
+    { text:'😴 Order Rest', desc:'Protect crew — small health boost, lose some science.', healthEffect:+5, sciEffect:-3, powerMod:+5 },
+    { text:'🤖 Send Robot', desc:'Let a robot do it — battery cost, saves the crew.', sciEffect:+3, powerMod:-15 }
+  ]},
+  { id:'MOON-TOXIC-DUST', type:'crisis', title:'☠️ Toxic Lunar Dust Infiltration', desc:'Abrasive dust breached airlock seals.', insightTitle:'Apollo Dust Findings:', insightText:'Apollo astronauts reported "lunar hay fever."', scienceExplanation:'Lunar regolith silica damages lung tissue.', options:[
+    { text:'🧹 Full Decontamination', desc:'Deep-clean the habitat — costs O₂ and power, protects crew.', o2Effect:-15, healthEffect:-5, powerMod:-20 },
+    { text:'🚪 Seal Modules', desc:'Cut off dusty sections. Cheap, but crew suffers.', o2Effect:-5, healthEffect:-15 },
+    { text:'💨 Air Filtration', desc:'Run heavy filters — big power draw, moderate protection.', powerMod:-25, healthEffect:-10 }
+  ]},
+  { id:'MOON-SOLAR-FLARE', type:'crisis', title:'☀️ Massive Solar Flare — No Atmosphere', desc:'X-class flare heading for the Moon.', insightTitle:'NASA DONKI:', insightText:'Moon gets 380 mSv/yr vs Mars 233 — no atmospheric shielding.', scienceExplanation:'No atmosphere, no magnetic field. Astronauts must shelter.', options:[
+    { text:'🛡️ Retreat to Shelter', desc:'Deep shelter for the crew — costs extreme power and O₂.', o2Effect:-20, shieldEffect:+20, powerMod:-30 },
+    { text:'⚡ Stay Operational', desc:'Risk the crew\'s health — saves power, absorbs radiation.', shieldEffect:-50, healthEffect:-20 },
+    { text:'📡 Emergency Power Down', desc:'Shut everything off — reduces radiation, saves power.', powerMod:-40, shieldEffect:-15 }
+  ]},
+  { id:'MOON-LUNAR-NIGHT', type:'crisis', title:'🌑 14-Day Lunar Night Begins', desc:'Sun sets for 14 days. −173°C. Solar useless.', insightTitle:'LRO Data:', insightText:'Lunar night lasts 14 Earth days — brutal for batteries.', scienceExplanation:'Without sunlight, all power from batteries or nuclear.', options:[
+    { text:'🔋 Conservation Mode', desc:'Minimal life support — crew suffers, but power holds.', o2Effect:-15, healthEffect:-10, powerMod:+15 },
+    { text:'☢️ RTG Nuclear Backup', desc:'Nuclear backup keeps things warm — some radiation cost.', shieldEffect:-15, powerMod:+25 },
+    { text:'🔥 Reduce Heating', desc:'Cold night for crew — saves power, costs health.', healthEffect:-20, powerMod:+10 }
+  ]},
+  { id:'MOON-NO-CARBON', type:'crisis', title:'🍽️ Food Crisis — No Carbon', desc:'Hydroponics failing. Lunar soil has no C or N.', insightTitle:'Lunar Resource Scarcity:', insightText:'Moon lacks carbon/nitrogen. Every gram needs resupply.', scienceExplanation:'Mars has CO₂ and N₂ — the Moon has neither.', options:[
+    { text:'📦 Ration Food', desc:'Half rations — health hit, but saves O₂.', healthEffect:-25, o2Effect:-5 },
+    { text:'🚀 Emergency Resupply', desc:'Call Earth for a food drop — slow and expensive.', healthEffect:-10, powerMod:-20, sciEffect:-5 },
+    { text:'🧪 Divert to Recycling', desc:'Heavy power draw to recycle nutrients — crew suffers.', powerMod:-30, healthEffect:-15 }
+  ]},
+  { id:'MOON-MOONQUAKE', type:'crisis', title:'🌋 Moonquake Damages Base', desc:'Shallow moonquake shaking outpost.', insightTitle:'Apollo Seismic Data:', insightText:'Moonquakes last up to an hour, magnitude 5.5.', scienceExplanation:'No water dampens seismic waves.', options:[
+    { text:'🔧 Structural Repair', desc:'Patch cracks immediately — moderate O₂ cost, heavy power.', o2Effect:-10, powerMod:-25 },
+    { text:'🚪 Seal Damaged Modules', desc:'Cut off damaged rooms — protects O₂, crew takes damage.', healthEffect:-20, o2Effect:+5 },
+    { text:'📡 Assess from Orbit', desc:'Wait for space imagery — loses science, saves power.', sciEffect:-8, powerMod:-15 }
+  ]},
+  { id:'MOON-MICRO-SWARM', type:'crisis', title:'💨 Micrometeoroid Swarm', desc:'Dense swarm passing through. No atmosphere to burn up.', insightTitle:'Lunar Meteorite Flux:', insightText:'Thousands of impacts per m² yearly without atmosphere.', scienceExplanation:'Every tiny particle becomes a high-velocity bullet.', options:[
+    { text:'🛡️ Full Shielding', desc:'Pour all power into shields — costly but safe.', powerMod:-30, shieldEffect:+15, o2Effect:-5 },
+    { text:'🤖 Deploy Repair Robots', desc:'Let machines handle damage — moderate power, some hits.', powerMod:-20, shieldEffect:-10 },
+    { text:'⚡ Accept Damage', desc:'Do nothing — save power, but take serious hits.', shieldEffect:-25, healthEffect:-10 }
+  ]}
 ];
 
-/* ============ THEMES ============ */
 const THEMES = {
   gold:    { border:'border-yellow-500/60', shadow:'shadow-yellow-500/30', iconBg:'bg-gradient-to-br from-yellow-400 to-amber-600', iconShadow:'shadow-yellow-500/50', header:'text-yellow-400', subtitle:'text-yellow-300', statBorder:'border-yellow-500/40', storyBorder:'border-yellow-500/30', storyBg:'bg-yellow-950/40', storyText:'text-yellow-100' },
   emerald: { border:'border-emerald-500/60', shadow:'shadow-emerald-500/30', iconBg:'bg-gradient-to-br from-emerald-400 to-teal-600', iconShadow:'shadow-emerald-500/50', header:'text-emerald-400', subtitle:'text-emerald-300', statBorder:'border-emerald-500/40', storyBorder:'border-emerald-500/30', storyBg:'bg-emerald-950/40', storyText:'text-emerald-100' },
@@ -640,72 +677,53 @@ const THEMES = {
   red:     { border:'border-red-500/60', shadow:'shadow-red-500/30', iconBg:'bg-gradient-to-br from-red-400 to-red-700', iconShadow:'shadow-red-500/50', header:'text-red-400', subtitle:'text-red-300', statBorder:'border-red-500/40', storyBorder:'border-red-500/30', storyBg:'bg-red-950/40', storyText:'text-red-100' }
 };
 
-/* ============ ENDINGS ============ */
 const ENDINGS = {
-  legend_moon: { iconFA: 'fa-crown', iconEmoji: '👑', isWin: true, theme: 'gold',
-    header: 'LEGENDARY MOON COMMANDER', subtitle: '🏆 You achieved what NASA only dreams of',
+  legend_moon: { iconFA: 'fa-crown', iconEmoji: '👑', isWin: true, theme: 'gold', header: 'LEGENDARY MOON COMMANDER', subtitle: '🏆 You achieved what NASA only dreams of',
     story: 'You commanded the Artemis Moon Base through {sol} brutal Sols on the most hostile surface in the solar system — no atmosphere, no carbon, toxic dust, worse radiation than anywhere else humans have ever stood. And yet: all four crew members alive, 500 science points collected, every system above 90%.',
     lesson: 'Real mission planners call this "nominal margins." You achieved it under conditions where they rarely do.' },
-  legend_mars: { iconFA: 'fa-crown', iconEmoji: '👑', isWin: true, theme: 'gold',
-    header: 'LEGENDARY MARS PIONEER', subtitle: '🏆 The first human Mars colony is secure',
+  legend_mars: { iconFA: 'fa-crown', iconEmoji: '👑', isWin: true, theme: 'gold', header: 'LEGENDARY MARS PIONEER', subtitle: '🏆 The first human Mars colony is secure',
     story: 'You commanded the Mars Jezero Outpost for {sol} Sols, keeping every system above 90% and every crew member healthy while collecting the full 500 science points.',
     lesson: 'Your mission data will inform the real Mars Sample Return campaign and NASA\'s first crewed Mars mission.' },
-  lightning: { iconFA: 'fa-bolt', iconEmoji: '⚡', isWin: true, theme: 'purple',
-    header: 'LIGHTNING VICTORY', subtitle: '⚡ Fastest science campaign on record',
+  lightning: { iconFA: 'fa-bolt', iconEmoji: '⚡', isWin: true, theme: 'purple', header: 'LIGHTNING VICTORY', subtitle: '⚡ Fastest science campaign on record',
     story: 'You collected 500 science points in just {sol} Sols — a pace NASA mission planners would call "impossible."',
     lesson: 'Real mission planners balance ambition against safety. This time, it worked.' },
-  outstanding: { iconFA: 'fa-medal', iconEmoji: '🏅', isWin: true, theme: 'emerald',
-    header: 'OUTSTANDING COMMANDER', subtitle: '🏅 Flawless mission management',
+  outstanding: { iconFA: 'fa-medal', iconEmoji: '🏅', isWin: true, theme: 'emerald', header: 'OUTSTANDING COMMANDER', subtitle: '🏅 Flawless mission management',
     story: 'You kept all vital systems above 75% while collecting 500 science points in {sol} Sols.',
     lesson: 'This is the standard NASA trains its Flight Directors to achieve.' },
-  steady: { iconFA: 'fa-award', iconEmoji: '🎖️', isWin: true, theme: 'cyan',
-    header: 'STRONG FLIGHT DIRECTOR', subtitle: '🎖️ Hard decisions, everyone alive',
+  steady: { iconFA: 'fa-award', iconEmoji: '🎖️', isWin: true, theme: 'cyan', header: 'STRONG FLIGHT DIRECTOR', subtitle: '🎖️ Hard decisions, everyone alive',
     story: 'You made tough calls, absorbed real costs, and still got your crew and science to the finish line.',
     lesson: 'This is what real mission command looks like under pressure.' },
-  director: { iconFA: 'fa-star', iconEmoji: '✨', isWin: true, theme: 'cyan',
-    header: 'FLIGHT DIRECTOR', subtitle: '✨ Mission accomplished — crew survived',
+  director: { iconFA: 'fa-star', iconEmoji: '✨', isWin: true, theme: 'cyan', header: 'FLIGHT DIRECTOR', subtitle: '✨ Mission accomplished — crew survived',
     story: 'You completed the mission. Not every decision was optimal, but you delivered the science and got your crew through.',
     lesson: 'The difference between a good and great commander is what they learn after the mission.' },
-  pyrrhic: { iconFA: 'fa-bandage', iconEmoji: '🩹', isWin: true, theme: 'amber',
-    header: 'PYRRHIC VICTORY', subtitle: '🩹 You won — but barely',
+  pyrrhic: { iconFA: 'fa-bandage', iconEmoji: '🩹', isWin: true, theme: 'amber', header: 'PYRRHIC VICTORY', subtitle: '🩹 You won — but barely',
     story: 'You reached 500 science points, but at a terrible cost. At least one critical system was pushed to the brink of total failure.',
     lesson: 'Real NASA flight directors would call this a "safety review case study."' },
-  cascade: { iconFA: 'fa-bomb', iconEmoji: '💥', isWin: false, theme: 'red',
-    header: 'CATASTROPHIC CASCADE', subtitle: '💥 Multiple systems failed at once',
+  cascade: { iconFA: 'fa-bomb', iconEmoji: '💥', isWin: false, theme: 'red', header: 'CATASTROPHIC CASCADE', subtitle: '💥 Multiple systems failed at once',
     story: 'One system failed, then another, then another. The cascade of failures overwhelmed the crew on Sol {sol}.',
     lesson: 'NASA trains specifically for cascade failures. Real crews drill these monthly.' },
-  suffocation: { iconFA: 'fa-lungs-virus', iconEmoji: '💨', isWin: false, theme: 'cyan',
-    header: 'CREW SUFFOCATED', subtitle: '💨 The air ran out',
+  suffocation: { iconFA: 'fa-lungs-virus', iconEmoji: '💨', isWin: false, theme: 'cyan', header: 'CREW SUFFOCATED', subtitle: '💨 The air ran out',
     story: 'Oxygen reserves hit zero on Sol {sol}.',
     lesson: 'In real NASA missions, oxygen is priority #1. Every other system comes second.' },
-  blackout: { iconFA: 'fa-bolt-lightning', iconEmoji: '🔋', isWin: false, theme: 'amber',
-    header: 'POWER BLACKOUT', subtitle: '🔋 The grid went dark',
+  blackout: { iconFA: 'fa-bolt-lightning', iconEmoji: '🔋', isWin: false, theme: 'amber', header: 'POWER BLACKOUT', subtitle: '🔋 The grid went dark',
     story: 'Battery reserves collapsed to zero on Sol {sol}. Every life-support system failed simultaneously.',
     lesson: 'Power failure often triggers every other failure.' },
-  radiation: { iconFA: 'fa-radiation', iconEmoji: '☢️', isWin: false, theme: 'purple',
-    header: 'RADIATION OVERWHELMED CREW', subtitle: '☢️ Shielding failed',
+  radiation: { iconFA: 'fa-radiation', iconEmoji: '☢️', isWin: false, theme: 'purple', header: 'RADIATION OVERWHELMED CREW', subtitle: '☢️ Shielding failed',
     story: 'Radiation shielding collapsed on Sol {sol} during a solar event.',
     lesson: 'Shielding is not optional — it is the thin line between exploration and tragedy.' },
-  starvation: { iconFA: 'fa-utensils', iconEmoji: '🍽️', isWin: false, theme: 'amber',
-    header: 'CREW STARVED', subtitle: '🍽️ Food and health collapsed',
+  starvation: { iconFA: 'fa-utensils', iconEmoji: '🍽️', isWin: false, theme: 'amber', header: 'CREW STARVED', subtitle: '🍽️ Food and health collapsed',
     story: 'Food stores ran out on Sol {sol}. Crew health collapsed.',
     lesson: 'Food self-sufficiency is one of NASA\'s hardest unsolved problems.' },
-  rookie: { iconFA: 'fa-hourglass', iconEmoji: '⏰', isWin: false, theme: 'red',
-    header: 'ROOKIE MISTAKE', subtitle: '⏰ The mission ended before it began',
+  rookie: { iconFA: 'fa-hourglass', iconEmoji: '⏰', isWin: false, theme: 'red', header: 'ROOKIE MISTAKE', subtitle: '⏰ The mission ended before it began',
     story: 'The mission ended in just {sol} Sols. Somewhere in your early decisions, you chose options that cost more than the crew could afford.',
     lesson: 'Read the option badges carefully next time — each one shows its cost.' },
-  heartbreak: { iconFA: 'fa-heart-crack', iconEmoji: '💔', isWin: false, theme: 'purple',
-    header: 'HEARTBREAK', subtitle: '💔 So close to victory',
+  heartbreak: { iconFA: 'fa-heart-crack', iconEmoji: '💔', isWin: false, theme: 'purple', header: 'HEARTBREAK', subtitle: '💔 So close to victory',
     story: 'You collected {science} of 500 science points before disaster struck on Sol {sol}.',
     lesson: 'The hardest failures are those closest to success. Go do it.' }
 };
 
-/* ============ BADGE STORAGE ============ */
 const BADGE_KEY = 'astro_outpost_badges_v1';
-const STORAGE_WORKS = (() => {
-  try { const t = '__astro_test__'; localStorage.setItem(t, '1'); localStorage.removeItem(t); return true; }
-  catch(e) { console.warn('[Astro Outpost] localStorage unavailable.'); return false; }
-})();
+const STORAGE_WORKS = (() => { try { const t = '__astro_test__'; localStorage.setItem(t, '1'); localStorage.removeItem(t); return true; } catch(e) { return false; } })();
 let _inMemoryBadges = [];
 
 function getUnlockedBadges() {
@@ -726,29 +744,22 @@ function unlockBadge(key) {
   unlocked.push(key);
   _inMemoryBadges = unlocked.slice();
   if (STORAGE_WORKS) { try { localStorage.setItem(BADGE_KEY, JSON.stringify(unlocked)); } catch(e) {} }
+  SFX.badge();
+  buzz([50, 30, 50, 30, 100]);
   return true;
 }
-function resetBadges() {
-  _inMemoryBadges = [];
-  if (STORAGE_WORKS) { try { localStorage.removeItem(BADGE_KEY); } catch(e) {} }
-}
+function resetBadges() { _inMemoryBadges = []; if (STORAGE_WORKS) { try { localStorage.removeItem(BADGE_KEY); } catch(e) {} } }
 function updateBadgeCounts() {
   const unlocked = getUnlockedBadges();
   const total = Object.keys(ENDINGS).length;
   const pct = (unlocked.length / total) * 100;
   const isComplete = unlocked.length === total;
   const headerEl = document.getElementById('badgeCountHeader');
-  if (headerEl) {
-    headerEl.textContent = `${unlocked.length}/${total}`;
-    headerEl.className = isComplete ? 'text-[10px] bg-yellow-400 text-black px-1.5 py-0.5 rounded font-mono font-black' : 'text-[10px] bg-yellow-500/20 px-1.5 py-0.5 rounded font-mono';
-  }
+  if (headerEl) { headerEl.textContent = `${unlocked.length}/${total}`; headerEl.className = isComplete ? 'text-[10px] bg-yellow-400 text-black px-1.5 py-0.5 rounded font-mono font-black' : 'text-[10px] bg-yellow-500/20 px-1.5 py-0.5 rounded font-mono'; }
   const countEl = document.getElementById('badgeCount');
   if (countEl) countEl.innerHTML = isComplete ? `${unlocked.length} / ${total} unlocked · <span class="text-yellow-400 font-bold">COMPLETE!</span>` : `${unlocked.length} / ${total} unlocked`;
   const progressEl = document.getElementById('badgeProgressBar');
-  if (progressEl) {
-    progressEl.style.width = `${pct}%`;
-    progressEl.className = isComplete ? 'h-full bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-400 transition-all duration-500 animate-pulse' : 'h-full bg-gradient-to-r from-yellow-500 to-amber-400 transition-all duration-500';
-  }
+  if (progressEl) { progressEl.style.width = `${pct}%`; progressEl.className = isComplete ? 'h-full bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-400 transition-all duration-500 animate-pulse' : 'h-full bg-gradient-to-r from-yellow-500 to-amber-400 transition-all duration-500'; }
   const warnEl = document.getElementById('storageWarning');
   if (warnEl) { if (!STORAGE_WORKS) warnEl.classList.remove('hidden'); else warnEl.classList.add('hidden'); }
 }
@@ -758,17 +769,9 @@ function renderBadgeGrid() {
   grid.innerHTML = Object.entries(ENDINGS).map(([key, e]) => {
     const t = THEMES[e.theme];
     if (unlocked.includes(key)) {
-      return `<div class="glass-card p-3 border-l-4 ${t.border} flex flex-col items-center text-center hover:scale-105 transition-transform cursor-default">
-        <div class="w-12 h-12 ${t.iconBg} text-white rounded-full flex items-center justify-center mb-2 ${t.iconShadow} shadow-lg"><i class="fa-solid ${e.iconFA} text-lg"></i></div>
-        <div class="text-[11px] font-bold ${t.header} leading-tight">${e.header}</div>
-        <div class="text-[9px] ${t.subtitle} mt-0.5 font-bold">${e.isWin ? '🏆 WIN' : '💀 LOSS'}</div>
-      </div>`;
+      return `<div class="glass-card p-3 border-l-4 ${t.border} flex flex-col items-center text-center hover:scale-105 transition-transform cursor-default"><div class="w-12 h-12 ${t.iconBg} text-white rounded-full flex items-center justify-center mb-2 ${t.iconShadow} shadow-lg"><i class="fa-solid ${e.iconFA} text-lg"></i></div><div class="text-[11px] font-bold ${t.header} leading-tight">${e.header}</div><div class="text-[9px] ${t.subtitle} mt-0.5 font-bold">${e.isWin ? '🏆 WIN' : '💀 LOSS'}</div></div>`;
     } else {
-      return `<div class="bg-black/70 rounded-xl p-3 border border-slate-800 flex flex-col items-center text-center badge-locked">
-        <div class="w-12 h-12 bg-slate-900 text-slate-700 rounded-full flex items-center justify-center mb-2 border border-slate-800"><i class="fa-solid fa-lock text-lg"></i></div>
-        <div class="text-[11px] font-bold text-slate-700 leading-tight">???</div>
-        <div class="text-[9px] text-slate-800 mt-0.5 font-bold">LOCKED</div>
-      </div>`;
+      return `<div class="bg-black/70 rounded-xl p-3 border border-slate-800 flex flex-col items-center text-center badge-locked"><div class="w-12 h-12 bg-slate-900 text-slate-700 rounded-full flex items-center justify-center mb-2 border border-slate-800"><i class="fa-solid fa-lock text-lg"></i></div><div class="text-[11px] font-bold text-slate-700 leading-tight">???</div><div class="text-[9px] text-slate-800 mt-0.5 font-bold">LOCKED</div></div>`;
     }
   }).join('');
   updateBadgeCounts();
@@ -777,62 +780,43 @@ function openBadgeCollection() { renderBadgeGrid(); const m = document.getElemen
 function closeBadgeCollection() { const m = document.getElementById('badgeModal'); m.classList.add('hidden'); m.classList.remove('flex'); }
 function confirmResetBadges() { if (confirm('Reset all badge progress? This cannot be undone.')) { resetBadges(); renderBadgeGrid(); } }
 
-/* ============ A.R.I.A. ============ */
 const ARIA = {
-  body: null, bubble: null, msgEl: null,
-  hideTimer: null, lastMsg: null, lastMood: 'idle',
-  init() {
-    this.body = document.getElementById('ariaBody');
-    this.bubble = document.getElementById('ariaBubble');
-    this.msgEl = document.getElementById('ariaMessage');
-    if (this.body) this.body.addEventListener('click', () => this.dismiss());
-  },
+  body: null, bubble: null, msgEl: null, hideTimer: null, lastMsg: null, lastMood: 'idle',
+  init() { this.body = document.getElementById('ariaBody'); this.bubble = document.getElementById('ariaBubble'); this.msgEl = document.getElementById('ariaMessage'); if (this.body) this.body.addEventListener('click', () => this.dismiss()); },
   setMood(mood) { if (this.body) this.body.className = 'aria-body mood-' + mood; },
   show(message, mood = 'idle', duration = 6000) {
     if (!this.bubble || !this.msgEl || !this.body) return;
-    clearTimeout(this.hideTimer);
-    this.setMood(mood);
+    clearTimeout(this.hideTimer); this.setMood(mood);
     this.msgEl.textContent = message;
     this.bubble.className = 'aria-bubble mood-' + mood;
     this.bubble.classList.remove('hidden');
     this.bubble.style.animation = 'none';
     void this.bubble.offsetWidth;
     this.bubble.style.animation = 'ariaBubbleIn 0.3s ease-out';
-    this.lastMsg = message;
-    this.lastMood = mood;
+    this.lastMsg = message; this.lastMood = mood;
     if (duration > 0) this.hideTimer = setTimeout(() => this.hide(), duration);
   },
   hide() { clearTimeout(this.hideTimer); if (this.bubble) this.bubble.classList.add('hidden'); this.setMood('idle'); },
-  dismiss() {
-    if (!this.bubble) return;
-    if (this.bubble.classList.contains('hidden')) { if (this.lastMsg) this.show(this.lastMsg, this.lastMood, 5000); }
-    else this.hide();
-  }
+  dismiss() { if (!this.bubble) return; if (this.bubble.classList.contains('hidden')) { if (this.lastMsg) this.show(this.lastMsg, this.lastMood, 5000); } else this.hide(); }
 };
 
 function checkAriaTriggers() {
   if (!currentOutpost || !missionStarted) return;
-  if (o2Level > 0 && o2Level < 25 && !ariaO2Warned) { ariaO2Warned = true; ARIA.show(`⚠️ OXYGEN at ${Math.round(o2Level)}%! Prioritize life support NOW, Commander!`, 'panic', 0); return; }
+  if (o2Level > 0 && o2Level < 25 && !ariaO2Warned) { ariaO2Warned = true; ARIA.show(`⚠️ OXYGEN at ${Math.round(o2Level)}%! Prioritize life support NOW, Commander!`, 'panic', 0); SFX.panic(); buzz([100,50,100,50,100]); return; }
   if (o2Level >= 40) ariaO2Warned = false;
-  if (batteryLevel > 0 && batteryLevel < 20 && !ariaBatteryWarned) { ariaBatteryWarned = true; ARIA.show(`Battery critical at ${Math.round(batteryLevel)}%! A blackout would kill everything!`, 'panic', 0); return; }
+  if (batteryLevel > 0 && batteryLevel < 20 && !ariaBatteryWarned) { ariaBatteryWarned = true; ARIA.show(`Battery critical at ${Math.round(batteryLevel)}%! A blackout would kill everything!`, 'panic', 0); SFX.panic(); buzz([100,50,100,50,100]); return; }
   if (batteryLevel >= 40) ariaBatteryWarned = false;
-  if (shieldIntegrity > 0 && shieldIntegrity < 20 && !ariaShieldWarned) { ariaShieldWarned = true; ARIA.show(`Shielding is failing! Cosmic radiation is dangerous!`, 'panic', 0); return; }
+  if (shieldIntegrity > 0 && shieldIntegrity < 20 && !ariaShieldWarned) { ariaShieldWarned = true; ARIA.show(`Shielding is failing! Cosmic radiation is dangerous!`, 'panic', 0); SFX.panic(); buzz([100,50,100,50,100]); return; }
   if (shieldIntegrity >= 40) ariaShieldWarned = false;
-  if (crewHealth > 0 && crewHealth < 20 && !ariaHealthWarned) { ariaHealthWarned = true; ARIA.show(`Crew health critical! They need food and rest — now!`, 'panic', 0); return; }
+  if (crewHealth > 0 && crewHealth < 20 && !ariaHealthWarned) { ariaHealthWarned = true; ARIA.show(`Crew health critical! They need food and rest — now!`, 'panic', 0); SFX.panic(); buzz([100,50,100,50,100]); return; }
   if (crewHealth >= 40) ariaHealthWarned = false;
-  if (sciencePoints >= 100 && !ariaSci100) { ariaSci100 = true; ARIA.show(`100 science points! Great progress, Commander!`, 'excited', 4500); return; }
-  if (sciencePoints >= 200 && !ariaSci200) { ariaSci200 = true; ARIA.show(`200 science points! NASA will be thrilled — major experiment success!`, 'excited', 5000); return; }
-  if (sciencePoints >= 300 && !ariaSci300) { ariaSci300 = true; ARIA.show(`300 points! Over halfway there! Keep it up!`, 'excited', 4500); return; }
-  if (sciencePoints >= 400 && !ariaSci400) { ariaSci400 = true; ARIA.show(`400 points! Almost victory, Commander!`, 'excited', 4500); return; }
+  if (sciencePoints >= 100 && !ariaSci100) { ariaSci100 = true; ARIA.show(`100 science points! Great progress, Commander!`, 'excited', 4500); SFX.milestone(); buzz([30,20,30]); return; }
+  if (sciencePoints >= 200 && !ariaSci200) { ariaSci200 = true; ARIA.show(`200 science points! NASA will be thrilled — major experiment success!`, 'excited', 5000); SFX.milestone(); buzz([30,20,30,20,60]); return; }
+  if (sciencePoints >= 300 && !ariaSci300) { ariaSci300 = true; ARIA.show(`300 points! Over halfway there! Keep it up!`, 'excited', 4500); SFX.milestone(); buzz([30,20,30]); return; }
+  if (sciencePoints >= 400 && !ariaSci400) { ariaSci400 = true; ARIA.show(`400 points! Almost victory, Commander!`, 'excited', 4500); SFX.milestone(); buzz([30,20,30,20,60]); return; }
 }
-function resetAriaState() {
-  ariaO2Warned = ariaBatteryWarned = ariaShieldWarned = ariaHealthWarned = false;
-  ariaSci100 = ariaSci200 = ariaSci300 = ariaSci400 = false;
-  ariaFirstEventShown = false;
-  ARIA.hide();
-}
+function resetAriaState() { ariaO2Warned = ariaBatteryWarned = ariaShieldWarned = ariaHealthWarned = false; ariaSci100 = ariaSci200 = ariaSci300 = ariaSci400 = false; ariaFirstEventShown = false; ARIA.hide(); }
 
-/* ============ ENDING LOGIC ============ */
 function determineEnding(won) {
   const avg = Math.round((o2Level + (batteryLevel/batteryMax)*100 + shieldIntegrity + crewHealth) / 4);
   const isMoon = currentOutpost === 'moon';
@@ -841,24 +825,10 @@ function determineEnding(won) {
   if (batteryLevel <= 0) failed.push('battery');
   if (shieldIntegrity <= 0) failed.push('shield');
   if (crewHealth <= 0) failed.push('health');
-  if (won) {
-    if (avg >= 90) return isMoon ? 'legend_moon' : 'legend_mars';
-    if (sol <= 8) return 'lightning';
-    if (avg >= 75) return 'outstanding';
-    if (avg >= 50) return 'steady';
-    if (avg >= 30) return 'director';
-    return 'pyrrhic';
-  } else {
-    if (sol <= 5 && failed.length === 1) return 'rookie';
-    if (sciencePoints >= 400 && failed.length === 1) return 'heartbreak';
-    if (failed.length >= 2) return 'cascade';
-    if (failed.includes('oxygen')) return 'suffocation';
-    if (failed.includes('battery')) return 'blackout';
-    if (failed.includes('shield')) return 'radiation';
-    if (failed.includes('health')) return 'starvation';
-    return 'cascade';
-  }
+  if (won) { if (avg >= 90) return isMoon ? 'legend_moon' : 'legend_mars'; if (sol <= 8) return 'lightning'; if (avg >= 75) return 'outstanding'; if (avg >= 50) return 'steady'; if (avg >= 30) return 'director'; return 'pyrrhic'; }
+  else { if (sol <= 5 && failed.length === 1) return 'rookie'; if (sciencePoints >= 400 && failed.length === 1) return 'heartbreak'; if (failed.length >= 2) return 'cascade'; if (failed.includes('oxygen')) return 'suffocation'; if (failed.includes('battery')) return 'blackout'; if (failed.includes('shield')) return 'radiation'; if (failed.includes('health')) return 'starvation'; return 'cascade'; }
 }
+
 function renderEnding(won) {
   const endingKey = determineEnding(won);
   const isNewBadge = unlockBadge(endingKey);
@@ -889,51 +859,39 @@ function renderEnding(won) {
     <button onclick="restartMission()" class="w-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-black text-sm py-3 rounded-xl shadow-lg uppercase tracking-wider">${won ? '🚀 Fly Another Mission' : '🔄 Return to Mode Selection'}</button>
   `;
   const modal = document.getElementById('debriefModal');
-  modal.classList.remove('hidden');
-  modal.classList.add('flex');
-  if (won) ARIA.show(`MISSION ACCOMPLISHED! I'm so proud of you, Commander! 🎉`, 'excited', 0);
-  else ARIA.show(`We lost the crew... but their data lives on. Let's try again, Commander.`, 'sad', 0);
+  modal.classList.remove('hidden'); modal.classList.add('flex');
+  if (won) { SFX.win(); buzz([60,40,60,40,200]); ARIA.show(`MISSION ACCOMPLISHED! I'm so proud of you, Commander! 🎉`, 'excited', 0); }
+  else { SFX.lose(); buzz([200,100,200]); ARIA.show(`We lost the crew... but their data lives on. Let's try again, Commander.`, 'sad', 0); }
 }
 
-/* ============ MODE SELECTION ============ */
 function showModeSelect() { const m = document.getElementById('modeSelectModal'); m.classList.remove('hidden'); m.classList.add('flex'); ARIA.hide(); }
 function selectMode(type) {
   currentOutpost = type;
   applyModeModifiers(type);
-  const badgeIcon = document.getElementById('modeBadgeIcon');
-  const badgeText = document.getElementById('modeBadgeText');
-  const badge = document.getElementById('modeBadge');
+  const badgeIcon = document.getElementById('modeBadgeIcon'); const badgeText = document.getElementById('modeBadgeText'); const badge = document.getElementById('modeBadge');
   if (type === 'moon') { badgeIcon.textContent = '🌙'; badgeText.textContent = 'Moon · HARD'; badgeText.className = 'text-red-300 font-bold'; badge.className = 'bg-red-950/60 px-3 py-1.5 rounded-xl border border-red-500/50 flex items-center gap-1.5 text-xs transition-all'; }
   else { badgeIcon.textContent = '🔴'; badgeText.textContent = 'Mars · EASY'; badgeText.className = 'text-emerald-300 font-bold'; badge.className = 'bg-emerald-950/60 px-3 py-1.5 rounded-xl border border-emerald-500/50 flex items-center gap-1.5 text-xs transition-all'; }
   const banner = document.getElementById('selectedModeBanner');
   if (type === 'moon') { banner.className = 'text-center text-sm font-bold py-2 rounded-xl mb-4 bg-red-950/50 border border-red-500/40 text-red-300'; banner.innerHTML = '🌙 You selected MOON — HARD MODE'; }
   else { banner.className = 'text-center text-sm font-bold py-2 rounded-xl mb-4 bg-emerald-950/50 border border-emerald-500/40 text-emerald-300'; banner.innerHTML = '🔴 You selected MARS — EASY MODE'; }
-  document.getElementById('modeSelectModal').classList.add('hidden');
-  document.getElementById('modeSelectModal').classList.remove('flex');
-  document.getElementById('tutorialModal').classList.remove('hidden');
-  document.getElementById('tutorialModal').classList.add('flex');
+  document.getElementById('modeSelectModal').classList.add('hidden'); document.getElementById('modeSelectModal').classList.remove('flex');
+  document.getElementById('tutorialModal').classList.remove('hidden'); document.getElementById('tutorialModal').classList.add('flex');
 }
 function applyModeModifiers(type) {
-  const badge = document.getElementById('locationBadge');
-  const mods = document.getElementById('outpostModifiers');
+  const badge = document.getElementById('locationBadge'); const mods = document.getElementById('outpostModifiers');
   if (type === 'moon') {
-    badge.innerText = 'Lunar South Pole · HARD';
-    badge.className = 'text-[11px] font-semibold bg-red-500/10 text-red-300 border border-red-500/30 px-2 py-0.5 rounded-full';
-    document.getElementById('envTemp').innerText = '-160°C';
-    document.getElementById('envTau').innerText = '0.0';
+    badge.innerText = 'Lunar South Pole · HARD'; badge.className = 'text-[11px] font-semibold bg-red-500/10 text-red-300 border border-red-500/30 px-2 py-0.5 rounded-full';
+    document.getElementById('envTemp').innerText = '-160°C'; document.getElementById('envTau').innerText = '0.0';
     o2DrainPerSol = 6; scienceMult = 0.7; batteryRechargePerSol = 2;
     mods.innerHTML = '🌙 <span class="text-red-300 font-bold">Moon (HARD)</span>: O₂ −6/Sol · Science ×0.7 · Battery +2/Sol';
   } else {
-    badge.innerText = 'Jezero Crater · EASY';
-    badge.className = 'text-[11px] font-semibold bg-emerald-500/10 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded-full';
-    document.getElementById('envTemp').innerText = '-62°C';
-    document.getElementById('envTau').innerText = '0.4';
+    badge.innerText = 'Jezero Crater · EASY'; badge.className = 'text-[11px] font-semibold bg-emerald-500/10 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded-full';
+    document.getElementById('envTemp').innerText = '-62°C'; document.getElementById('envTau').innerText = '0.4';
     o2DrainPerSol = 4; scienceMult = 1.2; batteryRechargePerSol = 4;
     mods.innerHTML = '🔴 <span class="text-emerald-300 font-bold">Mars (EASY)</span>: O₂ −4/Sol · Science ×1.2 · Battery +4/Sol';
   }
 }
 
-/* ============ EVENT LIBRARY ============ */
 function openEventLibrary() {
   const body = document.getElementById('eventLibraryBody');
   const groups = { crisis: [], opportunity: [], tradeoff: [] };
@@ -941,8 +899,7 @@ function openEventLibrary() {
   const labels = { crisis: { name: '🔴 Crisis Events', border: 'border-red-500/40', color: 'text-red-300' }, opportunity: { name: '🟢 Opportunities', border: 'border-emerald-500/40', color: 'text-emerald-300' }, tradeoff: { name: '🟡 Trade-offs', border: 'border-amber-500/40', color: 'text-amber-300' } };
   let html = '';
   for (const type of ['crisis', 'opportunity', 'tradeoff']) {
-    const evs = groups[type];
-    if (!evs.length) continue;
+    const evs = groups[type]; if (!evs.length) continue;
     html += `<div class="mb-4"><div class="text-sm font-bold ${labels[type].color} mb-2">${labels[type].name} (${evs.length})</div><div class="space-y-2">`;
     evs.forEach(ev => {
       const isMoonOnly = ev.id.startsWith('MOON-');
@@ -957,15 +914,17 @@ function openEventLibrary() {
         if (opt.shieldEffect) badges.push(`<span class="${opt.shieldEffect>=0?'text-emerald-400':'text-red-400'} font-mono">🛡️${opt.shieldEffect>=0?'+':''}${opt.shieldEffect}</span>`);
         if (opt.healthEffect) badges.push(`<span class="${opt.healthEffect>=0?'text-emerald-400':'text-red-400'} font-mono">🌱${opt.healthEffect>=0?'+':''}${opt.healthEffect}</span>`);
         if (opt.sciEffect) badges.push(`<span class="${opt.sciEffect>=0?'text-emerald-400':'text-red-400'} font-mono">🔬${opt.sciEffect>=0?'+':''}${opt.sciEffect}</span>`);
-        html += `<div class="text-[10px] text-slate-300 flex justify-between bg-slate-900/60 rounded px-2 py-1"><span class="flex-1">${i+1}. ${opt.text}</span><span class="flex gap-1">${badges.join('')}</span></div>`;
+        html += `<div class="text-[10px] text-slate-300 bg-slate-900/60 rounded px-2 py-1.5">
+          <div class="flex justify-between gap-2"><span class="flex-1 font-bold">${i+1}. ${opt.text}</span><span class="flex gap-1">${badges.join('')}</span></div>
+          <div class="text-[10px] text-slate-500 italic mt-0.5">${opt.desc || ''}</div>
+        </div>`;
       });
       html += `</div></div>`;
     });
     html += `</div></div>`;
   }
   body.innerHTML = html;
-  document.getElementById('eventLibraryModal').classList.remove('hidden');
-  document.getElementById('eventLibraryModal').classList.add('flex');
+  document.getElementById('eventLibraryModal').classList.remove('hidden'); document.getElementById('eventLibraryModal').classList.add('flex');
 }
 function closeEventLibrary() { document.getElementById('eventLibraryModal').classList.add('hidden'); document.getElementById('eventLibraryModal').classList.remove('flex'); }
 function showTutorial() { if (!currentOutpost) return; const m = document.getElementById('tutorialModal'); m.classList.remove('hidden'); m.classList.add('flex'); }
@@ -974,10 +933,10 @@ function startMissionFromTutorial() {
   document.getElementById('tutorialModal').classList.remove('flex');
   if (!currentEvent) loadSolEvent();
   missionStarted = true;
+  BGM.start();
   setTimeout(() => ARIA.show(`A.R.I.A. online! I'm your mission assistant, Commander. Let's keep these astronauts safe!`, 'happy', 7000), 400);
 }
 
-/* ============ CANVAS ============ */
 function initCanvas() {
   const canvas = document.getElementById('outpostCanvas');
   const ctx = canvas.getContext('2d');
@@ -987,114 +946,64 @@ function initCanvas() {
   function render() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     let shakeX = 0, shakeY = 0;
-    if (canvasFX.shake) {
-      const t = (Date.now() - canvasFX.shake.start) / canvasFX.shake.duration;
-      if (t < 1) { const k = canvasFX.shake.intensity * (1 - t); shakeX = (Math.random() - 0.5) * k * 2; shakeY = (Math.random() - 0.5) * k * 2; }
-      else canvasFX.shake = null;
-    }
+    if (canvasFX.shake) { const t = (Date.now() - canvasFX.shake.start) / canvasFX.shake.duration; if (t < 1) { const k = canvasFX.shake.intensity * (1 - t); shakeX = (Math.random() - 0.5) * k * 2; shakeY = (Math.random() - 0.5) * k * 2; } else canvasFX.shake = null; }
     ctx.save(); ctx.translate(shakeX, shakeY);
     if (currentOutpost === 'moon') {
       ctx.fillStyle = '#030712'; ctx.fillRect(-10, -10, canvas.width+20, canvas.height+20);
-      ctx.fillStyle = '#ffffff';
-      for (let i = 0; i < 30; i++) ctx.fillRect((i*47)%canvas.width, (i*23)%(canvas.height*0.6), (i%2)+1, (i%2)+1);
-      ctx.fillStyle = '#334155';
-      ctx.beginPath(); ctx.ellipse(canvas.width/2, canvas.height+40, canvas.width*0.7, 100, 0, 0, Math.PI*2); ctx.fill();
+      ctx.fillStyle = '#ffffff'; for (let i = 0; i < 30; i++) ctx.fillRect((i*47)%canvas.width, (i*23)%(canvas.height*0.6), (i%2)+1, (i%2)+1);
+      ctx.fillStyle = '#334155'; ctx.beginPath(); ctx.ellipse(canvas.width/2, canvas.height+40, canvas.width*0.7, 100, 0, 0, Math.PI*2); ctx.fill();
     } else if (currentOutpost === 'mars') {
-      let g = ctx.createLinearGradient(0,0,0,canvas.height);
-      g.addColorStop(0,'#7c2d12'); g.addColorStop(1,'#451a03');
+      let g = ctx.createLinearGradient(0,0,0,canvas.height); g.addColorStop(0,'#7c2d12'); g.addColorStop(1,'#451a03');
       ctx.fillStyle = g; ctx.fillRect(-10, -10, canvas.width+20, canvas.height+20);
-      ctx.fillStyle = '#9a3412';
-      ctx.beginPath(); ctx.ellipse(canvas.width/2, canvas.height+30, canvas.width*0.7, 90, 0, 0, Math.PI*2); ctx.fill();
+      ctx.fillStyle = '#9a3412'; ctx.beginPath(); ctx.ellipse(canvas.width/2, canvas.height+30, canvas.width*0.7, 90, 0, 0, Math.PI*2); ctx.fill();
     } else {
       ctx.fillStyle = '#0b1020'; ctx.fillRect(-10, -10, canvas.width+20, canvas.height+20);
-      ctx.fillStyle = '#ffffff';
-      for (let i = 0; i < 20; i++) ctx.fillRect((i*67)%canvas.width, (i*31)%(canvas.height*0.7), 1, 1);
+      ctx.fillStyle = '#ffffff'; for (let i = 0; i < 20; i++) ctx.fillRect((i*67)%canvas.width, (i*31)%(canvas.height*0.7), 1, 1);
     }
     if (currentOutpost) {
       const cx = canvas.width/2, cy = canvas.height - 35;
       ctx.fillStyle = 'rgba(224,242,254,0.2)'; ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 3;
       ctx.beginPath(); ctx.arc(cx, cy, 50, Math.PI, 0); ctx.fill(); ctx.stroke();
       if (shieldIntegrity > 20) { ctx.strokeStyle = 'rgba(56,189,248,0.4)'; ctx.lineWidth = 5; ctx.beginPath(); ctx.arc(cx, cy, 62, Math.PI*1.1, Math.PI*1.9); ctx.stroke(); }
-      if (!panelsRetracted) {
-        ctx.fillStyle = '#1e3a8a'; ctx.strokeStyle = '#60a5fa'; ctx.lineWidth = 1;
-        ctx.fillRect(cx-95, cy-12, 35, 12); ctx.strokeRect(cx-95, cy-12, 35, 12);
-        ctx.fillRect(cx+60, cy-12, 35, 12); ctx.strokeRect(cx+60, cy-12, 35, 12);
-      } else { ctx.fillStyle = '#475569'; ctx.fillRect(cx-65, cy-8, 12, 8); ctx.fillRect(cx+53, cy-8, 12, 8); }
-      ctx.strokeStyle = 'rgba(16,185,129,0.3)'; ctx.lineWidth = 1;
-      ctx.beginPath(); ctx.arc(30, 30, 18, 0, Math.PI*2); ctx.stroke();
-      ctx.strokeStyle = '#10b981';
-      ctx.beginPath(); ctx.moveTo(30, 30); ctx.lineTo(30+Math.cos(radarAngle)*18, 30+Math.sin(radarAngle)*18); ctx.stroke();
+      if (!panelsRetracted) { ctx.fillStyle = '#1e3a8a'; ctx.strokeStyle = '#60a5fa'; ctx.lineWidth = 1; ctx.fillRect(cx-95, cy-12, 35, 12); ctx.strokeRect(cx-95, cy-12, 35, 12); ctx.fillRect(cx+60, cy-12, 35, 12); ctx.strokeRect(cx+60, cy-12, 35, 12); }
+      else { ctx.fillStyle = '#475569'; ctx.fillRect(cx-65, cy-8, 12, 8); ctx.fillRect(cx+53, cy-8, 12, 8); }
+      ctx.strokeStyle = 'rgba(16,185,129,0.3)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(30, 30, 18, 0, Math.PI*2); ctx.stroke();
+      ctx.strokeStyle = '#10b981'; ctx.beginPath(); ctx.moveTo(30, 30); ctx.lineTo(30+Math.cos(radarAngle)*18, 30+Math.sin(radarAngle)*18); ctx.stroke();
       radarAngle += 0.05;
     }
-    for (let i = canvasFX.particles.length - 1; i >= 0; i--) {
-      const p = canvasFX.particles[i];
-      p.x += p.vx; p.y += p.vy; p.life -= 1;
-      if (p.life <= 0) { canvasFX.particles.splice(i, 1); continue; }
-      ctx.globalAlpha = Math.max(0, p.life / p.maxLife);
-      ctx.fillStyle = p.color;
-      ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2); ctx.fill();
-    }
+    for (let i = canvasFX.particles.length - 1; i >= 0; i--) { const p = canvasFX.particles[i]; p.x += p.vx; p.y += p.vy; p.life -= 1; if (p.life <= 0) { canvasFX.particles.splice(i, 1); continue; } ctx.globalAlpha = Math.max(0, p.life / p.maxLife); ctx.fillStyle = p.color; ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2); ctx.fill(); }
     ctx.globalAlpha = 1;
     if (canvasFX.rays) {
       const t = (Date.now() - canvasFX.rays.start) / canvasFX.rays.duration;
       if (t < 1) {
         const cx = canvas.width/2, cy = canvas.height/2;
         ctx.globalAlpha = 0.6 * (1 - t); ctx.strokeStyle = canvasFX.rays.color; ctx.lineWidth = 3;
-        for (let i = 0; i < canvasFX.rays.count; i++) {
-          const angle = (i / canvasFX.rays.count) * Math.PI * 2 + t * 3;
-          const len = 60 + Math.random() * 40;
-          ctx.beginPath(); ctx.moveTo(cx + Math.cos(angle) * 15, cy + Math.sin(angle) * 15); ctx.lineTo(cx + Math.cos(angle) * len, cy + Math.sin(angle) * len); ctx.stroke();
-        }
+        for (let i = 0; i < canvasFX.rays.count; i++) { const angle = (i / canvasFX.rays.count) * Math.PI * 2 + t * 3; const len = 60 + Math.random() * 40; ctx.beginPath(); ctx.moveTo(cx + Math.cos(angle) * 15, cy + Math.sin(angle) * 15); ctx.lineTo(cx + Math.cos(angle) * len, cy + Math.sin(angle) * len); ctx.stroke(); }
         ctx.globalAlpha = 1;
       } else canvasFX.rays = null;
     }
     for (let i = canvasFX.icons.length - 1; i >= 0; i--) {
-      const ic = canvasFX.icons[i];
-      const t = (Date.now() - ic.start) / ic.duration;
+      const ic = canvasFX.icons[i]; const t = (Date.now() - ic.start) / ic.duration;
       if (t >= 1) { canvasFX.icons.splice(i, 1); continue; }
-      ctx.globalAlpha = 1 - t; ctx.font = '24px serif'; ctx.textAlign = 'center';
-      ctx.fillText(ic.emoji, ic.x, ic.y + ic.vy * t);
-      ctx.globalAlpha = 1;
+      ctx.globalAlpha = 1 - t; ctx.font = '24px serif'; ctx.textAlign = 'center'; ctx.fillText(ic.emoji, ic.x, ic.y + ic.vy * t); ctx.globalAlpha = 1;
     }
     ctx.restore();
-    if (canvasFX.tint) {
-      const t = (Date.now() - canvasFX.tint.start) / canvasFX.tint.duration;
-      if (t < 1) { ctx.save(); ctx.globalAlpha = canvasFX.tint.alpha * (1 - t); ctx.fillStyle = canvasFX.tint.color; ctx.fillRect(0, 0, canvas.width, canvas.height); ctx.restore(); }
-      else canvasFX.tint = null;
-    }
-    if (canvasFX.flash) {
-      const t = (Date.now() - canvasFX.flash.start) / canvasFX.flash.duration;
-      if (t < 1) { ctx.save(); ctx.globalAlpha = (1 - t) * 0.75; ctx.fillStyle = canvasFX.flash.color; ctx.fillRect(0, 0, canvas.width, canvas.height); ctx.restore(); }
-      else canvasFX.flash = null;
-    }
+    if (canvasFX.tint) { const t = (Date.now() - canvasFX.tint.start) / canvasFX.tint.duration; if (t < 1) { ctx.save(); ctx.globalAlpha = canvasFX.tint.alpha * (1 - t); ctx.fillStyle = canvasFX.tint.color; ctx.fillRect(0, 0, canvas.width, canvas.height); ctx.restore(); } else canvasFX.tint = null; }
+    if (canvasFX.flash) { const t = (Date.now() - canvasFX.flash.start) / canvasFX.flash.duration; if (t < 1) { ctx.save(); ctx.globalAlpha = (1 - t) * 0.75; ctx.fillStyle = canvasFX.flash.color; ctx.fillRect(0, 0, canvas.width, canvas.height); ctx.restore(); } else canvasFX.flash = null; }
     requestAnimationFrame(render);
   }
   render();
 }
 
 function triggerCanvasFX(eventId, eventType) {
-  const canvas = document.getElementById('outpostCanvas');
-  const wrapper = canvas.parentElement;
-  const W = canvas.width, H = canvas.height;
-  const now = Date.now();
+  const canvas = document.getElementById('outpostCanvas'); const wrapper = canvas.parentElement;
+  const W = canvas.width, H = canvas.height; const now = Date.now();
   if (!canvasFX.particles) canvasFX.particles = [];
   if (!canvasFX.icons) canvasFX.icons = [];
-  wrapper.classList.remove('crisis-pulse', 'good-pulse');
-  void wrapper.offsetWidth;
-  if (eventType === 'crisis') wrapper.classList.add('crisis-pulse');
-  else if (eventType === 'opportunity') wrapper.classList.add('good-pulse');
+  wrapper.classList.remove('crisis-pulse', 'good-pulse'); void wrapper.offsetWidth;
+  if (eventType === 'crisis') wrapper.classList.add('crisis-pulse'); else if (eventType === 'opportunity') wrapper.classList.add('good-pulse');
   setTimeout(() => wrapper.classList.remove('crisis-pulse', 'good-pulse'), 2600);
-  const spawn = (count, cfg) => {
-    for (let i = 0; i < count; i++) {
-      canvasFX.particles.push({
-        x: cfg.x !== undefined ? cfg.x(W, i) : Math.random() * W,
-        y: cfg.y !== undefined ? cfg.y(H, i) : Math.random() * H,
-        vx: cfg.vx(W, i), vy: cfg.vy(H, i),
-        size: cfg.size(), color: cfg.color(i),
-        life: cfg.life(), maxLife: cfg.life()
-      });
-    }
-  };
+  const spawn = (count, cfg) => { for (let i = 0; i < count; i++) { canvasFX.particles.push({ x: cfg.x !== undefined ? cfg.x(W, i) : Math.random() * W, y: cfg.y !== undefined ? cfg.y(H, i) : Math.random() * H, vx: cfg.vx(W, i), vy: cfg.vy(H, i), size: cfg.size(), color: cfg.color(i), life: cfg.life(), maxLife: cfg.life() }); } };
   switch (eventId) {
     case 'DUST': spawn(50, { vx: () => 2 + Math.random() * 4, vy: () => (Math.random() - 0.5) * 2, size: () => 1.5 + Math.random() * 2, color: () => `hsl(30, 65%, ${40 + Math.random() * 25}%)`, life: () => 70 + Math.random() * 40 }); canvasFX.tint = { color: 'rgba(180, 100, 30, 1)', alpha: 0.35, start: now, duration: 4000 }; break;
     case 'SPE': canvasFX.flash = { color: 'rgba(255, 150, 50, 1)', start: now, duration: 800 }; canvasFX.tint = { color: 'rgba(255, 80, 20, 1)', alpha: 0.25, start: now, duration: 2500 }; spawn(35, { x: () => Math.random() * W, y: () => -10 - Math.random() * 30, vx: () => (Math.random() - 0.5), vy: () => 2 + Math.random() * 2, size: () => 1 + Math.random() * 2, color: () => '#ff5030', life: () => 80 }); break;
@@ -1116,18 +1025,15 @@ function triggerCanvasFX(eventId, eventType) {
   }
 }
 
-/* ============ POWER ============ */
 function adjustPower(type, delta) {
   const sliderId = type === 'o2' ? 'sliderO2' : (type === 'shield' ? 'sliderShield' : 'sliderScience');
-  const slider = document.getElementById(sliderId);
-  if (!slider) return;
-  const min = parseInt(slider.min);
-  const max = parseInt(slider.max);
+  const slider = document.getElementById(sliderId); if (!slider) return;
+  const min = parseInt(slider.min), max = parseInt(slider.max);
   let newVal = parseInt(slider.value) + delta;
-  if (newVal < min) newVal = min;
-  if (newVal > max) newVal = max;
+  if (newVal < min) newVal = min; if (newVal > max) newVal = max;
   slider.value = newVal;
   updatePowerAllocation();
+  buzz(8);
 }
 
 function updatePowerAllocation() {
@@ -1141,51 +1047,46 @@ function updatePowerAllocation() {
   document.getElementById('valPowerUsed').innerText = routed;
   document.getElementById('valPowerGen').innerText = powerGridMax + ' kW';
   document.getElementById('valPowerCap').innerText = powerGridMax + ' kW';
-  // Highlight "Routed" red if over capacity
   const routedEl = document.getElementById('valPowerUsed');
-  if (routed > powerGridMax) {
-    routedEl.className = 'font-mono font-bold text-red-400 animate-pulse';
+  if (routed > powerGridMax) routedEl.className = 'font-mono font-bold text-red-400 animate-pulse';
+  else routedEl.className = 'font-mono font-bold text-emerald-400';
+}
+
+function updatePanelBadge() {
+  const badge = document.getElementById('panelStatusBadge');
+  if (!badge) return;
+  if (!panelsRetracted) {
+    badge.innerText = 'Panels: Deployed';
+    badge.className = 'absolute top-2 left-2 bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[10px] font-bold px-2 py-0.5 rounded-full backdrop-blur z-10';
   } else {
-    routedEl.className = 'font-mono font-bold text-emerald-400';
+    const plural = panelsRetractCountdown === 1 ? 'Sol' : 'Sols';
+    badge.innerText = `Panels: Retracted (${panelsRetractCountdown} ${plural})`;
+    badge.className = 'absolute top-2 left-2 bg-amber-500/20 text-amber-300 border border-amber-500/40 text-[10px] font-bold px-2 py-0.5 rounded-full backdrop-blur z-10';
   }
 }
 
-/* ============ EVENT LOADER ============ */
 function loadSolEvent() {
   chosenOptionThisSol = false;
   clearInterval(timerInterval);
   document.getElementById('timerContainer').classList.add('hidden');
   document.getElementById('btnAdvanceSol').disabled = true;
-
-  let availableEvents = eventPool.filter(ev => {
-    if (currentOutpost === 'mars' && ev.id.startsWith('MOON-')) return false;
-    return true;
-  });
-
+  let availableEvents = eventPool.filter(ev => { if (currentOutpost === 'mars' && ev.id.startsWith('MOON-')) return false; return true; });
   const idx = (sol - 1) % availableEvents.length;
   currentEvent = availableEvents[idx];
-
   triggerCanvasFX(currentEvent.id, currentEvent.type);
-
+  if (currentEvent.type === 'crisis') { SFX.crisis(); buzz([60,30,60]); }
+  else if (currentEvent.type === 'opportunity') { SFX.opportunity(); buzz([30]); }
   document.getElementById('eventSolLabel').innerText = `Sol ${sol} Trade-Off`;
   document.getElementById('eventTitle').innerText = currentEvent.title;
   document.getElementById('eventDescription').innerText = currentEvent.desc;
   document.getElementById('dataInsightTitle').innerText = currentEvent.insightTitle;
   document.getElementById('dataInsightText').innerText = currentEvent.insightText;
-
   if (missionStarted) {
-    if (sol === 1 && !ariaFirstEventShown) {
-      ariaFirstEventShown = true;
-      ARIA.show(`First challenge, Commander! Read every option — each one has a cost.`, 'happy', 5000);
-    } else if (currentEvent.type === 'crisis') {
-      ARIA.show(`Crisis incoming! Think fast, Commander!`, 'worried', 3500);
-    } else if (currentEvent.type === 'opportunity') {
-      ARIA.show(`Ooh, an opportunity! Let's not waste it!`, 'excited', 3500);
-    }
+    if (sol === 1 && !ariaFirstEventShown) { ariaFirstEventShown = true; ARIA.show(`First challenge, Commander! Read every option — each one has a cost.`, 'happy', 5000); }
+    else if (currentEvent.type === 'crisis') { ARIA.show(`Crisis incoming! Think fast, Commander!`, 'worried', 3500); }
+    else if (currentEvent.type === 'opportunity') { ARIA.show(`Ooh, an opportunity! Let's not waste it!`, 'excited', 3500); }
   }
-
   if (currentEvent.timed) startCountdownTimer();
-
   const container = document.getElementById('eventOptionsContainer');
   container.innerHTML = '';
   currentEvent.options.forEach((opt, i) => {
@@ -1200,7 +1101,11 @@ function loadSolEvent() {
     if (opt.shieldEffect) badges.push(`<span class="${opt.shieldEffect>=0?'text-emerald-400':'text-red-400'}">🛡️${opt.shieldEffect>=0?'+':''}${opt.shieldEffect}</span>`);
     if (opt.healthEffect) badges.push(`<span class="${opt.healthEffect>=0?'text-emerald-400':'text-red-400'}">🌱${opt.healthEffect>=0?'+':''}${opt.healthEffect}</span>`);
     if (opt.sciEffect) badges.push(`<span class="${opt.sciEffect>=0?'text-emerald-400':'text-red-400'}">🔬${opt.sciEffect>=0?'+':''}${opt.sciEffect}</span>`);
-    btn.innerHTML = `<div class="font-bold text-xs text-cyan-300 mb-1">Option ${i + 1}: ${opt.text}</div><div class="flex flex-wrap gap-1 mt-1 text-[10px] font-mono">${badges.join('')}</div>`;
+    btn.innerHTML = `
+      <div class="font-bold text-xs text-cyan-300 mb-1">Option ${i + 1}: ${opt.text}</div>
+      <div class="text-[11px] text-slate-300 leading-snug mb-2">${opt.desc || ''}</div>
+      <div class="flex flex-wrap gap-1 text-[10px] font-mono">${badges.join('')}</div>
+    `;
     container.appendChild(btn);
   });
 }
@@ -1212,6 +1117,7 @@ function startCountdownTimer() {
   timerInterval = setInterval(() => {
     countdownSecs--;
     document.getElementById('countdownTimer').innerText = countdownSecs + 's';
+    if (countdownSecs <= 3 && countdownSecs > 0) { SFX.warning(); buzz(30); }
     if (countdownSecs <= 0) { clearInterval(timerInterval); selectEventOption(0); }
   }, 1000);
 }
@@ -1221,72 +1127,66 @@ function selectEventOption(i) {
   chosenOptionThisSol = true;
   clearInterval(timerInterval);
   document.getElementById('timerContainer').classList.add('hidden');
-
   const opt = currentEvent.options[i];
-
-  if (opt.action === 'retract') panelsRetracted = true;
-  if (opt.action === 'expose') panelsRetracted = false;
-
+  if (opt.action === 'retract') { panelsRetracted = true; panelsRetractCountdown = 3; updatePanelBadge(); }
+  if (opt.action === 'expose') { panelsRetracted = false; panelsRetractCountdown = 0; updatePanelBadge(); }
   if (opt.powerGridUp) { powerGridMax += opt.powerGridUp; updatePowerAllocation(); }
   if (opt.batteryMaxUp) batteryMax += opt.batteryMaxUp;
   if (opt.powerMod !== undefined) batteryLevel = Math.max(0, Math.min(batteryMax, batteryLevel + opt.powerMod));
-
   o2Level = Math.min(100, Math.max(0, o2Level + (opt.o2Effect || 0)));
   shieldIntegrity = Math.min(100, Math.max(0, shieldIntegrity + (opt.shieldEffect || 0)));
   crewHealth = Math.min(100, Math.max(0, crewHealth + (opt.healthEffect || 0)));
   sciencePoints = Math.min(targetScience, Math.max(0, sciencePoints + (opt.sciEffect || 0)));
-
+  if (opt.sciEffect && opt.sciEffect > 0) { SFX.science(); buzz(20); }
   updatePowerAllocation();
   updateUI();
   document.getElementById('btnAdvanceSol').disabled = false;
   showScienceModal(currentEvent.scienceExplanation, currentEvent.insightTitle);
-
   checkAriaTriggers();
-
   if (sciencePoints >= targetScience) { setTimeout(() => triggerDebrief(true), 600); return; }
-  if (o2Level <= 0 || batteryLevel <= 0 || shieldIntegrity <= 0 || crewHealth <= 0) {
-    setTimeout(() => triggerDebrief(false), 600);
-  }
+  if (o2Level <= 0 || batteryLevel <= 0 || shieldIntegrity <= 0 || crewHealth <= 0) { setTimeout(() => triggerDebrief(false), 600); }
 }
 
-function showScienceModal(text, source) {
-  document.getElementById('scienceModalText').innerText = text;
-  document.getElementById('scienceModalSource').innerText = source;
-  document.getElementById('scienceExplanationModal').classList.remove('hidden');
-  document.getElementById('scienceExplanationModal').classList.add('flex');
-}
-function closeScienceModal() {
-  document.getElementById('scienceExplanationModal').classList.add('hidden');
-  document.getElementById('scienceExplanationModal').classList.remove('flex');
-}
+function showScienceModal(text, source) { document.getElementById('scienceModalText').innerText = text; document.getElementById('scienceModalSource').innerText = source; document.getElementById('scienceExplanationModal').classList.remove('hidden'); document.getElementById('scienceExplanationModal').classList.add('flex'); }
+function closeScienceModal() { document.getElementById('scienceExplanationModal').classList.add('hidden'); document.getElementById('scienceExplanationModal').classList.remove('flex'); }
 
-/* ============ ADVANCE SOL (with brownout) ============ */
 function advanceSol() {
   if (!chosenOptionThisSol) return;
   if (sciencePoints >= targetScience) { triggerDebrief(true); return; }
-
-  // ⚡ BROWNOUT PENALTY — fires if routed > grid capacity
   const routed = powerO2 + powerShield + powerScience;
   const overrouted = routed - powerGridMax;
   let brownoutInfo = null;
-
   if (overrouted > 0) {
     const overPct = overrouted / powerGridMax;
     const o2Penalty = Math.min(12, Math.max(2, Math.round(overPct * 8)));
     const healthPenalty = Math.min(8, Math.max(1, Math.round(overPct * 5)));
     const batteryPenalty = Math.min(8, Math.max(2, Math.round(overPct * 4)));
-
     o2Level = Math.max(0, o2Level - o2Penalty);
     crewHealth = Math.max(0, crewHealth - healthPenalty);
     batteryLevel = Math.max(0, batteryLevel - batteryPenalty);
-
     brownoutInfo = { routed, max: powerGridMax, o2Penalty, healthPenalty, batteryPenalty };
+    SFX.brownout(); buzz([100,50,100,50,200]);
     ARIA.show(`⚡ BROWNOUT! You routed ${routed}/${powerGridMax} kW — grid can't deliver that. Systems underperformed: −${o2Penalty}% O₂, −${healthPenalty}% health, −${batteryPenalty}% battery.`, 'panic', 8000);
   }
 
-  // Normal end-of-sol drift
   o2Level = Math.max(0, o2Level - o2DrainPerSol);
-  batteryLevel = panelsRetracted ? Math.max(0, batteryLevel - 15) : Math.min(batteryMax, batteryLevel + batteryRechargePerSol);
+
+  // Mode-specific drain while retracted (Mars −8, Moon −15)
+  const retractedDrain = currentOutpost === 'mars' ? 8 : 15;
+  batteryLevel = panelsRetracted ? Math.max(0, batteryLevel - retractedDrain) : Math.min(batteryMax, batteryLevel + batteryRechargePerSol);
+
+  // Countdown panels; redeploy after 3 Sols
+  if (panelsRetracted) {
+    panelsRetractCountdown--;
+    if (panelsRetractCountdown <= 0) {
+      panelsRetracted = false;
+      panelsRetractCountdown = 0;
+      if (missionStarted) {
+        setTimeout(() => ARIA.show(`Panels redeployed! Battery recharging again. ⚡`, 'happy', 4000), 600);
+      }
+    }
+    updatePanelBadge();
+  }
 
   let scienceGain = Math.round(powerScience * 0.7 * scienceMult);
   if (batteryLevel / batteryMax < 0.3) scienceGain = Math.round(scienceGain * 0.5);
@@ -1295,57 +1195,36 @@ function advanceSol() {
   sol++;
   document.getElementById('displaySol').innerText = `Sol ${sol}`;
   updateUI();
-
-  // If brownout didn't already fire ARIA, check other triggers
   if (!brownoutInfo) checkAriaTriggers();
-
   if (sciencePoints >= targetScience) { triggerDebrief(true); return; }
   if (o2Level <= 0 || batteryLevel <= 0 || shieldIntegrity <= 0 || crewHealth <= 0) { triggerDebrief(false); return; }
   loadSolEvent();
 }
 
 function updateUI() {
-  document.getElementById('valO2').innerText = Math.round(o2Level) + '%';
-  document.getElementById('barO2').style.width = Math.round(o2Level) + '%';
-  document.getElementById('valBattery').innerText = Math.round(batteryLevel) + ' / ' + batteryMax + '%';
-  document.getElementById('barBattery').style.width = ((batteryLevel / batteryMax) * 100) + '%';
-  document.getElementById('valShield').innerText = Math.round(shieldIntegrity) + '%';
-  document.getElementById('barShield').style.width = Math.round(shieldIntegrity) + '%';
-  document.getElementById('valHealth').innerText = Math.round(crewHealth) + '%';
-  document.getElementById('barHealth').style.width = Math.round(crewHealth) + '%';
-  document.getElementById('valScience').innerText = sciencePoints + ' / ' + targetScience + ' PTS';
-  document.getElementById('barScience').style.width = ((sciencePoints/targetScience)*100) + '%';
+  document.getElementById('valO2').innerText = Math.round(o2Level) + '%'; document.getElementById('barO2').style.width = Math.round(o2Level) + '%';
+  document.getElementById('valBattery').innerText = Math.round(batteryLevel) + ' / ' + batteryMax + '%'; document.getElementById('barBattery').style.width = ((batteryLevel / batteryMax) * 100) + '%';
+  document.getElementById('valShield').innerText = Math.round(shieldIntegrity) + '%'; document.getElementById('barShield').style.width = Math.round(shieldIntegrity) + '%';
+  document.getElementById('valHealth').innerText = Math.round(crewHealth) + '%'; document.getElementById('barHealth').style.width = Math.round(crewHealth) + '%';
+  document.getElementById('valScience').innerText = sciencePoints + ' / ' + targetScience + ' PTS'; document.getElementById('barScience').style.width = ((sciencePoints/targetScience)*100) + '%';
 }
 
 function triggerDebrief(won) { renderEnding(won); }
 
 function restartMission() {
   sol = 1;
-  o2Level = 100; batteryLevel = 100; batteryMax = 100;
-  shieldIntegrity = 100; crewHealth = 100;
+  o2Level = 100; batteryLevel = 100; batteryMax = 100; shieldIntegrity = 100; crewHealth = 100;
   sciencePoints = 0;
-  panelsRetracted = false;
-  powerGridMax = 100;
-  currentOutpost = null;
-  currentEvent = null;
-  missionStarted = false;
-  chosenOptionThisSol = false;
+  panelsRetracted = false; panelsRetractCountdown = 0; powerGridMax = 100;
+  currentOutpost = null; currentEvent = null; missionStarted = false; chosenOptionThisSol = false;
   canvasFX = { particles: [], icons: [], shake: null, rays: null, tint: null, flash: null };
   resetAriaState();
   document.getElementById('displaySol').innerText = 'Sol 1';
-  const badgeIcon = document.getElementById('modeBadgeIcon');
-  const badgeText = document.getElementById('modeBadgeText');
-  const badge = document.getElementById('modeBadge');
-  badgeIcon.textContent = '❓';
-  badgeText.textContent = 'No Mode Selected';
-  badgeText.className = 'text-slate-400 font-bold';
-  badge.className = 'bg-slate-900/80 px-3 py-1.5 rounded-xl border border-slate-600 flex items-center gap-1.5 text-xs transition-all';
-  document.getElementById('locationBadge').innerText = 'Awaiting Mode';
-  document.getElementById('locationBadge').className = 'text-[11px] font-semibold bg-slate-500/10 text-slate-400 border border-slate-500/30 px-2 py-0.5 rounded-full';
-  document.getElementById('outpostModifiers').innerHTML = 'Select a mission mode to begin';
-  document.getElementById('outpostModifiers').className = 'w-full mt-2 text-[10px] text-center bg-slate-900/60 rounded-lg px-2 py-1.5 border border-white/5 text-slate-400';
-  document.getElementById('envTemp').innerText = '—';
-  document.getElementById('envTau').innerText = '—';
+  const badgeIcon = document.getElementById('modeBadgeIcon'); const badgeText = document.getElementById('modeBadgeText'); const badge = document.getElementById('modeBadge');
+  badgeIcon.textContent = '❓'; badgeText.textContent = 'No Mode Selected'; badgeText.className = 'text-slate-400 font-bold'; badge.className = 'bg-slate-900/80 px-3 py-1.5 rounded-xl border border-slate-600 flex items-center gap-1.5 text-xs transition-all';
+  document.getElementById('locationBadge').innerText = 'Awaiting Mode'; document.getElementById('locationBadge').className = 'text-[11px] font-semibold bg-slate-500/10 text-slate-400 border border-slate-500/30 px-2 py-0.5 rounded-full';
+  document.getElementById('outpostModifiers').innerHTML = 'Select a mission mode to begin'; document.getElementById('outpostModifiers').className = 'w-full mt-2 text-[10px] text-center bg-slate-900/60 rounded-lg px-2 py-1.5 border border-white/5 text-slate-400';
+  document.getElementById('envTemp').innerText = '—'; document.getElementById('envTau').innerText = '—';
   document.getElementById('eventSolLabel').innerText = 'Awaiting Mode Selection';
   document.getElementById('eventTitle').innerHTML = '<i class="fa-solid fa-hourglass-half"></i> Waiting for Mission Launch...';
   document.getElementById('eventDescription').innerText = 'Please select Mars (EASY) or Moon (HARD) on the start screen to begin your mission.';
@@ -1353,12 +1232,9 @@ function restartMission() {
   document.getElementById('dataInsightText').innerText = 'Your choice cannot be changed once the mission begins.';
   document.getElementById('eventOptionsContainer').innerHTML = '';
   document.getElementById('btnAdvanceSol').disabled = true;
-  document.getElementById('debriefModal').classList.add('hidden');
-  document.getElementById('debriefModal').classList.remove('flex');
-  // Reset sliders to defaults
-  document.getElementById('sliderO2').value = 35;
-  document.getElementById('sliderShield').value = 35;
-  document.getElementById('sliderScience').value = 30;
+  document.getElementById('debriefModal').classList.add('hidden'); document.getElementById('debriefModal').classList.remove('flex');
+  document.getElementById('sliderO2').value = 35; document.getElementById('sliderShield').value = 35; document.getElementById('sliderScience').value = 30;
+  updatePanelBadge();
   updatePowerAllocation();
   updateUI();
   showModeSelect();
@@ -1366,7 +1242,9 @@ function restartMission() {
 
 window.addEventListener('DOMContentLoaded', () => {
   ARIA.init();
+  updateMuteUI();
   initCanvas();
+  updatePanelBadge();
   updatePowerAllocation();
   updateUI();
   updateBadgeCounts();
