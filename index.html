@@ -81,9 +81,327 @@
     ::-webkit-scrollbar-track { background: rgba(15,23,42,0.6); }
     ::-webkit-scrollbar-thumb { background: rgba(56,189,248,0.3); border-radius: 4px; }
     button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* ===== CINEMATIC INTRO ===== */
+    .intro-modal { position: fixed; inset: 0; z-index: 75; display: flex; align-items: center; justify-content: center; padding: 20px; overflow: hidden; background: #02030a; }
+    .intro-modal.hidden { display: none; }
+    .intro-bg-nebula { position: absolute; inset: -50%; background: radial-gradient(circle at 20% 30%, rgba(139,92,246,0.38), transparent 35%), radial-gradient(circle at 80% 60%, rgba(56,189,248,0.3), transparent 40%), radial-gradient(circle at 60% 80%, rgba(236,72,153,0.18), transparent 40%), radial-gradient(circle at 30% 70%, rgba(34,197,94,0.14), transparent 35%), radial-gradient(circle at center, #0f172a, #02030a); animation: introNebula 25s ease-in-out infinite; filter: blur(18px); }
+    @keyframes introNebula { 0%, 100% { transform: rotate(0deg) scale(1); } 50% { transform: rotate(6deg) scale(1.1); } }
+    .intro-bg-stars { position: absolute; inset: 0; background-image: radial-gradient(1px 1px at 5% 8%, #fff, transparent), radial-gradient(1px 1px at 15% 22%, #fff, transparent), radial-gradient(2px 2px at 22% 15%, #fff, transparent), radial-gradient(1px 1px at 35% 45%, #fff, transparent), radial-gradient(1px 1px at 42% 12%, #fff, transparent), radial-gradient(2px 2px at 55% 28%, #fff, transparent), radial-gradient(1px 1px at 62% 52%, #fff, transparent), radial-gradient(1px 1px at 72% 35%, #fff, transparent), radial-gradient(2px 2px at 78% 18%, #fff, transparent), radial-gradient(1px 1px at 85% 62%, #fff, transparent), radial-gradient(1px 1px at 92% 45%, #fff, transparent), radial-gradient(1px 1px at 48% 78%, #fff, transparent), radial-gradient(2px 2px at 18% 88%, #fff, transparent), radial-gradient(1px 1px at 68% 82%, #fff, transparent), radial-gradient(1px 1px at 88% 85%, #fff, transparent), radial-gradient(1px 1px at 33% 65%, #fff, transparent); background-size: 100% 100%; opacity: 0.75; animation: introTwinkle 4s ease-in-out infinite; }
+    @keyframes introTwinkle { 0%, 100% { opacity: 0.55; } 50% { opacity: 0.95; } }
+    .intro-bg-dust { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+    .intro-dust { position: absolute; width: 3px; height: 3px; border-radius: 50%; background: rgba(255,255,255,0.65); box-shadow: 0 0 8px rgba(255,255,255,0.9); animation: introDustFloat linear infinite; }
+    .intro-dust:nth-child(1) { left: 10%; animation-duration: 18s; animation-delay: 0s; }
+    .intro-dust:nth-child(2) { left: 30%; animation-duration: 22s; animation-delay: -4s; }
+    .intro-dust:nth-child(3) { left: 50%; animation-duration: 16s; animation-delay: -8s; }
+    .intro-dust:nth-child(4) { left: 70%; animation-duration: 20s; animation-delay: -12s; }
+    .intro-dust:nth-child(5) { left: 88%; animation-duration: 24s; animation-delay: -2s; }
+    @keyframes introDustFloat { 0% { transform: translateY(100vh) translateX(0); opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { transform: translateY(-100px) translateX(30px); opacity: 0; } }
+    .intro-letterbox-top, .intro-letterbox-bottom { position: absolute; left: 0; right: 0; height: 32px; background: #000; z-index: 5; box-shadow: 0 0 40px rgba(0,0,0,0.9); }
+    .intro-letterbox-top { top: 0; }
+    .intro-letterbox-bottom { bottom: 0; }
+    @media (max-width: 640px) { .intro-letterbox-top, .intro-letterbox-bottom { height: 20px; } }
+    .intro-vignette { position: absolute; inset: 0; background: radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.8) 100%); pointer-events: none; z-index: 4; }
+    .intro-card { position: relative; max-width: 640px; width: 100%; padding: 44px 32px 32px; background: linear-gradient(180deg, rgba(15,23,42,0.94) 0%, rgba(3,7,18,0.97) 100%); border: 2px solid rgba(56,189,248,0.4); border-radius: 20px; box-shadow: 0 0 0 6px rgba(0,0,0,0.5), 0 0 60px rgba(56,189,248,0.35), 0 0 120px rgba(139,92,246,0.2), 0 30px 80px rgba(0,0,0,0.9); text-align: center; z-index: 10; overflow: hidden; animation: introCardIn 0.7s cubic-bezier(0.34, 1.56, 0.64, 1); }
+    .intro-card::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 50% 0%, rgba(56,189,248,0.15) 0%, transparent 40%); pointer-events: none; }
+    .intro-card::after { content: ''; position: absolute; inset: 0; background-image: radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1.5px); background-size: 12px 12px; opacity: 0.5; pointer-events: none; }
+    @keyframes introCardIn { 0% { opacity: 0; transform: scale(0.7) translateY(40px) rotateX(20deg); } 100% { opacity: 1; transform: scale(1) translateY(0) rotateX(0); } }
+    .intro-scene-num { position: absolute; top: -14px; left: 24px; padding: 4px 14px; background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #0f172a; font-size: 10px; font-weight: 900; letter-spacing: 2px; border-radius: 4px; box-shadow: 0 4px 12px rgba(251,191,36,0.5); z-index: 3; }
+    .intro-icon-wrap { position: relative; width: 150px; height: 150px; margin: 0 auto 22px; display: flex; align-items: center; justify-content: center; }
+    .intro-icon { font-size: 88px; line-height: 1; display: block; filter: drop-shadow(0 0 20px rgba(56,189,248,0.9)) drop-shadow(0 0 40px rgba(139,92,246,0.5)); animation: introIconFloat 3s ease-in-out infinite; position: relative; z-index: 2; }
+    @keyframes introIconFloat { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-8px) scale(1.05); } }
+    .intro-orbit { position: absolute; inset: 0; border: 1.5px solid rgba(56,189,248,0.35); border-radius: 50%; animation: introOrbitSpin 8s linear infinite; }
+    .intro-orbit::before { content: ''; position: absolute; top: -4px; left: 50%; width: 8px; height: 8px; border-radius: 50%; background: #38bdf8; box-shadow: 0 0 12px #38bdf8, 0 0 24px #38bdf8; transform: translateX(-50%); }
+    .intro-orbit:nth-child(2) { inset: -12px; border-color: rgba(168,85,247,0.25); animation: introOrbitSpin 12s linear infinite reverse; }
+    .intro-orbit:nth-child(2)::before { background: #a855f7; box-shadow: 0 0 12px #a855f7; }
+    @keyframes introOrbitSpin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    .intro-title-wrap { margin-bottom: 18px; }
+    .intro-title { display: inline-block; font-size: 28px; font-weight: 900; color: #fff; letter-spacing: 1px; padding: 8px 24px; background: linear-gradient(135deg, rgba(56,189,248,0.15), rgba(139,92,246,0.15)); border-top: 2px solid rgba(56,189,248,0.5); border-bottom: 2px solid rgba(139,92,246,0.5); text-shadow: 0 2px 8px rgba(0,0,0,0.8), 0 0 20px rgba(56,189,248,0.4); }
+    .intro-text-wrap { position: relative; background: rgba(0,0,0,0.4); border-left: 4px solid #38bdf8; padding: 16px 20px; margin-bottom: 20px; border-radius: 4px; text-align: left; min-height: 100px; }
+    .intro-text { font-size: 15px; line-height: 1.75; color: #e2e8f0; margin: 0; letter-spacing: 0.3px; }
+    .intro-progress { display: flex; justify-content: center; gap: 6px; margin-bottom: 20px; }
+    .intro-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.2); transition: all 0.4s; }
+    .intro-dot.active { background: linear-gradient(90deg, #38bdf8, #a855f7); width: 32px; border-radius: 4px; box-shadow: 0 0 12px #38bdf8; }
+    .intro-dot.done { background: rgba(56,189,248,0.6); }
+    .intro-btn { background: linear-gradient(135deg, #38bdf8, #a855f7); color: white; border: none; padding: 14px 40px; border-radius: 12px; font-weight: 900; font-size: 14px; letter-spacing: 2px; cursor: pointer; box-shadow: 0 6px 24px rgba(56,189,248,0.5), inset 0 1px 0 rgba(255,255,255,0.2); transition: all 0.2s; position: relative; z-index: 2; }
+    .intro-btn:hover { transform: translateY(-2px) scale(1.03); box-shadow: 0 10px 32px rgba(56,189,248,0.7), inset 0 1px 0 rgba(255,255,255,0.3); }
+    .intro-btn:active { transform: translateY(0) scale(0.98); }
+    .intro-skip { background: transparent; color: #64748b; border: 1px solid rgba(255,255,255,0.1); padding: 8px 18px; border-radius: 8px; font-size: 11px; font-weight: 600; letter-spacing: 1px; cursor: pointer; margin-top: 10px; transition: all 0.2s; position: relative; z-index: 2; }
+    .intro-skip:hover { color: #94a3b8; border-color: rgba(255,255,255,0.25); }
+    .intro-card[data-scene="0"] { border-color: rgba(34,197,94,0.5); box-shadow: 0 0 0 6px rgba(0,0,0,0.5), 0 0 60px rgba(34,197,94,0.35), 0 0 120px rgba(56,189,248,0.2), 0 30px 80px rgba(0,0,0,0.9); }
+    .intro-card[data-scene="0"] .intro-text-wrap { border-left-color: #22c55e; }
+    .intro-card[data-scene="0"] .intro-title { color: #86efac; border-color: #22c55e; }
+    .intro-card[data-scene="1"] { border-color: rgba(59,130,246,0.5); }
+    .intro-card[data-scene="1"] .intro-text-wrap { border-left-color: #3b82f6; }
+    .intro-card[data-scene="1"] .intro-title { color: #93c5fd; }
+    .intro-card[data-scene="2"] { border-color: rgba(239,68,68,0.5); box-shadow: 0 0 0 6px rgba(0,0,0,0.5), 0 0 60px rgba(239,68,68,0.35), 0 0 120px rgba(245,158,11,0.2), 0 30px 80px rgba(0,0,0,0.9); }
+    .intro-card[data-scene="2"] .intro-text-wrap { border-left-color: #ef4444; }
+    .intro-card[data-scene="2"] .intro-title { color: #fca5a5; border-color: #ef4444; }
+    .intro-card[data-scene="3"] { border-color: rgba(251,191,36,0.5); box-shadow: 0 0 0 6px rgba(0,0,0,0.5), 0 0 60px rgba(251,191,36,0.4), 0 0 120px rgba(249,115,22,0.2), 0 30px 80px rgba(0,0,0,0.9); }
+    .intro-card[data-scene="3"] .intro-text-wrap { border-left-color: #fbbf24; }
+    .intro-card[data-scene="3"] .intro-title { color: #fde047; border-color: #fbbf24; }
+    .intro-card[data-scene="4"] { border-color: rgba(168,85,247,0.5); box-shadow: 0 0 0 6px rgba(0,0,0,0.5), 0 0 60px rgba(168,85,247,0.5), 0 0 120px rgba(56,189,248,0.2), 0 30px 80px rgba(0,0,0,0.9); }
+    .intro-card[data-scene="4"] .intro-text-wrap { border-left-color: #a855f7; }
+    .intro-card[data-scene="4"] .intro-title { color: #d8b4fe; border-color: #a855f7; }
+
+    /* ===== COMIC A.R.I.A. BRIEFING ===== */
+    .briefing-modal { position: fixed; inset: 0; z-index: 65; display: flex; align-items: center; justify-content: center; padding: 20px; background: #050814; overflow: hidden; }
+    .briefing-modal.hidden { display: none; }
+    .briefing-modal::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 50% 50%, rgba(251,191,36,0.25) 0%, transparent 50%), radial-gradient(circle at 20% 80%, rgba(249,115,22,0.15) 0%, transparent 40%), radial-gradient(circle at 80% 20%, rgba(234,179,8,0.15) 0%, transparent 40%), radial-gradient(circle at center, #1a1000 0%, #050814 100%); animation: briefingGlow 4s ease-in-out infinite; }
+    @keyframes briefingGlow { 0%, 100% { opacity: 0.8; } 50% { opacity: 1; } }
+    .briefing-modal::after { content: ''; position: absolute; inset: 0; background-image: radial-gradient(circle, rgba(251,191,36,0.08) 1px, transparent 1.5px); background-size: 16px 16px; pointer-events: none; }
+    .briefing-card { position: relative; max-width: 560px; width: 100%; display: flex; flex-direction: column; align-items: center; gap: 20px; z-index: 2; }
+    .briefing-avatar-wrap { position: relative; width: 140px; height: 140px; display: flex; align-items: center; justify-content: center; }
+    .briefing-burst { position: absolute; inset: 0; background: conic-gradient(from 0deg, rgba(251,191,36,0.7), transparent 10%, rgba(251,191,36,0.7) 20%, transparent 30%, rgba(251,191,36,0.7) 40%, transparent 50%, rgba(251,191,36,0.7) 60%, transparent 70%, rgba(251,191,36,0.7) 80%, transparent 90%, rgba(251,191,36,0.7)); border-radius: 50%; animation: briefingBurstSpin 8s linear infinite; opacity: 0.6; }
+    @keyframes briefingBurstSpin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    .briefing-avatar { position: relative; width: 100px; height: 100px; border-radius: 50%; background: radial-gradient(circle at 30% 25%, #7dd3fc, #38bdf8 45%, #0284c7 90%); display: flex; align-items: center; justify-content: center; font-size: 54px; box-shadow: 0 0 0 4px rgba(0,0,0,0.6), 0 0 40px rgba(56,189,248,0.9), 0 0 80px rgba(251,191,36,0.5); border: 3px solid rgba(255,255,255,0.3); animation: ariaBob 2s ease-in-out infinite; z-index: 2; }
+    .briefing-bubble { position: relative; background: linear-gradient(180deg, #fef9e7, #fef3c7); color: #1f2937; border: 3px solid #1f2937; border-radius: 24px; padding: 22px 26px; box-shadow: 0 8px 0 rgba(0,0,0,0.3), 0 16px 40px rgba(0,0,0,0.6), inset -3px -3px 0 rgba(0,0,0,0.1); width: 100%; animation: briefingBubbleIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); }
+    @keyframes briefingBubbleIn { 0% { opacity: 0; transform: scale(0.8) translateY(20px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
+    .briefing-bubble::before { content: ''; position: absolute; top: -18px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border: 12px solid transparent; border-bottom-color: #1f2937; }
+    .briefing-bubble::after { content: ''; position: absolute; top: -13px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border: 10px solid transparent; border-bottom-color: #fef9e7; }
+    .briefing-name { position: absolute; top: -14px; left: 20px; background: #38bdf8; color: white; font-size: 11px; font-weight: 900; letter-spacing: 2px; padding: 4px 12px; border-radius: 6px; border: 2px solid #1f2937; box-shadow: 0 2px 0 rgba(0,0,0,0.3); }
+    .briefing-text { font-size: 15px; line-height: 1.65; color: #1f2937; font-weight: 500; min-height: 80px; margin-top: 6px; }
+    .briefing-actions { display: flex; gap: 12px; margin-top: 4px; width: 100%; }
+    .briefing-continue { flex: 1; background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #1f2937; border: 3px solid #1f2937; padding: 14px; border-radius: 14px; font-weight: 900; font-size: 14px; letter-spacing: 2px; cursor: pointer; box-shadow: 0 6px 0 #b45309, 0 10px 30px rgba(251,191,36,0.5); transition: all 0.15s; }
+    .briefing-continue:hover { transform: translateY(-2px); box-shadow: 0 8px 0 #b45309, 0 14px 36px rgba(251,191,36,0.7); }
+    .briefing-continue:active { transform: translateY(4px); box-shadow: 0 2px 0 #b45309, 0 4px 12px rgba(251,191,36,0.5); }
+
+    /* ========== GAME PAGE GLOW-UP ========== */
+    body { position: relative; background: #05070f; }
+    body::before { content: ''; position: fixed; inset: -50%; z-index: -3; pointer-events: none; background: radial-gradient(circle at 20% 30%, rgba(139,92,246,0.18) 0%, transparent 40%), radial-gradient(circle at 80% 70%, rgba(56,189,248,0.15) 0%, transparent 40%), radial-gradient(circle at 40% 90%, rgba(236,72,153,0.10) 0%, transparent 35%), radial-gradient(circle at 60% 10%, rgba(34,197,94,0.08) 0%, transparent 30%); animation: bgNebula 40s ease-in-out infinite; }
+    body::after { content: ''; position: fixed; inset: 0; z-index: -2; pointer-events: none; background-image: radial-gradient(1px 1px at 10% 15%, rgba(255,255,255,0.85), transparent), radial-gradient(1px 1px at 30% 60%, rgba(255,255,255,0.65), transparent), radial-gradient(2px 2px at 55% 25%, rgba(255,255,255,0.95), transparent), radial-gradient(1px 1px at 75% 45%, rgba(255,255,255,0.6), transparent), radial-gradient(1px 1px at 85% 80%, rgba(255,255,255,0.8), transparent), radial-gradient(2px 2px at 45% 90%, rgba(255,255,255,0.9), transparent), radial-gradient(1px 1px at 20% 40%, rgba(255,255,255,0.6), transparent), radial-gradient(2px 2px at 90% 20%, rgba(255,255,255,0.9), transparent), radial-gradient(1px 1px at 5% 75%, rgba(255,255,255,0.7), transparent), radial-gradient(1px 1px at 65% 5%, rgba(255,255,255,0.75), transparent); background-size: 100% 100%; opacity: 0.6; animation: bgTwinkle 6s ease-in-out infinite; }
+    @keyframes bgNebula { 0%, 100% { transform: rotate(0deg) scale(1); } 50% { transform: rotate(6deg) scale(1.1); } }
+    @keyframes bgTwinkle { 0%, 100% { opacity: 0.4; } 50% { opacity: 0.85; } }
+    .glass-panel { position: relative; background: linear-gradient(180deg, rgba(15,23,42,0.82), rgba(8,12,28,0.85)); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.08); box-shadow: inset 0 1px 0 rgba(255,255,255,0.06), inset 0 0 40px rgba(56,189,248,0.04), 0 8px 32px rgba(0,0,0,0.5); overflow: hidden; }
+    .glass-panel::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; pointer-events: none; background: linear-gradient(90deg, transparent, rgba(56,189,248,0.45), transparent); }
+    header.glass-panel { background: linear-gradient(180deg, rgba(10,15,35,0.95), rgba(5,7,18,0.95)); box-shadow: 0 4px 20px rgba(0,0,0,0.6), inset 0 -1px 0 rgba(56,189,248,0.1); }
+    .bg-nasaBlue { box-shadow: 0 0 20px rgba(11,61,145,0.6), inset 0 1px 0 rgba(255,255,255,0.2); position: relative; }
+    .bg-nasaBlue::after { content: ''; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 12px rgba(56,189,248,0.3); pointer-events: none; }
+    .glass-panel > h2 { position: relative; padding-bottom: 10px; }
+    .glass-panel > h2::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, rgba(56,189,248,0.4), rgba(56,189,248,0.1) 40%, transparent); }
+    .glass-panel > h2::before { content: ''; position: absolute; bottom: -1px; left: 0; width: 32px; height: 2px; background: linear-gradient(90deg, #38bdf8, #a855f7); box-shadow: 0 0 8px rgba(56,189,248,0.8); border-radius: 1px; z-index: 1; }
+    h2 i[class*="fa-"] { animation: subtleFloat 3s ease-in-out infinite; }
+    @keyframes subtleFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-2px); } }
+    main .glass-card i.fa-wind, main .glass-card i.fa-battery-three-quarters, main .glass-card i.fa-shield-cat, main .glass-card i.fa-user-astronaut, main .glass-card i.fa-microscope, main .glass-card i.fa-mask-ventilator, main .glass-card i.fa-shield-virus, main .glass-card i.fa-satellite-dish { display: inline-flex !important; align-items: center; justify-content: center; width: 26px; height: 26px; border-radius: 8px; margin-right: 8px; background: rgba(0,0,0,0.35); border: 1px solid currentColor; box-shadow: 0 0 10px currentColor, inset 0 0 6px rgba(0,0,0,0.3); font-size: 12px !important; transition: transform 0.2s, box-shadow 0.2s; }
+    main .glass-card:hover i.fa-wind, main .glass-card:hover i.fa-battery-three-quarters, main .glass-card:hover i.fa-shield-cat, main .glass-card:hover i.fa-user-astronaut, main .glass-card:hover i.fa-microscope, main .glass-card:hover i.fa-mask-ventilator, main .glass-card:hover i.fa-shield-virus, main .glass-card:hover i.fa-satellite-dish { transform: scale(1.1); box-shadow: 0 0 16px currentColor, inset 0 0 6px rgba(0,0,0,0.3); }
+    [id^="bar"] { position: relative; transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1), filter 0.3s; }
+    #barO2 { box-shadow: 0 0 12px rgba(34,211,238,0.55); }
+    #barBattery { box-shadow: 0 0 12px rgba(251,191,36,0.55); }
+    #barShield { box-shadow: 0 0 12px rgba(245,158,11,0.55); }
+    #barHealth { box-shadow: 0 0 12px rgba(16,185,129,0.55); }
+    #barScience { box-shadow: 0 0 12px rgba(139,92,246,0.55); }
+    [id^="bar"]::after { content: ''; position: absolute; inset: 0; border-radius: inherit; background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.35) 50%, transparent 100%); background-size: 200% 100%; animation: barShimmer 2.5s ease-in-out infinite; pointer-events: none; }
+    @keyframes barShimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+    .critical-pulse { animation: criticalPulse 0.8s ease-in-out infinite !important; }
+    @keyframes criticalPulse { 0%, 100% { filter: brightness(1); box-shadow: 0 0 12px rgba(239,68,68,0.4); } 50% { filter: brightness(1.8); box-shadow: 0 0 28px rgba(239,68,68,1); } }
+    input[type=range] { -webkit-appearance: none; appearance: none; background: linear-gradient(90deg, rgba(56,189,248,0.15), rgba(139,92,246,0.15)) !important; border-radius: 8px; height: 10px !important; border: 1px solid rgba(255,255,255,0.1); cursor: pointer; }
+    input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; height: 24px !important; width: 24px !important; border-radius: 50%; background: radial-gradient(circle at 30% 25%, #7dd3fc, #38bdf8 60%, #0284c7); border: 2px solid white; box-shadow: 0 0 16px rgba(56,189,248,0.9), 0 0 32px rgba(56,189,248,0.4); cursor: grab; transition: transform 0.15s; }
+    input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.15); }
+    input[type=range]::-webkit-slider-thumb:active { transform: scale(1.25); cursor: grabbing; }
+    button[onclick*="adjustPower"] { transition: all 0.15s; box-shadow: 0 2px 6px rgba(0,0,0,0.4); }
+    button[onclick*="adjustPower"]:hover { box-shadow: 0 0 12px currentColor, 0 4px 10px rgba(0,0,0,0.4); transform: translateY(-1px); }
+    #btnAdvanceSol { position: relative; overflow: hidden; padding: 14px 32px !important; font-size: 15px !important; letter-spacing: 1px; box-shadow: 0 6px 24px rgba(16,185,129,0.4), inset 0 1px 0 rgba(255,255,255,0.2); transition: all 0.2s; }
+    #btnAdvanceSol:not(:disabled)::before { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent); animation: btnShimmer 2s ease-in-out infinite; }
+    #btnAdvanceSol:not(:disabled):hover { box-shadow: 0 8px 32px rgba(16,185,129,0.6), inset 0 1px 0 rgba(255,255,255,0.3); transform: translateY(-2px); }
+    @keyframes btnShimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+    #eventOptionsContainer button { position: relative; overflow: hidden; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); border: 1px solid rgba(255,255,255,0.08); }
+    #eventOptionsContainer button:hover { transform: translateY(-3px); border-color: rgba(56,189,248,0.6); box-shadow: 0 8px 24px rgba(56,189,248,0.25), 0 0 0 1px rgba(56,189,248,0.4); background: linear-gradient(135deg, rgba(56,189,248,0.1), rgba(139,92,246,0.08)); }
+    #eventOptionsContainer button::after { content: ''; position: absolute; top: 0; right: 0; width: 80px; height: 80px; background: radial-gradient(circle at top right, rgba(56,189,248,0.2), transparent 70%); pointer-events: none; opacity: 0; transition: opacity 0.25s; }
+    #eventOptionsContainer button:hover::after { opacity: 1; }
+    #eventTitle { text-shadow: 0 0 20px rgba(251,191,36,0.4); }
+    #timerContainer:not(.hidden) { animation: timerPulse 0.8s ease-in-out infinite; box-shadow: 0 0 24px rgba(239,68,68,0.5); }
+    @keyframes timerPulse { 0%, 100% { box-shadow: 0 0 12px rgba(239,68,68,0.3); } 50% { box-shadow: 0 0 32px rgba(239,68,68,0.8); } }
+    #modeSelectModal button[onclick^="selectMode"] { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); position: relative; overflow: hidden; }
+    #modeSelectModal button[onclick^="selectMode"]:hover { transform: translateY(-6px) scale(1.02); box-shadow: 0 20px 48px rgba(0,0,0,0.7), 0 0 40px rgba(56,189,248,0.3); }
+    #modeSelectModal button[onclick*="'mars'"]:hover { border-color: #10b981 !important; box-shadow: 0 20px 48px rgba(0,0,0,0.7), 0 0 40px rgba(16,185,129,0.5); }
+    #modeSelectModal button[onclick*="'moon'"]:hover { border-color: #ef4444 !important; box-shadow: 0 20px 48px rgba(0,0,0,0.7), 0 0 40px rgba(239,68,68,0.5); }
+    .text-red-400.font-bold { animation: warnPulse 2s ease-in-out infinite; }
+    @keyframes warnPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: rgba(15,23,42,0.8); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #38bdf8, #0284c7); border-radius: 4px; border: 1px solid rgba(255,255,255,0.2); }
+    ::-webkit-scrollbar-thumb:hover { background: linear-gradient(180deg, #7dd3fc, #38bdf8); }
+    #outpostCanvas { filter: contrast(1.05) saturate(1.1); }
+
+    /* ===== High-Tech Outpost Telemetry Frame ===== */
+    main .glass-panel .relative.w-full.h-48 {
+      box-shadow: inset 0 0 30px rgba(56, 189, 248, 0.15), inset 0 0 60px rgba(0, 0, 0, 0.6), 0 0 20px rgba(56, 189, 248, 0.15);
+      border-color: rgba(56, 189, 248, 0.25) !important;
+    }
+    main .glass-panel .relative.w-full.h-48::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 6;
+      background: repeating-linear-gradient(0deg, transparent 0px, transparent 2px, rgba(56, 189, 248, 0.035) 2px, rgba(56, 189, 248, 0.035) 3px);
+      mix-blend-mode: screen;
+      opacity: 0.5;
+    }
+    main .glass-panel .relative.w-full.h-48::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 6;
+      background: radial-gradient(ellipse at center, transparent 40%, rgba(0, 0, 0, 0.35) 100%);
+    }
+
+    /* ===== Vital Visual Inspection Modal ===== */
+    #vitalVisualModal .glass-panel {
+      position: relative;
+      animation: vitalModalIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    @keyframes vitalModalIn {
+      from { opacity: 0; transform: scale(0.85) translateY(20px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    main .glass-card span[onclick^="showVitalVisual"] {
+      cursor: pointer;
+      transition: color 0.2s;
+      border-bottom: 1px dashed rgba(56, 189, 248, 0.4);
+      padding-bottom: 1px;
+    }
+    main .glass-card span[onclick^="showVitalVisual"]:hover {
+      color: #38bdf8;
+      border-bottom-color: rgba(56, 189, 248, 0.9);
+    }
+    main .glass-card i[onclick^="showVitalVisual"] {
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    main .glass-card i[onclick^="showVitalVisual"]:hover {
+      transform: scale(1.2);
+    }
+
+    /* ===== Critical Warning Vignette ===== */
+    #criticalWarningOverlay {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 44;
+      opacity: 0;
+      transition: opacity 0.8s ease;
+      background:
+        radial-gradient(ellipse at center,
+          transparent 45%,
+          rgba(239, 68, 68, 0.08) 65%,
+          rgba(239, 68, 68, 0.18) 82%,
+          rgba(239, 68, 68, 0.38) 100%);
+      box-shadow:
+        inset 0 0 80px rgba(239, 68, 68, 0.28),
+        inset 0 0 160px rgba(239, 68, 68, 0.12);
+    }
+    #criticalWarningOverlay.active {
+      opacity: 0.85;
+      animation: criticalScreenPulse 1.6s ease-in-out infinite;
+    }
+    #criticalWarningOverlay.severe {
+      opacity: 1;
+      animation: criticalScreenPulse 0.7s ease-in-out infinite;
+      background:
+        radial-gradient(ellipse at center,
+          transparent 22%,
+          rgba(255, 10, 10, 0.35) 52%,
+          rgba(255, 10, 10, 0.72) 78%,
+          rgba(255, 10, 10, 0.95) 100%);
+      box-shadow:
+        inset 0 0 140px rgba(255, 10, 10, 0.85),
+        inset 0 0 260px rgba(255, 10, 10, 0.5),
+        0 0 60px rgba(255, 10, 10, 0.4);
+    }
+    @keyframes criticalScreenPulse {
+      0%, 100% { opacity: 0.55; }
+      50% { opacity: 1; }
+    }
+    #criticalWarningOverlay.active::before {
+      content: '⚠️ CRITICAL — LIFE SUPPORT';
+      position: absolute;
+      top: 90px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 8px 20px;
+      background: rgba(15, 23, 42, 0.92);
+      border: 2px solid rgba(239, 68, 68, 0.8);
+      border-radius: 8px;
+      color: #ef4444;
+      font-weight: 900;
+      font-size: 12px;
+      letter-spacing: 2px;
+      box-shadow: 0 0 20px rgba(239, 68, 68, 0.7), inset 0 0 12px rgba(239, 68, 68, 0.2);
+      animation: criticalBadgeShake 0.5s ease-in-out infinite;
+    }
+    #criticalWarningOverlay.severe::before {
+      border-color: rgba(255, 10, 10, 1);
+      color: #ff0a0a;
+      box-shadow: 0 0 30px rgba(255, 10, 10, 0.9), inset 0 0 16px rgba(255, 10, 10, 0.3);
+      animation: criticalBadgeShake 0.3s ease-in-out infinite;
+    }
+    @keyframes criticalBadgeShake {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      25% { transform: translateX(-50%) translateX(-2px) translateY(-1px); }
+      75% { transform: translateX(-50%) translateX(2px) translateY(1px); }
+    }
+    @media (max-width: 768px) {
+      #criticalWarningOverlay.active::before {
+        top: 70px;
+        font-size: 10px;
+        padding: 6px 14px;
+      }
+    }
   </style>
 </head>
 <body class="flex flex-col min-h-screen">
+
+  <!-- Critical Warning Vignette -->
+  <div id="criticalWarningOverlay"></div>
+
+  <!-- Cinematic Intro Story -->
+  <div id="introStoryModal" class="intro-modal hidden">
+    <div class="intro-bg-nebula"></div>
+    <div class="intro-bg-stars"></div>
+    <div class="intro-bg-dust">
+      <div class="intro-dust"></div>
+      <div class="intro-dust"></div>
+      <div class="intro-dust"></div>
+      <div class="intro-dust"></div>
+      <div class="intro-dust"></div>
+    </div>
+    <div class="intro-letterbox-top"></div>
+    <div class="intro-letterbox-bottom"></div>
+    <div class="intro-vignette"></div>
+    <div id="introCard" class="intro-card" data-scene="0">
+      <div class="intro-scene-num" id="introSceneNum">SCENE 1 / 5</div>
+      <div class="intro-icon-wrap">
+        <div class="intro-orbit"></div>
+        <div class="intro-orbit"></div>
+        <div id="introIcon" class="intro-icon">🌍</div>
+      </div>
+      <div class="intro-title-wrap"><h2 id="introTitle" class="intro-title">Earth · 2045</h2></div>
+      <div class="intro-text-wrap"><p id="introText" class="intro-text"></p></div>
+      <div id="introProgress" class="intro-progress"></div>
+      <button id="introNext" class="intro-btn">CONTINUE →</button>
+      <br>
+      <button id="introSkip" class="intro-skip">SKIP INTRO</button>
+    </div>
+  </div>
+
+  <!-- Comic A.R.I.A. Briefing -->
+  <div id="ariaBriefingModal" class="briefing-modal hidden">
+    <div class="briefing-card">
+      <div class="briefing-avatar-wrap">
+        <div class="briefing-burst"></div>
+        <div class="briefing-avatar">🤖</div>
+      </div>
+      <div class="briefing-bubble">
+        <div class="briefing-name">A.R.I.A.</div>
+        <div id="briefingText" class="briefing-text"></div>
+      </div>
+      <div class="briefing-actions">
+        <button id="briefingContinue" class="briefing-continue">CONTINUE →</button>
+      </div>
+    </div>
+  </div>
 
   <header class="w-full glass-panel border-b border-panelBorder sticky top-0 z-40 px-4 py-3">
     <div class="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-3">
@@ -123,6 +441,9 @@
         <button onclick="showTutorial()" class="bg-slate-800 hover:bg-slate-700 text-xs px-3 py-2 rounded-xl border border-slate-600 flex items-center gap-1.5 transition">
           <i class="fa-solid fa-circle-question text-cyan-400"></i><span class="hidden md:inline">How to Play</span>
         </button>
+        <button onclick="showIntroStory(missionStarted ? 'game' : 'modeselect')" title="Replay the intro story" class="bg-slate-800 hover:bg-slate-700 text-xs px-3 py-2 rounded-xl border border-slate-600 flex items-center gap-1.5 transition">
+          <i class="fa-solid fa-book-open text-amber-400"></i><span class="hidden md:inline">Story</span>
+        </button>
       </div>
     </div>
   </header>
@@ -155,7 +476,7 @@
         </h2>
         <div class="glass-card p-3">
           <div class="flex justify-between items-center text-xs mb-1">
-            <span class="font-medium text-slate-300"><i class="fa-solid fa-wind text-cyan-400"></i> Oxygen (O₂)</span>
+            <span class="font-medium text-slate-300"><i class="fa-solid fa-wind text-cyan-400" onclick="showVitalVisual('o2')" title="Click to inspect tank"></i> <span onclick="showVitalVisual('o2')">Oxygen (O₂)</span></span>
             <span id="valO2" class="font-mono font-bold text-cyan-400">100%</span>
           </div>
           <div class="w-full h-2.5 bg-slate-900 rounded-full overflow-hidden border border-white/5">
@@ -164,7 +485,7 @@
         </div>
         <div class="glass-card p-3">
           <div class="flex justify-between items-center text-xs mb-1">
-            <span class="font-medium text-slate-300"><i class="fa-solid fa-battery-three-quarters text-yellow-400"></i> Grid Battery Storage</span>
+            <span class="font-medium text-slate-300"><i class="fa-solid fa-battery-three-quarters text-yellow-400" onclick="showVitalVisual('battery')" title="Click to inspect battery bank"></i> <span onclick="showVitalVisual('battery')">Grid Battery Storage</span></span>
             <span id="valBattery" class="font-mono font-bold text-yellow-400">100 / 100%</span>
           </div>
           <div class="w-full h-2.5 bg-slate-900 rounded-full overflow-hidden border border-white/5">
@@ -173,7 +494,7 @@
         </div>
         <div class="glass-card p-3">
           <div class="flex justify-between items-center text-xs mb-1">
-            <span class="font-medium text-slate-300"><i class="fa-solid fa-shield-cat text-amber-400"></i> Radiation Shielding</span>
+            <span class="font-medium text-slate-300"><i class="fa-solid fa-shield-cat text-amber-400" onclick="showVitalVisual('shield')" title="Click to inspect shield"></i> <span onclick="showVitalVisual('shield')">Radiation Shielding</span></span>
             <span id="valShield" class="font-mono font-bold text-amber-400">100%</span>
           </div>
           <div class="w-full h-2.5 bg-slate-900 rounded-full overflow-hidden border border-white/5">
@@ -182,7 +503,7 @@
         </div>
         <div class="glass-card p-3">
           <div class="flex justify-between items-center text-xs mb-1">
-            <span class="font-medium text-slate-300"><i class="fa-solid fa-user-astronaut text-emerald-400"></i> Crew Health & Food</span>
+            <span class="font-medium text-slate-300"><i class="fa-solid fa-user-astronaut text-emerald-400" onclick="showVitalVisual('health')" title="Click to inspect crew"></i> <span onclick="showVitalVisual('health')">Crew Health & Food</span></span>
             <span id="valHealth" class="font-mono font-bold text-emerald-400">100%</span>
           </div>
           <div class="w-full h-2.5 bg-slate-900 rounded-full overflow-hidden border border-white/5">
@@ -303,7 +624,7 @@
             <li>• Weathered, less toxic dust</li>
             <li>• O₂ drains −4% per Sol</li>
             <li>• Science ×1.2 · Battery +4/Sol</li>
-            <li class="text-emerald-300 font-bold">• Standard events only</li>
+            <li class="text-emerald-300 font-bold">• Storms linger (Rad decays slowly)</li>
           </ul>
           <div class="mt-3 pt-3 border-t border-emerald-500/20 text-[10px] text-emerald-300 font-bold flex items-center gap-1">
             <i class="fa-solid fa-seedling"></i> Recommended for first missions
@@ -417,6 +738,24 @@
     </div>
   </div>
 
+  <!-- Vital Life Support Inspection Modal -->
+  <div id="vitalVisualModal" class="fixed inset-0 backdrop-blur-lg z-[52] hidden items-center justify-center p-4" style="background: rgba(0,0,0,0.88);">
+    <div class="glass-panel max-w-sm w-full p-6 border border-cyan-500/40">
+      <div class="flex justify-between items-center mb-3">
+        <h3 id="vitalVisualTitle" class="text-lg font-bold text-white flex items-center gap-2"></h3>
+        <button onclick="closeVitalVisual()" class="text-slate-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="bg-slate-950/60 rounded-xl p-3 border border-white/5 flex items-center justify-center" style="min-height: 260px;">
+        <div id="vitalVisualContent" class="flex flex-col items-center"></div>
+      </div>
+      <div class="mt-3 text-center">
+        <div id="vitalVisualValue" class="font-mono font-black text-3xl"></div>
+        <div id="vitalVisualHint" class="text-xs text-slate-400 mt-1 leading-relaxed"></div>
+      </div>
+      <div class="mt-3 text-center text-[10px] text-slate-500 italic">Updates live · Close anytime</div>
+    </div>
+  </div>
+
   <div id="debriefModal" class="fixed inset-0 backdrop-blur-lg z-50 hidden items-center justify-center p-4 overflow-y-auto" style="background: rgba(0,0,0,0.92);">
     <div id="debriefContent" class="glass-panel max-w-lg w-full p-6 border-2 my-auto"></div>
   </div>
@@ -430,7 +769,127 @@
   </div>
 
 <script>
-/* ============ SFX (short retro beeps) ============ */
+/* ============ STORY / INTRO ============ */
+const INTRO_SEEN_KEY = 'astro_intro_seen_v1';
+const INTRO_SLIDES = [
+  { icon: '🌍', title: 'Earth · 2045', text: 'Earth is crowded. Resources are running low. Humanity needs a new home among the stars.' },
+  { icon: '🚀', title: 'Two Outposts', text: 'NASA has built two bases: one on the Moon, one on Mars. Each is humanity\'s best hope.' },
+  { icon: '⚠️', title: 'Deep Space Is Harsh', text: 'Life support fails. Storms strike. Every decision costs something. Nothing is free.' },
+  { icon: '🧑‍🚀', title: 'You Are the Commander', text: 'Your mission: keep 4 astronauts alive and collect 500 science points. The future depends on it.' },
+  { icon: '🎯', title: 'Choose Your Destination', text: 'The Moon is brutal but close. Mars is kinder but far. Your choice is permanent. The mission begins now.' }
+];
+
+const ARIA_BRIEFINGS = {
+  mars: [
+    { text: "Commander! You chose Mars. Bold — but smart. Jezero Crater has water ice, CO₂ for oxygen, and a thin atmosphere that shields us from the worst radiation. Easier than the Moon — but far from home.", mood: 'excited' },
+    { text: "6-month communication delay means we're on our own. No resupply ships. No rescue missions. We make it work — or we don't. Ready, Commander?", mood: 'worried' }
+  ],
+  moon: [
+    { text: "Commander! You chose the Moon. This is the hardest mission NASA has ever attempted. No atmosphere. No resources. 380 mSv of radiation every year — the highest anywhere humans have ever stood.", mood: 'worried' },
+    { text: "But we're only 3 days from Earth. If something goes wrong, we can abort. On Mars, there is no abort. So — do you have what it takes to survive the Moon?", mood: 'excited' }
+  ]
+};
+
+let introSlideIndex = 0;
+let introReturnTo = 'modeselect';
+let ariaBriefingIndex = 0;
+let ariaBriefingMode = 'mars';
+
+function typewrite(el, text, speed = 28) {
+  if (!el) return;
+  el.textContent = '';
+  let i = 0;
+  clearInterval(el._tw);
+  el._tw = setInterval(() => {
+    el.textContent = text.slice(0, ++i);
+    if (i >= text.length) clearInterval(el._tw);
+  }, speed);
+}
+
+function renderIntroSlide() {
+  const slide = INTRO_SLIDES[introSlideIndex];
+  const card = document.getElementById('introCard');
+  card.setAttribute('data-scene', introSlideIndex);
+  document.getElementById('introSceneNum').textContent = `SCENE ${introSlideIndex + 1} / ${INTRO_SLIDES.length}`;
+  document.getElementById('introIcon').textContent = slide.icon;
+  document.getElementById('introTitle').textContent = slide.title;
+  typewrite(document.getElementById('introText'), slide.text, 24);
+  const progress = document.getElementById('introProgress');
+  progress.innerHTML = INTRO_SLIDES.map((_, i) =>
+    `<div class="intro-dot ${i < introSlideIndex ? 'done' : ''} ${i === introSlideIndex ? 'active' : ''}"></div>`
+  ).join('');
+  document.getElementById('introNext').textContent =
+    introSlideIndex === INTRO_SLIDES.length - 1 ? 'BEGIN MISSION →' : 'CONTINUE →';
+  card.style.animation = 'none';
+  void card.offsetWidth;
+  card.style.animation = 'introCardIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)';
+  if (window.SFX && SFX.opportunity) SFX.opportunity();
+}
+
+function showIntroStory(returnTo = 'modeselect') {
+  introReturnTo = returnTo;
+  introSlideIndex = 0;
+  document.getElementById('introStoryModal').classList.remove('hidden');
+  renderIntroSlide();
+}
+
+function advanceIntro() {
+  if (introSlideIndex < INTRO_SLIDES.length - 1) {
+    introSlideIndex++;
+    renderIntroSlide();
+  } else {
+    finishIntro();
+  }
+}
+
+function finishIntro() {
+  clearInterval(document.getElementById('introText')._tw);
+  document.getElementById('introStoryModal').classList.add('hidden');
+  try { localStorage.setItem(INTRO_SEEN_KEY, '1'); } catch(e) {}
+  if (introReturnTo === 'game' && missionStarted) return;
+  showModeSelect();
+}
+
+function skipIntro() { finishIntro(); }
+
+function hasSeenIntro() {
+  try { return localStorage.getItem(INTRO_SEEN_KEY) === '1'; } catch(e) { return false; }
+}
+
+function showAriaBriefing(mode) {
+  ariaBriefingMode = mode;
+  ariaBriefingIndex = 0;
+  if (window.ARIA && ARIA.hide) ARIA.hide();
+  document.getElementById('ariaBriefingModal').classList.remove('hidden');
+  renderAriaBriefing();
+}
+
+function renderAriaBriefing() {
+  const lines = ARIA_BRIEFINGS[ariaBriefingMode];
+  const line = lines[ariaBriefingIndex];
+  typewrite(document.getElementById('briefingText'), line.text, 28);
+  document.getElementById('briefingContinue').textContent =
+    ariaBriefingIndex === lines.length - 1 ? 'LAUNCH MISSION →' : 'CONTINUE →';
+  if (window.SFX) {
+    if (line.mood === 'excited' && SFX.opportunity) SFX.opportunity();
+    else if (line.mood === 'worried' && SFX.warning) SFX.warning();
+  }
+}
+
+function advanceAriaBriefing() {
+  const lines = ARIA_BRIEFINGS[ariaBriefingMode];
+  if (ariaBriefingIndex < lines.length - 1) {
+    ariaBriefingIndex++;
+    renderAriaBriefing();
+  } else {
+    document.getElementById('ariaBriefingModal').classList.add('hidden');
+    const tut = document.getElementById('tutorialModal');
+    tut.classList.remove('hidden');
+    tut.classList.add('flex');
+  }
+}
+
+/* ============ SFX ============ */
 const SFX = {
   ctx: null,
   muted: (() => { try { return localStorage.getItem('astro_muted') === '1'; } catch(e) { return false; } })(),
@@ -469,7 +928,7 @@ const SFX = {
   toggleOff()  { this.ensure(); this.seq([{f:784,d:0.08,t:'sine',v:0.1},{f:523,d:0.12,t:'sine',v:0.1,s:0.06}]); }
 };
 
-/* ============ BGM (procedural space ambient) ============ */
+/* ============ BGM ============ */
 const BGM = {
   ctx: null, master: null, playing: false, stepIdx: 0, timer: null, currentVol: 0.28,
   init() { if (this.ctx) return; try { const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return; this.ctx = new AC(); this.master = this.ctx.createGain(); this.master.gain.value = 0; this.master.connect(this.ctx.destination); } catch(e) {} },
@@ -532,13 +991,280 @@ function updateMuteUI() {
 function toggleMute() {
   SFX.toggleMute(); BGM.setMuted(SFX.muted);
   if (!SFX.muted) SFX.toggleOn();
+  if (SFX.muted) stopSevereWarnSound();
 }
 function buzz(pattern) { try { if ('vibrate' in navigator) navigator.vibrate(pattern); } catch(e) {} }
+
+/* ============ SEVERE WARNING SOUND ============ */
+let severeWarnSoundInterval = null;
+function startSevereWarnSound() {
+  if (severeWarnSoundInterval) return;
+  if (SFX.muted) return;
+  severeWarnSoundInterval = setInterval(() => {
+    if (SFX.muted) return;
+    SFX.tone(720, 0.09, 'square', 0.022);
+    SFX.tone(560, 0.09, 'square', 0.022, 0.14);
+  }, 1300);
+}
+function stopSevereWarnSound() {
+  if (severeWarnSoundInterval) {
+    clearInterval(severeWarnSoundInterval);
+    severeWarnSoundInterval = null;
+  }
+}
+
+/* ============ RAD HELPERS ============ */
+function getRadBaseline() {
+  return currentOutpost === 'moon' ? 1.04 : 0.64;
+}
+function getRadDecayRate() {
+  return currentOutpost === 'moon' ? 3 : 2;
+}
+function updateRadDisplay() {
+  const el = document.getElementById('envRad');
+  if (!el) return;
+  const baseline = getRadBaseline();
+  const excess = currentRad - baseline;
+  let color = 'text-emerald-400';
+  let suffix = '';
+  if (excess > 10) { color = 'text-red-400'; suffix = ' ⚠️'; }
+  else if (excess > 3) { color = 'text-amber-400'; suffix = ' ↑'; }
+  else if (excess > 0) { color = 'text-amber-300'; suffix = ' ↘'; }
+  el.className = `font-mono font-bold ${color} ${excess > 10 ? 'animate-pulse' : ''}`;
+  el.innerText = `${currentRad.toFixed(2)}${suffix}`;
+}
+
+/* ============ VITAL VISUALIZATION ============ */
+let vitalVisualInterval = null;
+let vitalVisualKey = null;
+
+const VITAL_CONFIG = {
+  o2:      { title: '💨 Oxygen Tank',        icon: 'fa-wind',                   color: '#38bdf8' },
+  battery: { title: '🔋 Battery Bank',        icon: 'fa-battery-three-quarters', color: '#fbbf24' },
+  shield:  { title: '🛡️ Radiation Shield',    icon: 'fa-shield-cat',             color: '#f59e0b' },
+  health:  { title: '🌱 Crew & Food Supply',  icon: 'fa-user-astronaut',         color: '#10b981' }
+};
+
+function getVitalValue(key) {
+  switch(key) {
+    case 'o2':      return o2Level;
+    case 'battery': return (batteryLevel / batteryMax) * 100;
+    case 'shield':  return shieldIntegrity;
+    case 'health':  return crewHealth;
+    default:        return 0;
+  }
+}
+
+function getVitalHint(key, value) {
+  switch(key) {
+    case 'o2': {
+      const sols = Math.floor(value / Math.max(1, o2DrainPerSol));
+      return `Current drain: ${o2DrainPerSol}%/Sol → about ${sols} Sol${sols === 1 ? '' : 's'} of air left.`;
+    }
+    case 'battery':
+      return value < 30
+        ? '⚠️ Below 30% — science yield is halved until recharged.'
+        : `Stored ${Math.round(batteryLevel)} / ${batteryMax}%. Recharge +${batteryRechargePerSol}%/Sol when panels deployed.`;
+    case 'shield':
+      return value < 25
+        ? '⚠️ Critical — a solar storm could breach the shield.'
+        : 'Blocks cosmic + solar radiation. Radiation above baseline drains this each Sol.';
+    case 'health':
+      return value < 25
+        ? '⚠️ Crew is malnourished — feed them soon or the mission ends.'
+        : 'Crew nutrition + fitness. Drops when food runs short or storms hit.';
+    default:
+      return '';
+  }
+}
+
+function renderOxygenSVG(value) {
+  const liquidH = (value / 100) * 140;
+  const liquidY = 170 - liquidH;
+  const bubbleCount = value > 10 ? 6 : 3;
+  let bubblesHTML = '';
+  for (let i = 0; i < bubbleCount; i++) {
+    const bx = 30 + Math.random() * 60;
+    const delay = (i * 0.4).toFixed(2);
+    const dur = (2 + Math.random() * 1.5).toFixed(2);
+    bubblesHTML += `<circle cx="${bx}" cy="165" r="${1.5 + Math.random() * 2}" fill="#fff" opacity="0.7">
+      <animate attributeName="cy" from="165" to="40" dur="${dur}s" begin="${delay}s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" from="0.7" to="0" dur="${dur}s" begin="${delay}s" repeatCount="indefinite"/>
+    </circle>`;
+  }
+  const gaugeColor = value > 50 ? '#38bdf8' : value > 25 ? '#f59e0b' : '#ef4444';
+  const angle = Math.PI * (1 - value / 100);
+  const needleX = 60 + 8 * Math.cos(angle);
+  const needleY = 58 - 8 * Math.sin(angle);
+  return `
+    <svg viewBox="0 0 120 210" class="w-36 h-56">
+      <defs>
+        <clipPath id="tankClip"><rect x="20" y="30" width="80" height="140" rx="40"/></clipPath>
+        <linearGradient id="o2Grad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#7dd3fc"/><stop offset="100%" stop-color="#0284c7"/>
+        </linearGradient>
+      </defs>
+      <rect x="20" y="30" width="80" height="140" rx="40" fill="rgba(15,23,42,0.9)" stroke="#38bdf8" stroke-width="2.5"/>
+      ${liquidH > 1 ? `<rect x="20" y="${liquidY}" width="80" height="${liquidH}" fill="url(#o2Grad)" clip-path="url(#tankClip)" opacity="0.85"/>` : ''}
+      ${liquidH > 5 ? `<path d="M 20 ${liquidY} Q 40 ${liquidY-4} 60 ${liquidY} T 100 ${liquidY}" fill="none" stroke="#7dd3fc" stroke-width="2" clip-path="url(#tankClip)"><animate attributeName="d" dur="2s" repeatCount="indefinite"
+        values="M 20 ${liquidY} Q 40 ${liquidY-4} 60 ${liquidY} T 100 ${liquidY};M 20 ${liquidY} Q 40 ${liquidY+4} 60 ${liquidY} T 100 ${liquidY};M 20 ${liquidY} Q 40 ${liquidY-4} 60 ${liquidY} T 100 ${liquidY}"/></path>` : ''}
+      ${bubblesHTML}
+      <rect x="52" y="8" width="16" height="25" rx="3" fill="#334155" stroke="#38bdf8" stroke-width="1.5"/>
+      <rect x="48" y="4" width="24" height="8" rx="2" fill="#64748b"/>
+      <circle cx="60" cy="58" r="10" fill="rgba(15,23,42,0.95)" stroke="${gaugeColor}" stroke-width="1.5"/>
+      <line x1="60" y1="58" x2="${needleX}" y2="${needleY}" stroke="${gaugeColor}" stroke-width="2" stroke-linecap="round"/>
+      <circle cx="60" cy="58" r="1.5" fill="${gaugeColor}"/>
+    </svg>`;
+}
+
+function renderBatterySVG(value) {
+  const cells = 4;
+  const perCell = 100 / cells;
+  let cellsHTML = '';
+  for (let i = 0; i < cells; i++) {
+    const cellFill = Math.max(0, Math.min(1, (value - i * perCell) / perCell));
+    const x = 20 + i * 38;
+    const fillColor = value > 50 ? '#fbbf24' : value > 25 ? '#f59e0b' : '#ef4444';
+    cellsHTML += `
+      <rect x="${x}" y="30" width="32" height="40" rx="3" fill="rgba(15,23,42,0.9)" stroke="${fillColor}" stroke-width="1.5"/>
+      ${cellFill > 0 ? `<rect x="${x}" y="${30 + 40*(1-cellFill)}" width="32" height="${40*cellFill}" rx="3" fill="${fillColor}" opacity="0.9">
+        <animate attributeName="opacity" values="0.7;1;0.7" dur="1.5s" repeatCount="indefinite"/>
+      </rect>` : ''}
+    `;
+  }
+  const shellColor = value > 50 ? '#fbbf24' : value > 25 ? '#f59e0b' : '#ef4444';
+  return `
+    <svg viewBox="0 0 200 100" class="w-56 h-28">
+      <rect x="10" y="20" width="165" height="60" rx="8" fill="rgba(15,23,42,0.9)" stroke="${shellColor}" stroke-width="3"/>
+      <rect x="175" y="38" width="15" height="24" rx="3" fill="${shellColor}"/>
+      ${cellsHTML}
+      ${value > 50 ? '<text x="100" y="62" text-anchor="middle" font-size="24" fill="#fbbf24" opacity="0.8">⚡</text>' : ''}
+    </svg>`;
+}
+
+function renderShieldSVG(value) {
+  const ringOpacity = value / 100;
+  const color = value > 50 ? '#f59e0b' : value > 25 ? '#fbbf24' : '#ef4444';
+  const particleCount = value < 50 ? 10 : 6;
+  let particlesHTML = '';
+  for (let i = 0; i < particleCount; i++) {
+    const angle = (i / particleCount) * Math.PI * 2 + Math.random() * 0.3;
+    const startDist = 95;
+    const endDist = 58;
+    const sx = 100 + Math.cos(angle) * startDist;
+    const sy = 100 + Math.sin(angle) * startDist;
+    const ex = 100 + Math.cos(angle) * endDist;
+    const ey = 100 + Math.sin(angle) * endDist;
+    const dur = (0.9 + Math.random() * 0.9).toFixed(2);
+    const begin = (Math.random() * 1.5).toFixed(2);
+    particlesHTML += `<circle r="2.5" fill="${color}" opacity="0">
+      <animate attributeName="cx" values="${sx};${ex}" dur="${dur}s" begin="${begin}s" repeatCount="indefinite"/>
+      <animate attributeName="cy" values="${sy};${ey}" dur="${dur}s" begin="${begin}s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="1;1;0" dur="${dur}s" begin="${begin}s" repeatCount="indefinite"/>
+    </circle>`;
+  }
+  return `
+    <svg viewBox="0 0 200 210" class="w-56 h-56">
+      ${particlesHTML}
+      <circle cx="100" cy="100" r="90" fill="none" stroke="${color}" stroke-width="1.5" opacity="${0.2 * ringOpacity}" stroke-dasharray="3 6"/>
+      <circle cx="100" cy="100" r="75" fill="none" stroke="${color}" stroke-width="2.5" opacity="${0.4 * ringOpacity}" stroke-dasharray="${value < 25 ? '2 10' : '10 5'}"/>
+      <circle cx="100" cy="100" r="58" fill="none" stroke="${color}" stroke-width="3" opacity="${0.75 * ringOpacity}">
+        <animate attributeName="opacity" values="${0.5 * ringOpacity};${0.9 * ringOpacity};${0.5 * ringOpacity}" dur="2s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="100" cy="100" r="58" fill="${color}" opacity="${0.1 * ringOpacity}"/>
+      <text x="100" y="118" text-anchor="middle" font-size="46">🧑‍🚀</text>
+      ${value < 25 ? '<text x="100" y="185" text-anchor="middle" font-size="11" fill="#ef4444" font-weight="bold">⚠️ CRITICAL</text>' : ''}
+    </svg>`;
+}
+
+function renderHealthSVG(value) {
+  const color = value > 50 ? '#10b981' : value > 25 ? '#f59e0b' : '#ef4444';
+  const beatSpeed = value > 50 ? '1.2s' : value > 25 ? '0.7s' : '0.4s';
+  const foodOpacity = Math.max(0.15, value / 100);
+  return `
+    <svg viewBox="0 0 200 210" class="w-56 h-56">
+      <g opacity="${foodOpacity}">
+        <rect x="15" y="155" width="36" height="36" rx="4" fill="#78350f" stroke="#f59e0b" stroke-width="1.5"/>
+        <rect x="58" y="155" width="36" height="36" rx="4" fill="#78350f" stroke="#f59e0b" stroke-width="1.5"/>
+        <rect x="147" y="155" width="36" height="36" rx="4" fill="#78350f" stroke="#f59e0b" stroke-width="1.5"/>
+        <text x="33" y="182" text-anchor="middle" font-size="20">🍎</text>
+        <text x="76" y="182" text-anchor="middle" font-size="20">🥫</text>
+        <text x="165" y="182" text-anchor="middle" font-size="20">💧</text>
+      </g>
+      <g transform="translate(100, 85)">
+        <circle cx="0" cy="-32" r="19" fill="${color}" opacity="0.9"/>
+        <g transform="translate(0, -3)">
+          <path d="M 0 -6 C -11 -17 -22 -9 -22 5 C -22 22 0 32 0 32 C 0 32 22 22 22 5 C 22 -9 11 -17 0 -6 Z" fill="${color}">
+            <animateTransform attributeName="transform" type="scale" values="1;1.18;1" dur="${beatSpeed}" repeatCount="indefinite" additive="sum"/>
+          </path>
+        </g>
+        <path d="M -16 6 L 16 6 L 21 52 L 8 57 L 5 92 L -5 92 L -8 57 L -21 52 Z" fill="${color}" opacity="0.85"/>
+      </g>
+      ${value < 25 ? '<text x="100" y="205" text-anchor="middle" font-size="11" fill="#ef4444" font-weight="bold">⚠️ CRITICAL</text>' : ''}
+    </svg>`;
+}
+
+function renderVitalVisual(key, value) {
+  const container = document.getElementById('vitalVisualContent');
+  switch(key) {
+    case 'o2':      container.innerHTML = renderOxygenSVG(value); break;
+    case 'battery': container.innerHTML = renderBatterySVG(value); break;
+    case 'shield':  container.innerHTML = renderShieldSVG(value); break;
+    case 'health':  container.innerHTML = renderHealthSVG(value); break;
+  }
+}
+
+function showVitalVisual(key) {
+  vitalVisualKey = key;
+  const config = VITAL_CONFIG[key];
+  const value = getVitalValue(key);
+
+  document.getElementById('vitalVisualTitle').innerHTML = `<i class="fa-solid ${config.icon}" style="color: ${config.color};"></i> ${config.title}`;
+  document.getElementById('vitalVisualValue').innerText = Math.round(value) + '%';
+  document.getElementById('vitalVisualValue').style.color =
+    value > 50 ? '#10b981' : value > 25 ? '#f59e0b' : '#ef4444';
+  document.getElementById('vitalVisualHint').innerText = getVitalHint(key, value);
+
+  renderVitalVisual(key, value);
+
+  const modal = document.getElementById('vitalVisualModal');
+  modal.classList.remove('hidden');
+  modal.classList.add('flex');
+
+  if (window.SFX) SFX.click();
+  if (window.buzz) buzz(10);
+
+  clearInterval(vitalVisualInterval);
+  vitalVisualInterval = setInterval(() => {
+    if (!vitalVisualKey) return;
+    const v = getVitalValue(vitalVisualKey);
+    document.getElementById('vitalVisualValue').innerText = Math.round(v) + '%';
+    document.getElementById('vitalVisualValue').style.color =
+      v > 50 ? '#10b981' : v > 25 ? '#f59e0b' : '#ef4444';
+    document.getElementById('vitalVisualHint').innerText = getVitalHint(vitalVisualKey, v);
+    renderVitalVisual(vitalVisualKey, v);
+  }, 500);
+}
+
+function closeVitalVisual() {
+  clearInterval(vitalVisualInterval);
+  vitalVisualInterval = null;
+  vitalVisualKey = null;
+  const modal = document.getElementById('vitalVisualModal');
+  if (modal) {
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+  }
+}
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && vitalVisualKey) closeVitalVisual();
+});
 
 document.addEventListener('click', (e) => {
   const btn = e.target.closest('button');
   if (!btn) return;
-  if (btn.id === 'muteBtn') return;
+  if (btn.id === 'muteBtn' || btn.id === 'introNext' || btn.id === 'introSkip' || btn.id === 'briefingContinue') return;
   if (btn.id === 'ariaBody' || e.target.closest('#ariaBody')) return;
   SFX.ensure(); SFX.click();
 }, true);
@@ -571,16 +1297,20 @@ let scienceMult = 1.0;
 let batteryRechargePerSol = 4;
 
 let currentEvent = null;
-let canvasFX = { particles: [], icons: [], shake: null, rays: null, tint: null, flash: null };
+let canvasFX = { particles: [], icons: [], shake: null, rays: null, tint: null, flash: null, spawnFn: null };
 let chosenOptionThisSol = false;
 let timerInterval = null;
 let countdownSecs = 10;
+let fxTopUpInterval = null;
+
+let currentRad = 1.04;
+let crewDoseAccumulated = 0;
 
 let ariaO2Warned = false, ariaBatteryWarned = false, ariaShieldWarned = false, ariaHealthWarned = false;
 let ariaSci100 = false, ariaSci200 = false, ariaSci300 = false, ariaSci400 = false;
 let ariaFirstEventShown = false;
 
-/* ============ EVENTS (with descriptions) ============ */
+/* ============ EVENTS ============ */
 const eventPool = [
   { id:'DUST', type:'crisis', title:'Dust Storm!', desc:'A high-velocity dust storm is burying solar panels!', timed:true, insightTitle:'NASA Mission Control:', insightText:'Dust reduces solar irradiance by up to 99%.', scienceExplanation:'Retracting arrays preserves hardware but forces reliance on battery reserves.', options:[
     { text:'Retract Panels', desc:'Save the panels for future Sols, but the grid runs on battery only for 3 Sols.', action:'retract', o2Effect:-5, powerMod:-20, sciEffect:-5 },
@@ -830,6 +1560,8 @@ function determineEnding(won) {
 }
 
 function renderEnding(won) {
+  stopSevereWarnSound();
+  document.getElementById('criticalWarningOverlay').classList.remove('active', 'severe');
   const endingKey = determineEnding(won);
   const isNewBadge = unlockBadge(endingKey);
   updateBadgeCounts();
@@ -848,10 +1580,15 @@ function renderEnding(won) {
     <h2 class="text-2xl font-black ${t.header} mb-1 leading-tight">${e.header}</h2>
     <p class="text-sm font-bold ${t.subtitle} mb-4">${e.subtitle}</p>
     ${newBadgeBanner}
-    <div class="grid grid-cols-3 gap-2 mb-4">
+    <div class="grid grid-cols-3 gap-2 mb-3">
       <div class="bg-slate-900 p-3 rounded-xl border ${t.statBorder}"><div class="text-[10px] text-slate-400">Sols</div><div class="text-xl font-black ${t.header}">${sol}</div></div>
       <div class="bg-slate-900 p-3 rounded-xl border ${t.statBorder}"><div class="text-[10px] text-slate-400">Science</div><div class="text-xl font-black ${t.header}">${sciencePoints}</div></div>
       <div class="bg-slate-900 p-3 rounded-xl border ${t.statBorder}"><div class="text-[10px] text-slate-400">Crew Surv.</div><div class="text-xl font-black ${t.header}">${avg}%</div></div>
+    </div>
+    <div class="bg-slate-900/60 rounded-xl p-2 mb-4 border ${t.statBorder} text-center">
+      <div class="text-[10px] text-slate-400">☢️ Crew Radiation Dose</div>
+      <div class="text-base font-black ${crewDoseAccumulated < 100 ? 'text-emerald-400' : crewDoseAccumulated < 300 ? 'text-amber-400' : 'text-orange-400'}">${crewDoseAccumulated.toFixed(1)} mSv</div>
+      <div class="text-[9px] text-slate-500">${crewDoseAccumulated < 100 ? 'within safe limits' : crewDoseAccumulated < 300 ? 'noticeable exposure' : 'near NASA career limit'}</div>
     </div>
     <div class="${t.storyBg} rounded-xl p-4 border ${t.storyBorder} text-left text-xs mb-4"><div class="font-black ${t.header} mb-2 text-sm">📖 Mission Report</div><p class="${t.storyText} leading-relaxed">${story}</p></div>
     <div class="bg-slate-900/80 rounded-xl p-3 border border-slate-600 text-left text-xs mb-4"><div class="font-bold text-slate-200 mb-1 flex items-center gap-1.5"><i class="fa-solid fa-lightbulb text-yellow-400"></i> Lesson Learned</div><p class="text-slate-300 leading-relaxed">${e.lesson}</p></div>
@@ -864,7 +1601,7 @@ function renderEnding(won) {
   else { SFX.lose(); buzz([200,100,200]); ARIA.show(`We lost the crew... but their data lives on. Let's try again, Commander.`, 'sad', 0); }
 }
 
-function showModeSelect() { const m = document.getElementById('modeSelectModal'); m.classList.remove('hidden'); m.classList.add('flex'); ARIA.hide(); }
+function showModeSelect() { const m = document.getElementById('modeSelectModal'); m.classList.remove('hidden'); m.classList.add('flex'); ARIA.hide(); stopSevereWarnSound(); }
 function selectMode(type) {
   currentOutpost = type;
   applyModeModifiers(type);
@@ -875,7 +1612,7 @@ function selectMode(type) {
   if (type === 'moon') { banner.className = 'text-center text-sm font-bold py-2 rounded-xl mb-4 bg-red-950/50 border border-red-500/40 text-red-300'; banner.innerHTML = '🌙 You selected MOON — HARD MODE'; }
   else { banner.className = 'text-center text-sm font-bold py-2 rounded-xl mb-4 bg-emerald-950/50 border border-emerald-500/40 text-emerald-300'; banner.innerHTML = '🔴 You selected MARS — EASY MODE'; }
   document.getElementById('modeSelectModal').classList.add('hidden'); document.getElementById('modeSelectModal').classList.remove('flex');
-  document.getElementById('tutorialModal').classList.remove('hidden'); document.getElementById('tutorialModal').classList.add('flex');
+  showAriaBriefing(type);
 }
 function applyModeModifiers(type) {
   const badge = document.getElementById('locationBadge'); const mods = document.getElementById('outpostModifiers');
@@ -883,13 +1620,15 @@ function applyModeModifiers(type) {
     badge.innerText = 'Lunar South Pole · HARD'; badge.className = 'text-[11px] font-semibold bg-red-500/10 text-red-300 border border-red-500/30 px-2 py-0.5 rounded-full';
     document.getElementById('envTemp').innerText = '-160°C'; document.getElementById('envTau').innerText = '0.0';
     o2DrainPerSol = 6; scienceMult = 0.7; batteryRechargePerSol = 2;
-    mods.innerHTML = '🌙 <span class="text-red-300 font-bold">Moon (HARD)</span>: O₂ −6/Sol · Science ×0.7 · Battery +2/Sol';
+    mods.innerHTML = '🌙 <span class="text-red-300 font-bold">Moon (HARD)</span>: O₂ −6/Sol · Science ×0.7 · Battery +2/Sol · Rad decay −3';
   } else {
     badge.innerText = 'Jezero Crater · EASY'; badge.className = 'text-[11px] font-semibold bg-emerald-500/10 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded-full';
     document.getElementById('envTemp').innerText = '-62°C'; document.getElementById('envTau').innerText = '0.4';
     o2DrainPerSol = 4; scienceMult = 1.2; batteryRechargePerSol = 4;
-    mods.innerHTML = '🔴 <span class="text-emerald-300 font-bold">Mars (EASY)</span>: O₂ −4/Sol · Science ×1.2 · Battery +4/Sol';
+    mods.innerHTML = '🔴 <span class="text-emerald-300 font-bold">Mars (EASY)</span>: O₂ −4/Sol · Science ×1.2 · Battery +4/Sol · Rad decay −2';
   }
+  currentRad = getRadBaseline();
+  updateRadDisplay();
 }
 
 function openEventLibrary() {
@@ -943,56 +1682,412 @@ function initCanvas() {
   canvas.width = canvas.parentElement.clientWidth;
   canvas.height = canvas.parentElement.clientHeight;
   let radarAngle = 0;
+  let scanLineY = 20;
+  let scanDir = 1;
+  let tick = 0;
+
   function render() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const W = canvas.width, H = canvas.height;
+    const now = Date.now();
+    tick++;
+    ctx.clearRect(0, 0, W, H);
+
     let shakeX = 0, shakeY = 0;
-    if (canvasFX.shake) { const t = (Date.now() - canvasFX.shake.start) / canvasFX.shake.duration; if (t < 1) { const k = canvasFX.shake.intensity * (1 - t); shakeX = (Math.random() - 0.5) * k * 2; shakeY = (Math.random() - 0.5) * k * 2; } else canvasFX.shake = null; }
-    ctx.save(); ctx.translate(shakeX, shakeY);
-    if (currentOutpost === 'moon') {
-      ctx.fillStyle = '#030712'; ctx.fillRect(-10, -10, canvas.width+20, canvas.height+20);
-      ctx.fillStyle = '#ffffff'; for (let i = 0; i < 30; i++) ctx.fillRect((i*47)%canvas.width, (i*23)%(canvas.height*0.6), (i%2)+1, (i%2)+1);
-      ctx.fillStyle = '#334155'; ctx.beginPath(); ctx.ellipse(canvas.width/2, canvas.height+40, canvas.width*0.7, 100, 0, 0, Math.PI*2); ctx.fill();
-    } else if (currentOutpost === 'mars') {
-      let g = ctx.createLinearGradient(0,0,0,canvas.height); g.addColorStop(0,'#7c2d12'); g.addColorStop(1,'#451a03');
-      ctx.fillStyle = g; ctx.fillRect(-10, -10, canvas.width+20, canvas.height+20);
-      ctx.fillStyle = '#9a3412'; ctx.beginPath(); ctx.ellipse(canvas.width/2, canvas.height+30, canvas.width*0.7, 90, 0, 0, Math.PI*2); ctx.fill();
-    } else {
-      ctx.fillStyle = '#0b1020'; ctx.fillRect(-10, -10, canvas.width+20, canvas.height+20);
-      ctx.fillStyle = '#ffffff'; for (let i = 0; i < 20; i++) ctx.fillRect((i*67)%canvas.width, (i*31)%(canvas.height*0.7), 1, 1);
-    }
-    if (currentOutpost) {
-      const cx = canvas.width/2, cy = canvas.height - 35;
-      ctx.fillStyle = 'rgba(224,242,254,0.2)'; ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 3;
-      ctx.beginPath(); ctx.arc(cx, cy, 50, Math.PI, 0); ctx.fill(); ctx.stroke();
-      if (shieldIntegrity > 20) { ctx.strokeStyle = 'rgba(56,189,248,0.4)'; ctx.lineWidth = 5; ctx.beginPath(); ctx.arc(cx, cy, 62, Math.PI*1.1, Math.PI*1.9); ctx.stroke(); }
-      if (!panelsRetracted) { ctx.fillStyle = '#1e3a8a'; ctx.strokeStyle = '#60a5fa'; ctx.lineWidth = 1; ctx.fillRect(cx-95, cy-12, 35, 12); ctx.strokeRect(cx-95, cy-12, 35, 12); ctx.fillRect(cx+60, cy-12, 35, 12); ctx.strokeRect(cx+60, cy-12, 35, 12); }
-      else { ctx.fillStyle = '#475569'; ctx.fillRect(cx-65, cy-8, 12, 8); ctx.fillRect(cx+53, cy-8, 12, 8); }
-      ctx.strokeStyle = 'rgba(16,185,129,0.3)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(30, 30, 18, 0, Math.PI*2); ctx.stroke();
-      ctx.strokeStyle = '#10b981'; ctx.beginPath(); ctx.moveTo(30, 30); ctx.lineTo(30+Math.cos(radarAngle)*18, 30+Math.sin(radarAngle)*18); ctx.stroke();
-      radarAngle += 0.05;
-    }
-    for (let i = canvasFX.particles.length - 1; i >= 0; i--) { const p = canvasFX.particles[i]; p.x += p.vx; p.y += p.vy; p.life -= 1; if (p.life <= 0) { canvasFX.particles.splice(i, 1); continue; } ctx.globalAlpha = Math.max(0, p.life / p.maxLife); ctx.fillStyle = p.color; ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2); ctx.fill(); }
-    ctx.globalAlpha = 1;
-    if (canvasFX.rays) {
-      const t = (Date.now() - canvasFX.rays.start) / canvasFX.rays.duration;
+    if (canvasFX.shake) {
+      const t = (now - canvasFX.shake.start) / canvasFX.shake.duration;
       if (t < 1) {
-        const cx = canvas.width/2, cy = canvas.height/2;
-        ctx.globalAlpha = 0.6 * (1 - t); ctx.strokeStyle = canvasFX.rays.color; ctx.lineWidth = 3;
-        for (let i = 0; i < canvasFX.rays.count; i++) { const angle = (i / canvasFX.rays.count) * Math.PI * 2 + t * 3; const len = 60 + Math.random() * 40; ctx.beginPath(); ctx.moveTo(cx + Math.cos(angle) * 15, cy + Math.sin(angle) * 15); ctx.lineTo(cx + Math.cos(angle) * len, cy + Math.sin(angle) * len); ctx.stroke(); }
-        ctx.globalAlpha = 1;
-      } else canvasFX.rays = null;
+        const k = canvasFX.shake.intensity * (1 - t);
+        shakeX = (Math.random() - 0.5) * k * 2;
+        shakeY = (Math.random() - 0.5) * k * 2;
+      } else canvasFX.shake = null;
     }
+
+    ctx.save();
+    ctx.translate(shakeX, shakeY);
+
+    const accent = currentOutpost === 'mars' ? '251, 146, 60' : '56, 189, 248';
+
+    let bg;
+    if (currentOutpost === 'moon') {
+      bg = ctx.createRadialGradient(W * 0.5, H * 0.75, 10, W * 0.5, H * 0.75, W * 0.9);
+      bg.addColorStop(0, '#0d1a2e'); bg.addColorStop(0.5, '#050a16'); bg.addColorStop(1, '#010206');
+    } else if (currentOutpost === 'mars') {
+      bg = ctx.createRadialGradient(W * 0.5, H * 0.75, 10, W * 0.5, H * 0.75, W * 0.9);
+      bg.addColorStop(0, '#2a1108'); bg.addColorStop(0.5, '#150703'); bg.addColorStop(1, '#030101');
+    } else {
+      bg = ctx.createRadialGradient(W * 0.5, H * 0.5, 10, W * 0.5, H * 0.5, W * 0.9);
+      bg.addColorStop(0, '#0b1020'); bg.addColorStop(1, '#02030a');
+    }
+    ctx.fillStyle = bg;
+    ctx.fillRect(-10, -10, W + 20, H + 20);
+
+    if (currentOutpost) {
+      for (let i = 0; i < 40; i++) {
+        const sx = (i * 47) % W;
+        const sy = (i * 23) % (H * 0.55);
+        const twinkle = 0.3 + Math.abs(Math.sin(tick * 0.02 + i)) * 0.7;
+        ctx.fillStyle = `rgba(255, 255, 255, ${twinkle * 0.6})`;
+        ctx.fillRect(sx, sy, (i % 3 === 0) ? 2 : 1, (i % 3 === 0) ? 2 : 1);
+      }
+    }
+
+    if (currentOutpost) {
+      const horizonY = H * 0.52;
+      ctx.strokeStyle = `rgba(${accent}, 0.12)`;
+      ctx.lineWidth = 1;
+      for (let i = 0; i < 7; i++) {
+        const t2 = i / 7;
+        const y = horizonY + Math.pow(t2, 1.8) * (H - horizonY);
+        ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+      }
+      for (let i = -5; i <= 5; i++) {
+        ctx.beginPath();
+        ctx.moveTo(W / 2 + i * 12, horizonY);
+        ctx.lineTo(W / 2 + i * (W / 9), H);
+        ctx.stroke();
+      }
+    }
+
+    if (currentOutpost) {
+      const bx = W / 2, by = H - 38;
+      const glowGrad = ctx.createRadialGradient(bx, by, 5, bx, by, 70);
+      glowGrad.addColorStop(0, `rgba(${accent}, 0.3)`);
+      glowGrad.addColorStop(1, `rgba(${accent}, 0)`);
+      ctx.fillStyle = glowGrad;
+      ctx.beginPath(); ctx.arc(bx, by, 70, 0, Math.PI * 2); ctx.fill();
+
+      ctx.strokeStyle = `rgba(${accent}, 0.6)`; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.ellipse(bx, by + 4, 60, 14, 0, 0, Math.PI * 2); ctx.stroke();
+
+      ctx.setLineDash([4, 6]);
+      ctx.strokeStyle = `rgba(${accent}, 0.3)`; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.ellipse(bx, by + 4, 50, 11, 0, 0, Math.PI * 2); ctx.stroke();
+      ctx.setLineDash([]);
+
+      ctx.save();
+      ctx.translate(bx, by);
+
+      const domeGrad = ctx.createLinearGradient(0, -50, 0, 0);
+      domeGrad.addColorStop(0, `rgba(${accent}, 0.4)`);
+      domeGrad.addColorStop(1, `rgba(${accent}, 0.05)`);
+      ctx.fillStyle = domeGrad;
+      ctx.strokeStyle = `rgba(${accent}, 0.9)`; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.arc(0, 0, 45, Math.PI, 0); ctx.fill(); ctx.stroke();
+
+      ctx.fillStyle = `rgba(${accent}, 1)`;
+      ctx.beginPath();
+      ctx.arc(-18, -18, 2.5, 0, Math.PI * 2);
+      ctx.arc(0, -25, 2.5, 0, Math.PI * 2);
+      ctx.arc(18, -18, 2.5, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.save();
+      ctx.beginPath(); ctx.arc(0, 0, 45, Math.PI, 0); ctx.clip();
+      const hiGrad = ctx.createLinearGradient(-45, -50, 45, 0);
+      hiGrad.addColorStop(0, 'rgba(255,255,255,0)');
+      hiGrad.addColorStop(0.5, 'rgba(255,255,255,0.12)');
+      hiGrad.addColorStop(1, 'rgba(255,255,255,0)');
+      ctx.fillStyle = hiGrad;
+      ctx.fillRect(-45, -50, 90, 50);
+      ctx.restore();
+
+      ctx.strokeStyle = `rgba(${accent}, 0.9)`; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(0, -45); ctx.lineTo(0, -58); ctx.stroke();
+
+      const blink = 0.5 + Math.sin(tick * 0.15) * 0.5;
+      const lightGlow = ctx.createRadialGradient(0, -60, 0, 0, -60, 10);
+      lightGlow.addColorStop(0, `rgba(239, 68, 68, ${blink * 0.6})`);
+      lightGlow.addColorStop(1, 'rgba(239, 68, 68, 0)');
+      ctx.fillStyle = lightGlow;
+      ctx.beginPath(); ctx.arc(0, -60, 10, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = `rgba(239, 68, 68, ${blink})`;
+      ctx.beginPath(); ctx.arc(0, -60, 3, 0, Math.PI * 2); ctx.fill();
+      ctx.restore();
+
+      if (!panelsRetracted) {
+        const lpGrad = ctx.createLinearGradient(bx - 100, by - 12, bx - 60, by - 4);
+        lpGrad.addColorStop(0, 'rgba(30, 58, 138, 0.9)');
+        lpGrad.addColorStop(1, 'rgba(37, 99, 235, 0.8)');
+        ctx.fillStyle = lpGrad;
+        ctx.strokeStyle = `rgba(${accent}, 0.7)`; ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(bx - 100, by - 12); ctx.lineTo(bx - 65, by - 12);
+        ctx.lineTo(bx - 60, by - 4); ctx.lineTo(bx - 95, by - 4);
+        ctx.closePath(); ctx.fill(); ctx.stroke();
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+        for (let gi = 1; gi < 4; gi++) {
+          const px = bx - 100 + gi * 10;
+          ctx.beginPath(); ctx.moveTo(px, by - 12); ctx.lineTo(px + 1, by - 4); ctx.stroke();
+        }
+        const rpGrad = ctx.createLinearGradient(bx + 60, by - 12, bx + 100, by - 4);
+        rpGrad.addColorStop(0, 'rgba(37, 99, 235, 0.8)');
+        rpGrad.addColorStop(1, 'rgba(30, 58, 138, 0.9)');
+        ctx.fillStyle = rpGrad;
+        ctx.strokeStyle = `rgba(${accent}, 0.7)`;
+        ctx.beginPath();
+        ctx.moveTo(bx + 60, by - 12); ctx.lineTo(bx + 95, by - 12);
+        ctx.lineTo(bx + 100, by - 4); ctx.lineTo(bx + 65, by - 4);
+        ctx.closePath(); ctx.fill(); ctx.stroke();
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+        for (let gi = 1; gi < 4; gi++) {
+          const px = bx + 60 + gi * 10;
+          ctx.beginPath(); ctx.moveTo(px, by - 12); ctx.lineTo(px + 1, by - 4); ctx.stroke();
+        }
+      } else {
+        ctx.fillStyle = 'rgba(71, 85, 105, 0.9)';
+        ctx.strokeStyle = `rgba(${accent}, 0.5)`; ctx.lineWidth = 1;
+        ctx.fillRect(bx - 66, by - 10, 10, 6); ctx.strokeRect(bx - 66, by - 10, 10, 6);
+        ctx.fillRect(bx + 56, by - 10, 10, 6); ctx.strokeRect(bx + 56, by - 10, 10, 6);
+      }
+
+      if (shieldIntegrity > 20) {
+        const shieldAlpha = (shieldIntegrity / 100) * 0.35;
+        ctx.strokeStyle = `rgba(56, 189, 248, ${shieldAlpha * 0.5})`; ctx.lineWidth = 6;
+        ctx.beginPath(); ctx.arc(bx, by - 20, 68, Math.PI, 0); ctx.stroke();
+        ctx.strokeStyle = `rgba(56, 189, 248, ${shieldAlpha + 0.3})`; ctx.lineWidth = 1.5;
+        ctx.setLineDash([8, 4]);
+        ctx.beginPath(); ctx.arc(bx, by - 20, 68, Math.PI, 0); ctx.stroke();
+        ctx.setLineDash([]);
+      }
+
+      if (!panelsRetracted) {
+        ctx.strokeStyle = `rgba(${accent}, 0.3)`; ctx.lineWidth = 1;
+        ctx.setLineDash([2, 3]);
+        ctx.beginPath();
+        ctx.moveTo(bx - 62, by - 8); ctx.lineTo(bx - 40, by - 20);
+        ctx.moveTo(bx + 62, by - 8); ctx.lineTo(bx + 40, by - 20);
+        ctx.stroke();
+        ctx.setLineDash([]);
+      }
+    }
+
+    if (currentOutpost) {
+      const rx = 32, ry = 32, rr = 20;
+      ctx.strokeStyle = `rgba(16, 185, 129, 0.5)`; ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.arc(rx, ry, rr, 0, Math.PI * 2); ctx.stroke();
+      ctx.strokeStyle = `rgba(16, 185, 129, 0.2)`; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.arc(rx, ry, rr * 0.66, 0, Math.PI * 2); ctx.stroke();
+      ctx.beginPath(); ctx.arc(rx, ry, rr * 0.33, 0, Math.PI * 2); ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(rx - rr, ry); ctx.lineTo(rx + rr, ry);
+      ctx.moveTo(rx, ry - rr); ctx.lineTo(rx, ry + rr);
+      ctx.stroke();
+      ctx.save();
+      ctx.beginPath();
+      ctx.moveTo(rx, ry);
+      ctx.arc(rx, ry, rr, radarAngle - 0.6, radarAngle);
+      ctx.closePath();
+      const sweepGrad = ctx.createRadialGradient(rx, ry, 0, rx, ry, rr);
+      sweepGrad.addColorStop(0, 'rgba(16, 185, 129, 0.5)');
+      sweepGrad.addColorStop(1, 'rgba(16, 185, 129, 0)');
+      ctx.fillStyle = sweepGrad;
+      ctx.fill();
+      ctx.restore();
+      ctx.strokeStyle = '#10b981'; ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(rx, ry);
+      ctx.lineTo(rx + Math.cos(radarAngle) * rr, ry + Math.sin(radarAngle) * rr);
+      ctx.stroke();
+      ctx.fillStyle = '#10b981';
+      ctx.shadowColor = '#10b981'; ctx.shadowBlur = 6;
+      ctx.beginPath(); ctx.arc(rx + 8, ry - 6, 1.5, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.arc(rx - 6, ry + 9, 1.5, 0, Math.PI * 2); ctx.fill();
+      ctx.shadowBlur = 0;
+      ctx.font = '6px monospace';
+      ctx.fillStyle = 'rgba(16, 185, 129, 0.7)';
+      ctx.textAlign = 'center';
+      ctx.fillText('RADAR', rx, ry + rr + 10);
+      radarAngle += 0.06;
+    }
+
+    if (currentOutpost) {
+      const cp = 6, cs = 16;
+      const bracketAlpha = 0.5 + Math.sin(tick * 0.08) * 0.2;
+      ctx.strokeStyle = `rgba(${accent}, ${bracketAlpha})`; ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(cp, cp + cs); ctx.lineTo(cp, cp); ctx.lineTo(cp + cs, cp);
+      ctx.moveTo(W - cp - cs, cp); ctx.lineTo(W - cp, cp); ctx.lineTo(W - cp, cp + cs);
+      ctx.moveTo(cp, H - cp - cs); ctx.lineTo(cp, H - cp); ctx.lineTo(cp + cs, H - cp);
+      ctx.moveTo(W - cp - cs, H - cp); ctx.lineTo(W - cp, H - cp); ctx.lineTo(W - cp, H - cp - cs);
+      ctx.stroke();
+    }
+
+    if (currentOutpost) {
+      ctx.strokeStyle = `rgba(${accent}, 0.25)`; ctx.lineWidth = 1;
+      const cx = W / 2, cy = H / 2;
+      ctx.beginPath();
+      ctx.moveTo(cx - 8, cy); ctx.lineTo(cx - 3, cy);
+      ctx.moveTo(cx + 3, cy); ctx.lineTo(cx + 8, cy);
+      ctx.moveTo(cx, cy - 8); ctx.lineTo(cx, cy - 3);
+      ctx.moveTo(cx, cy + 3); ctx.lineTo(cx, cy + 8);
+      ctx.stroke();
+    }
+
+    if (currentOutpost) {
+      for (let i = 0; i < 8; i++) {
+        const y = 20 + i * 8;
+        const w = i % 4 === 0 ? 10 : 5;
+        const active = (Math.floor(tick / 20) % 8) === i;
+        ctx.strokeStyle = `rgba(${accent}, ${active ? 0.9 : 0.3})`;
+        ctx.lineWidth = active ? 2 : 1;
+        ctx.beginPath();
+        ctx.moveTo(W - 6, y); ctx.lineTo(W - 6 - w, y);
+        ctx.stroke();
+      }
+    }
+
+    if (currentOutpost) {
+      scanLineY += scanDir * 0.8;
+      if (scanLineY > H - 30) scanDir = -1;
+      if (scanLineY < 20) scanDir = 1;
+      const scanGrad = ctx.createLinearGradient(0, scanLineY - 6, 0, scanLineY + 6);
+      scanGrad.addColorStop(0, `rgba(${accent}, 0)`);
+      scanGrad.addColorStop(0.5, `rgba(${accent}, 0.18)`);
+      scanGrad.addColorStop(1, `rgba(${accent}, 0)`);
+      ctx.fillStyle = scanGrad;
+      ctx.fillRect(0, scanLineY - 6, W, 12);
+    }
+
+    if (currentOutpost) {
+      ctx.font = '7px monospace';
+      ctx.textAlign = 'left';
+      const onlineBlink = 0.5 + Math.sin(tick * 0.1) * 0.5;
+      ctx.fillStyle = `rgba(34, 197, 94, ${onlineBlink})`;
+      ctx.beginPath(); ctx.arc(10, H - 52, 2, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = `rgba(${accent}, 0.8)`;
+      ctx.fillText('ONLINE', 16, H - 49);
+      ctx.fillStyle = `rgba(${accent}, 0.6)`;
+      ctx.fillText(`SOL ${String(sol).padStart(2, '0')}`, 10, H - 38);
+
+      ctx.textAlign = 'right';
+      ctx.fillStyle = `rgba(${accent}, 0.6)`;
+      ctx.fillText(`${Math.round(batteryLevel)}%`, W - 10, H - 49);
+      const barW = 40, barH = 3;
+      const barX = W - 10 - barW;
+      const barY = H - 44;
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+      ctx.fillRect(barX, barY, barW, barH);
+      const batPct = batteryLevel / batteryMax;
+      const batColor = batPct < 0.25 ? '#ef4444' : (batPct < 0.5 ? '#f59e0b' : '#22c55e');
+      ctx.fillStyle = batColor;
+      ctx.fillRect(barX, barY, barW * batPct, barH);
+      ctx.strokeStyle = `rgba(${accent}, 0.5)`;
+      ctx.strokeRect(barX, barY, barW, barH);
+
+      ctx.textAlign = 'right';
+      ctx.fillStyle = `rgba(${accent}, 0.6)`;
+      ctx.fillText(`O2 ${Math.round(o2Level)}%`, W - 10, H - 34);
+    }
+
+    // ===== Particles =====
+    for (let i = canvasFX.particles.length - 1; i >= 0; i--) {
+      const p = canvasFX.particles[i];
+      p.x += p.vx; p.y += p.vy; p.life -= 1;
+      if (p.life <= 0) { canvasFX.particles.splice(i, 1); continue; }
+      ctx.globalAlpha = Math.max(0, p.life / p.maxLife);
+      ctx.fillStyle = p.color;
+      ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2); ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+
+    // ===== Rays (persist until player chooses) =====
+    if (canvasFX.rays) {
+      if (chosenOptionThisSol && !canvasFX.rays.fading) {
+        canvasFX.rays.fading = true;
+        canvasFX.rays.fadeStart = now;
+      }
+      let alpha = 0.6;
+      if (canvasFX.rays.fading) {
+        const fadeT = (now - canvasFX.rays.fadeStart) / 1200;
+        alpha = 0.6 * Math.max(0, 1 - fadeT);
+        if (fadeT >= 1) { canvasFX.rays = null; }
+      }
+      if (canvasFX.rays) {
+        const elapsed = (now - canvasFX.rays.start) / 1000;
+        const rot = elapsed * 3;
+        const cx = W / 2, cy = H / 2;
+        ctx.save();
+        ctx.globalAlpha = alpha;
+        ctx.strokeStyle = canvasFX.rays.color;
+        ctx.lineWidth = 3;
+        for (let i = 0; i < canvasFX.rays.count; i++) {
+          const angle = (i / canvasFX.rays.count) * Math.PI * 2 + rot;
+          const len = 60 + (Math.sin(i * 7 + elapsed * 2) + 1) * 20;
+          ctx.beginPath();
+          ctx.moveTo(cx + Math.cos(angle) * 15, cy + Math.sin(angle) * 15);
+          ctx.lineTo(cx + Math.cos(angle) * len, cy + Math.sin(angle) * len);
+          ctx.stroke();
+        }
+        ctx.restore();
+      }
+    }
+
+    // ===== Icons =====
     for (let i = canvasFX.icons.length - 1; i >= 0; i--) {
-      const ic = canvasFX.icons[i]; const t = (Date.now() - ic.start) / ic.duration;
+      const ic = canvasFX.icons[i];
+      const t = (now - ic.start) / ic.duration;
       if (t >= 1) { canvasFX.icons.splice(i, 1); continue; }
-      ctx.globalAlpha = 1 - t; ctx.font = '24px serif'; ctx.textAlign = 'center'; ctx.fillText(ic.emoji, ic.x, ic.y + ic.vy * t); ctx.globalAlpha = 1;
+      ctx.globalAlpha = 1 - t;
+      ctx.font = '24px serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(ic.emoji, ic.x, ic.y + ic.vy * t);
+      ctx.globalAlpha = 1;
     }
+
     ctx.restore();
-    if (canvasFX.tint) { const t = (Date.now() - canvasFX.tint.start) / canvasFX.tint.duration; if (t < 1) { ctx.save(); ctx.globalAlpha = canvasFX.tint.alpha * (1 - t); ctx.fillStyle = canvasFX.tint.color; ctx.fillRect(0, 0, canvas.width, canvas.height); ctx.restore(); } else canvasFX.tint = null; }
-    if (canvasFX.flash) { const t = (Date.now() - canvasFX.flash.start) / canvasFX.flash.duration; if (t < 1) { ctx.save(); ctx.globalAlpha = (1 - t) * 0.75; ctx.fillStyle = canvasFX.flash.color; ctx.fillRect(0, 0, canvas.width, canvas.height); ctx.restore(); } else canvasFX.flash = null; }
+
+    // ===== Tint (persist until player chooses) =====
+    if (canvasFX.tint) {
+      if (chosenOptionThisSol && !canvasFX.tint.fading) {
+        canvasFX.tint.fading = true;
+        canvasFX.tint.fadeStart = now;
+      }
+      let alpha = canvasFX.tint.alpha;
+      if (canvasFX.tint.fading) {
+        const fadeT = (now - canvasFX.tint.fadeStart) / 1200;
+        alpha = canvasFX.tint.alpha * Math.max(0, 1 - fadeT);
+        if (fadeT >= 1) { canvasFX.tint = null; }
+      }
+      if (canvasFX.tint) {
+        ctx.save();
+        ctx.globalAlpha = alpha;
+        ctx.fillStyle = canvasFX.tint.color;
+        ctx.fillRect(0, 0, W, H);
+        ctx.restore();
+      }
+    }
+
+    // ===== Flash (one-shot) =====
+    if (canvasFX.flash) {
+      const t = (now - canvasFX.flash.start) / canvasFX.flash.duration;
+      if (t < 1) {
+        ctx.save();
+        ctx.globalAlpha = (1 - t) * 0.75;
+        ctx.fillStyle = canvasFX.flash.color;
+        ctx.fillRect(0, 0, W, H);
+        ctx.restore();
+      } else canvasFX.flash = null;
+    }
+
     requestAnimationFrame(render);
   }
   render();
+}
+
+/* ---- FX top-up (keeps particles flowing while unchosen) ---- */
+function startFxTopUp() {
+  stopFxTopUp();
+  if (!canvasFX.spawnFn) return;
+  fxTopUpInterval = setInterval(() => {
+    if (chosenOptionThisSol) { stopFxTopUp(); return; }
+    if (canvasFX.spawnFn) canvasFX.spawnFn();
+  }, 320);
+}
+function stopFxTopUp() {
+  if (fxTopUpInterval) {
+    clearInterval(fxTopUpInterval);
+    fxTopUpInterval = null;
+  }
 }
 
 function triggerCanvasFX(eventId, eventType) {
@@ -1000,29 +2095,116 @@ function triggerCanvasFX(eventId, eventType) {
   const W = canvas.width, H = canvas.height; const now = Date.now();
   if (!canvasFX.particles) canvasFX.particles = [];
   if (!canvasFX.icons) canvasFX.icons = [];
+  canvasFX.spawnFn = null;
   wrapper.classList.remove('crisis-pulse', 'good-pulse'); void wrapper.offsetWidth;
   if (eventType === 'crisis') wrapper.classList.add('crisis-pulse'); else if (eventType === 'opportunity') wrapper.classList.add('good-pulse');
   setTimeout(() => wrapper.classList.remove('crisis-pulse', 'good-pulse'), 2600);
   const spawn = (count, cfg) => { for (let i = 0; i < count; i++) { canvasFX.particles.push({ x: cfg.x !== undefined ? cfg.x(W, i) : Math.random() * W, y: cfg.y !== undefined ? cfg.y(H, i) : Math.random() * H, vx: cfg.vx(W, i), vy: cfg.vy(H, i), size: cfg.size(), color: cfg.color(i), life: cfg.life(), maxLife: cfg.life() }); } };
+
   switch (eventId) {
-    case 'DUST': spawn(50, { vx: () => 2 + Math.random() * 4, vy: () => (Math.random() - 0.5) * 2, size: () => 1.5 + Math.random() * 2, color: () => `hsl(30, 65%, ${40 + Math.random() * 25}%)`, life: () => 70 + Math.random() * 40 }); canvasFX.tint = { color: 'rgba(180, 100, 30, 1)', alpha: 0.35, start: now, duration: 4000 }; break;
-    case 'SPE': canvasFX.flash = { color: 'rgba(255, 150, 50, 1)', start: now, duration: 800 }; canvasFX.tint = { color: 'rgba(255, 80, 20, 1)', alpha: 0.25, start: now, duration: 2500 }; spawn(35, { x: () => Math.random() * W, y: () => -10 - Math.random() * 30, vx: () => (Math.random() - 0.5), vy: () => 2 + Math.random() * 2, size: () => 1 + Math.random() * 2, color: () => '#ff5030', life: () => 80 }); break;
-    case 'BAT-EXP': canvasFX.flash = { color: 'rgba(250, 200, 50, 1)', start: now, duration: 400 }; spawn(30, { vx: () => (Math.random() - 0.5) * 0.6, vy: () => -1 - Math.random() * 1.5, size: () => 1.5 + Math.random() * 2.5, color: () => Math.random() < 0.5 ? '#fbbf24' : '#fde047', life: () => 70 }); break;
-    case 'MICRO': canvasFX.flash = { color: 'rgba(255, 255, 255, 1)', start: now, duration: 300 }; canvasFX.shake = { intensity: 6, start: now, duration: 500 }; spawn(20, { x: () => W * 0.5 + (Math.random() - 0.5) * W * 0.7, y: () => H * 0.6 + (Math.random() - 0.5) * H * 0.3, vx: () => (Math.random() - 0.5) * 5, vy: () => -2 - Math.random() * 3, size: () => 1 + Math.random() * 2, color: () => '#fff', life: () => 40 }); break;
-    case 'GRID-EXP': canvasFX.flash = { color: 'rgba(100, 180, 255, 1)', start: now, duration: 500 }; canvasFX.tint = { color: 'rgba(100, 180, 255, 1)', alpha: 0.15, start: now, duration: 2000 }; break;
-    case 'CO2': canvasFX.tint = { color: 'rgba(80, 200, 100, 1)', alpha: 0.25, start: now, duration: 3000 }; spawn(30, { y: () => H + 10, vx: () => (Math.random() - 0.5) * 0.6, vy: () => -1 - Math.random() * 1.5, size: () => 3 + Math.random() * 4, color: () => `hsla(120, 55%, ${45 + Math.random() * 15}%, 0.7)`, life: () => 100 }); break;
-    case 'SOLAR-EFF': spawn(25, { x: () => Math.random() < 0.5 ? W * 0.15 + (Math.random() - 0.5) * 40 : W * 0.85 + (Math.random() - 0.5) * 40, y: () => H * 0.65 + (Math.random() - 0.5) * 20, vx: () => (Math.random() - 0.5), vy: () => -1 - Math.random() * 1.5, size: () => 1.5 + Math.random() * 2, color: () => Math.random() < 0.5 ? '#fde047' : '#fef08a', life: () => 60 }); break;
-    case 'QUIET': canvasFX.tint = { color: 'rgba(80, 200, 255, 1)', alpha: 0.15, start: now, duration: 3500 }; break;
-    case 'HARVEST': spawn(20, { y: () => -10 - Math.random() * 25, vx: () => (Math.random() - 0.5), vy: () => 1 + Math.random() * 1.5, size: () => 2 + Math.random() * 2.5, color: () => `hsl(${90 + Math.random() * 40}, 75%, 55%)`, life: () => 100 }); break;
-    case 'SAMPLE': canvasFX.flash = { color: 'rgba(255, 200, 100, 1)', start: now, duration: 400 }; spawn(25, { x: () => W / 2 + (Math.random() - 0.5) * 12, y: () => H - (Math.random() * H * 0.5), vx: () => (Math.random() - 0.5) * 0.5, vy: () => -3 - Math.random() * 2, size: () => 1.5 + Math.random() * 2.5, color: () => `hsl(${25 + Math.random() * 25}, 95%, 60%)`, life: () => 60 }); break;
-    case 'EVA-REST': canvasFX.icons.push({ x: W / 2, y: H / 2, emoji: '🧑‍🚀', start: now, duration: 2500, vy: -25 }); break;
-    case 'MOON-TOXIC-DUST': canvasFX.tint = { color: 'rgba(120, 120, 120, 1)', alpha: 0.3, start: now, duration: 3500 }; spawn(60, { vx: () => (Math.random() - 0.5) * 1.5, vy: () => -0.5 - Math.random(), size: () => 1.5 + Math.random() * 3, color: () => `hsl(0, 0%, ${45 + Math.random() * 35}%)`, life: () => 80 + Math.random() * 40 }); break;
-    case 'MOON-SOLAR-FLARE': canvasFX.flash = { color: 'rgba(255, 100, 50, 1)', start: now, duration: 1100 }; canvasFX.rays = { color: '#ff6633', start: now, duration: 2200, count: 14 }; canvasFX.shake = { intensity: 5, start: now, duration: 900 }; canvasFX.tint = { color: 'rgba(255, 80, 30, 1)', alpha: 0.4, start: now, duration: 3500 }; break;
-    case 'MOON-LUNAR-NIGHT': canvasFX.tint = { color: 'rgba(0, 0, 40, 1)', alpha: 0.5, start: now, duration: 4500 }; spawn(40, { x: () => Math.random() * W, y: () => Math.random() * H * 0.5, vx: () => 0, vy: () => 0, size: () => 0.5 + Math.random() * 1.5, color: () => Math.random() < 0.7 ? '#fff' : '#a5d8ff', life: () => 180 }); break;
-    case 'MOON-NO-CARBON': canvasFX.tint = { color: 'rgba(100, 70, 30, 1)', alpha: 0.25, start: now, duration: 3000 }; spawn(25, { y: () => -10, vx: () => (Math.random() - 0.5) * 0.6, vy: () => 1 + Math.random(), size: () => 2 + Math.random() * 2.5, color: () => `hsl(30, 55%, ${28 + Math.random() * 20}%)`, life: () => 110 }); break;
-    case 'MOON-MOONQUAKE': canvasFX.shake = { intensity: 9, start: now, duration: 1800 }; canvasFX.tint = { color: 'rgba(150, 100, 50, 1)', alpha: 0.2, start: now, duration: 2000 }; spawn(25, { x: () => Math.random() * W, y: () => Math.random() * H, vx: () => (Math.random() - 0.5) * 2, vy: () => 1 + Math.random() * 2, size: () => 1.5 + Math.random() * 2.5, color: () => `hsl(30, 40%, ${40 + Math.random() * 20}%)`, life: () => 80 }); break;
-    case 'MOON-MICRO-SWARM': canvasFX.shake = { intensity: 4, start: now, duration: 700 }; spawn(50, { x: () => -10 - Math.random() * 20, y: () => Math.random() * H, vx: () => 4 + Math.random() * 5, vy: () => (Math.random() - 0.5) * 1.2, size: () => 1 + Math.random() * 1.2, color: () => '#ffffff', life: () => 55 }); break;
+    case 'DUST': {
+      const cfg = { vx: () => 2 + Math.random() * 4, vy: () => (Math.random() - 0.5) * 2, size: () => 1.5 + Math.random() * 2, color: () => `hsl(30, 65%, ${40 + Math.random() * 25}%)`, life: () => 70 + Math.random() * 40 };
+      spawn(50, cfg); canvasFX.spawnFn = () => spawn(16, cfg);
+      canvasFX.tint = { color: 'rgba(180, 100, 30, 1)', alpha: 0.35 };
+      break;
+    }
+    case 'SPE': {
+      canvasFX.flash = { color: 'rgba(255, 150, 50, 1)', start: now, duration: 800 };
+      const cfg = { x: () => Math.random() * W, y: () => -10 - Math.random() * 30, vx: () => (Math.random() - 0.5), vy: () => 2 + Math.random() * 2, size: () => 1 + Math.random() * 2, color: () => '#ff5030', life: () => 80 };
+      spawn(35, cfg); canvasFX.spawnFn = () => spawn(12, cfg);
+      canvasFX.tint = { color: 'rgba(255, 80, 20, 1)', alpha: 0.25 };
+      break;
+    }
+    case 'BAT-EXP': {
+      canvasFX.flash = { color: 'rgba(250, 200, 50, 1)', start: now, duration: 400 };
+      const cfg = { vx: () => (Math.random() - 0.5) * 0.6, vy: () => -1 - Math.random() * 1.5, size: () => 1.5 + Math.random() * 2.5, color: () => Math.random() < 0.5 ? '#fbbf24' : '#fde047', life: () => 70 };
+      spawn(30, cfg); canvasFX.spawnFn = () => spawn(10, cfg);
+      break;
+    }
+    case 'MICRO': {
+      canvasFX.flash = { color: 'rgba(255, 255, 255, 1)', start: now, duration: 300 };
+      canvasFX.shake = { intensity: 6, start: now, duration: 500 };
+      const cfg = { x: () => W * 0.5 + (Math.random() - 0.5) * W * 0.7, y: () => H * 0.6 + (Math.random() - 0.5) * H * 0.3, vx: () => (Math.random() - 0.5) * 5, vy: () => -2 - Math.random() * 3, size: () => 1 + Math.random() * 2, color: () => '#fff', life: () => 40 };
+      spawn(20, cfg); canvasFX.spawnFn = () => spawn(7, cfg);
+      break;
+    }
+    case 'GRID-EXP': {
+      canvasFX.flash = { color: 'rgba(100, 180, 255, 1)', start: now, duration: 500 };
+      canvasFX.tint = { color: 'rgba(100, 180, 255, 1)', alpha: 0.15 };
+      break;
+    }
+    case 'CO2': {
+      const cfg = { y: () => H + 10, vx: () => (Math.random() - 0.5) * 0.6, vy: () => -1 - Math.random() * 1.5, size: () => 3 + Math.random() * 4, color: () => `hsla(120, 55%, ${45 + Math.random() * 15}%, 0.7)`, life: () => 100 };
+      spawn(30, cfg); canvasFX.spawnFn = () => spawn(10, cfg);
+      canvasFX.tint = { color: 'rgba(80, 200, 100, 1)', alpha: 0.25 };
+      break;
+    }
+    case 'SOLAR-EFF': {
+      const cfg = { x: () => Math.random() < 0.5 ? W * 0.15 + (Math.random() - 0.5) * 40 : W * 0.85 + (Math.random() - 0.5) * 40, y: () => H * 0.65 + (Math.random() - 0.5) * 20, vx: () => (Math.random() - 0.5), vy: () => -1 - Math.random() * 1.5, size: () => 1.5 + Math.random() * 2, color: () => Math.random() < 0.5 ? '#fde047' : '#fef08a', life: () => 60 };
+      spawn(25, cfg); canvasFX.spawnFn = () => spawn(9, cfg);
+      break;
+    }
+    case 'QUIET': {
+      canvasFX.tint = { color: 'rgba(80, 200, 255, 1)', alpha: 0.15 };
+      break;
+    }
+    case 'HARVEST': {
+      const cfg = { y: () => -10 - Math.random() * 25, vx: () => (Math.random() - 0.5), vy: () => 1 + Math.random() * 1.5, size: () => 2 + Math.random() * 2.5, color: () => `hsl(${90 + Math.random() * 40}, 75%, 55%)`, life: () => 100 };
+      spawn(20, cfg); canvasFX.spawnFn = () => spawn(7, cfg);
+      break;
+    }
+    case 'SAMPLE': {
+      canvasFX.flash = { color: 'rgba(255, 200, 100, 1)', start: now, duration: 400 };
+      const cfg = { x: () => W / 2 + (Math.random() - 0.5) * 12, y: () => H - (Math.random() * H * 0.5), vx: () => (Math.random() - 0.5) * 0.5, vy: () => -3 - Math.random() * 2, size: () => 1.5 + Math.random() * 2.5, color: () => `hsl(${25 + Math.random() * 25}, 95%, 60%)`, life: () => 60 };
+      spawn(25, cfg); canvasFX.spawnFn = () => spawn(9, cfg);
+      break;
+    }
+    case 'EVA-REST': {
+      canvasFX.icons.push({ x: W / 2, y: H / 2, emoji: '🧑‍🚀', start: now, duration: 2500, vy: -25 });
+      break;
+    }
+    case 'MOON-TOXIC-DUST': {
+      const cfg = { vx: () => (Math.random() - 0.5) * 1.5, vy: () => -0.5 - Math.random(), size: () => 1.5 + Math.random() * 3, color: () => `hsl(0, 0%, ${45 + Math.random() * 35}%)`, life: () => 80 + Math.random() * 40 };
+      spawn(60, cfg); canvasFX.spawnFn = () => spawn(18, cfg);
+      canvasFX.tint = { color: 'rgba(120, 120, 120, 1)', alpha: 0.3 };
+      break;
+    }
+    case 'MOON-SOLAR-FLARE': {
+      canvasFX.flash = { color: 'rgba(255, 100, 50, 1)', start: now, duration: 1100 };
+      canvasFX.rays = { color: '#ff6633', start: now, count: 14 };
+      canvasFX.shake = { intensity: 5, start: now, duration: 900 };
+      canvasFX.tint = { color: 'rgba(255, 80, 30, 1)', alpha: 0.4 };
+      break;
+    }
+    case 'MOON-LUNAR-NIGHT': {
+      const cfg = { x: () => Math.random() * W, y: () => Math.random() * H * 0.5, vx: () => 0, vy: () => 0, size: () => 0.5 + Math.random() * 1.5, color: () => Math.random() < 0.7 ? '#fff' : '#a5d8ff', life: () => 180 };
+      spawn(40, cfg); canvasFX.spawnFn = () => spawn(12, cfg);
+      canvasFX.tint = { color: 'rgba(0, 0, 40, 1)', alpha: 0.5 };
+      break;
+    }
+    case 'MOON-NO-CARBON': {
+      const cfg = { y: () => -10, vx: () => (Math.random() - 0.5) * 0.6, vy: () => 1 + Math.random(), size: () => 2 + Math.random() * 2.5, color: () => `hsl(30, 55%, ${28 + Math.random() * 20}%)`, life: () => 110 };
+      spawn(25, cfg); canvasFX.spawnFn = () => spawn(8, cfg);
+      canvasFX.tint = { color: 'rgba(100, 70, 30, 1)', alpha: 0.25 };
+      break;
+    }
+    case 'MOON-MOONQUAKE': {
+      canvasFX.shake = { intensity: 9, start: now, duration: 1800 };
+      const cfg = { x: () => Math.random() * W, y: () => Math.random() * H, vx: () => (Math.random() - 0.5) * 2, vy: () => 1 + Math.random() * 2, size: () => 1.5 + Math.random() * 2.5, color: () => `hsl(30, 40%, ${40 + Math.random() * 20}%)`, life: () => 80 };
+      spawn(25, cfg); canvasFX.spawnFn = () => spawn(8, cfg);
+      canvasFX.tint = { color: 'rgba(150, 100, 50, 1)', alpha: 0.2 };
+      break;
+    }
+    case 'MOON-MICRO-SWARM': {
+      canvasFX.shake = { intensity: 4, start: now, duration: 700 };
+      const cfg = { x: () => -10 - Math.random() * 20, y: () => Math.random() * H, vx: () => 4 + Math.random() * 5, vy: () => (Math.random() - 0.5) * 1.2, size: () => 1 + Math.random() * 1.2, color: () => '#ffffff', life: () => 55 };
+      spawn(50, cfg); canvasFX.spawnFn = () => spawn(18, cfg);
+      break;
+    }
   }
+
+  // Start top-up while player hasn't chosen
+  startFxTopUp();
 }
 
 function adjustPower(type, delta) {
@@ -1067,6 +2249,7 @@ function updatePanelBadge() {
 
 function loadSolEvent() {
   chosenOptionThisSol = false;
+  stopFxTopUp();
   clearInterval(timerInterval);
   document.getElementById('timerContainer').classList.add('hidden');
   document.getElementById('btnAdvanceSol').disabled = true;
@@ -1125,6 +2308,7 @@ function startCountdownTimer() {
 function selectEventOption(i) {
   if (chosenOptionThisSol) return;
   chosenOptionThisSol = true;
+  stopFxTopUp();
   clearInterval(timerInterval);
   document.getElementById('timerContainer').classList.add('hidden');
   const opt = currentEvent.options[i];
@@ -1138,6 +2322,19 @@ function selectEventOption(i) {
   crewHealth = Math.min(100, Math.max(0, crewHealth + (opt.healthEffect || 0)));
   sciencePoints = Math.min(targetScience, Math.max(0, sciencePoints + (opt.sciEffect || 0)));
   if (opt.sciEffect && opt.sciEffect > 0) { SFX.science(); buzz(20); }
+
+  const lower = opt.text.toLowerCase();
+  const sheltered = lower.includes('retreat') || lower.includes('shelter') || lower.includes('power down');
+  const partial = lower.includes('monitor');
+  if (currentEvent.id === 'SPE' || currentEvent.id === 'MOON-SOLAR-FLARE') {
+    const base = getRadBaseline();
+    const peak = currentEvent.id === 'MOON-SOLAR-FLARE' ? 15.2 : (currentOutpost === 'mars' ? 9.0 : 8.5);
+    if (!sheltered) {
+      currentRad = Math.max(currentRad, peak * (partial ? 0.5 : 1));
+      updateRadDisplay();
+    }
+  }
+
   updatePowerAllocation();
   updateUI();
   document.getElementById('btnAdvanceSol').disabled = false;
@@ -1152,6 +2349,7 @@ function closeScienceModal() { document.getElementById('scienceExplanationModal'
 
 function advanceSol() {
   if (!chosenOptionThisSol) return;
+  stopFxTopUp();
   if (sciencePoints >= targetScience) { triggerDebrief(true); return; }
   const routed = powerO2 + powerShield + powerScience;
   const overrouted = routed - powerGridMax;
@@ -1169,29 +2367,34 @@ function advanceSol() {
     ARIA.show(`⚡ BROWNOUT! You routed ${routed}/${powerGridMax} kW — grid can't deliver that. Systems underperformed: −${o2Penalty}% O₂, −${healthPenalty}% health, −${batteryPenalty}% battery.`, 'panic', 8000);
   }
 
-  o2Level = Math.max(0, o2Level - o2DrainPerSol);
+  const radBaseline = getRadBaseline();
+  const excessRad = Math.max(0, currentRad - radBaseline);
+  if (excessRad > 0) {
+    const radDrain = Math.ceil(excessRad / 3);
+    shieldIntegrity = Math.max(0, shieldIntegrity - radDrain);
+  } else {
+    shieldIntegrity = Math.min(100, shieldIntegrity + 1);
+  }
+  crewDoseAccumulated += currentRad * 0.5;
+  if (currentRad > radBaseline) {
+    currentRad = Math.max(radBaseline, currentRad - getRadDecayRate());
+  }
+  updateRadDisplay();
 
-  // Mode-specific drain while retracted (Mars −8, Moon −15)
+  o2Level = Math.max(0, o2Level - o2DrainPerSol);
   const retractedDrain = currentOutpost === 'mars' ? 8 : 15;
   batteryLevel = panelsRetracted ? Math.max(0, batteryLevel - retractedDrain) : Math.min(batteryMax, batteryLevel + batteryRechargePerSol);
-
-  // Countdown panels; redeploy after 3 Sols
   if (panelsRetracted) {
     panelsRetractCountdown--;
     if (panelsRetractCountdown <= 0) {
-      panelsRetracted = false;
-      panelsRetractCountdown = 0;
-      if (missionStarted) {
-        setTimeout(() => ARIA.show(`Panels redeployed! Battery recharging again. ⚡`, 'happy', 4000), 600);
-      }
+      panelsRetracted = false; panelsRetractCountdown = 0;
+      if (missionStarted) setTimeout(() => ARIA.show(`Panels redeployed! Battery recharging again. ⚡`, 'happy', 4000), 600);
     }
     updatePanelBadge();
   }
-
   let scienceGain = Math.round(powerScience * 0.7 * scienceMult);
   if (batteryLevel / batteryMax < 0.3) scienceGain = Math.round(scienceGain * 0.5);
   sciencePoints = Math.min(targetScience, sciencePoints + scienceGain);
-
   sol++;
   document.getElementById('displaySol').innerText = `Sol ${sol}`;
   updateUI();
@@ -1201,12 +2404,53 @@ function advanceSol() {
   loadSolEvent();
 }
 
+function updateCriticalOverlay() {
+  const overlay = document.getElementById('criticalWarningOverlay');
+  if (!overlay) return;
+  if (!missionStarted) {
+    overlay.classList.remove('active', 'severe');
+    stopSevereWarnSound();
+    return;
+  }
+  const vitals = [
+    o2Level,
+    (batteryLevel / batteryMax) * 100,
+    shieldIntegrity,
+    crewHealth
+  ];
+  const minVital = Math.min(...vitals);
+  if (minVital > 0 && minVital < 20) {
+    overlay.classList.add('active');
+    if (minVital < 10) {
+      overlay.classList.add('severe');
+      startSevereWarnSound();
+    } else {
+      overlay.classList.remove('severe');
+      stopSevereWarnSound();
+    }
+  } else {
+    overlay.classList.remove('active', 'severe');
+    stopSevereWarnSound();
+  }
+}
+
 function updateUI() {
   document.getElementById('valO2').innerText = Math.round(o2Level) + '%'; document.getElementById('barO2').style.width = Math.round(o2Level) + '%';
   document.getElementById('valBattery').innerText = Math.round(batteryLevel) + ' / ' + batteryMax + '%'; document.getElementById('barBattery').style.width = ((batteryLevel / batteryMax) * 100) + '%';
   document.getElementById('valShield').innerText = Math.round(shieldIntegrity) + '%'; document.getElementById('barShield').style.width = Math.round(shieldIntegrity) + '%';
   document.getElementById('valHealth').innerText = Math.round(crewHealth) + '%'; document.getElementById('barHealth').style.width = Math.round(crewHealth) + '%';
   document.getElementById('valScience').innerText = sciencePoints + ' / ' + targetScience + ' PTS'; document.getElementById('barScience').style.width = ((sciencePoints/targetScience)*100) + '%';
+  const criticals = [
+    { id: 'barO2', value: o2Level, threshold: 25 },
+    { id: 'barBattery', value: (batteryLevel / batteryMax) * 100, threshold: 25 },
+    { id: 'barShield', value: shieldIntegrity, threshold: 25 },
+    { id: 'barHealth', value: crewHealth, threshold: 25 }
+  ];
+  criticals.forEach(({ id, value, threshold }) => {
+    const el = document.getElementById(id);
+    if (el) el.classList.toggle('critical-pulse', value > 0 && value < threshold);
+  });
+  updateCriticalOverlay();
 }
 
 function triggerDebrief(won) { renderEnding(won); }
@@ -1217,14 +2461,20 @@ function restartMission() {
   sciencePoints = 0;
   panelsRetracted = false; panelsRetractCountdown = 0; powerGridMax = 100;
   currentOutpost = null; currentEvent = null; missionStarted = false; chosenOptionThisSol = false;
-  canvasFX = { particles: [], icons: [], shake: null, rays: null, tint: null, flash: null };
+  currentRad = 1.04; crewDoseAccumulated = 0;
+  canvasFX = { particles: [], icons: [], shake: null, rays: null, tint: null, flash: null, spawnFn: null };
+  stopFxTopUp();
   resetAriaState();
+  closeVitalVisual();
+  stopSevereWarnSound();
+  document.getElementById('criticalWarningOverlay').classList.remove('active', 'severe');
   document.getElementById('displaySol').innerText = 'Sol 1';
   const badgeIcon = document.getElementById('modeBadgeIcon'); const badgeText = document.getElementById('modeBadgeText'); const badge = document.getElementById('modeBadge');
   badgeIcon.textContent = '❓'; badgeText.textContent = 'No Mode Selected'; badgeText.className = 'text-slate-400 font-bold'; badge.className = 'bg-slate-900/80 px-3 py-1.5 rounded-xl border border-slate-600 flex items-center gap-1.5 text-xs transition-all';
   document.getElementById('locationBadge').innerText = 'Awaiting Mode'; document.getElementById('locationBadge').className = 'text-[11px] font-semibold bg-slate-500/10 text-slate-400 border border-slate-500/30 px-2 py-0.5 rounded-full';
   document.getElementById('outpostModifiers').innerHTML = 'Select a mission mode to begin'; document.getElementById('outpostModifiers').className = 'w-full mt-2 text-[10px] text-center bg-slate-900/60 rounded-lg px-2 py-1.5 border border-white/5 text-slate-400';
   document.getElementById('envTemp').innerText = '—'; document.getElementById('envTau').innerText = '—';
+  document.getElementById('envRad').innerText = '—';
   document.getElementById('eventSolLabel').innerText = 'Awaiting Mode Selection';
   document.getElementById('eventTitle').innerHTML = '<i class="fa-solid fa-hourglass-half"></i> Waiting for Mission Launch...';
   document.getElementById('eventDescription').innerText = 'Please select Mars (EASY) or Moon (HARD) on the start screen to begin your mission.';
@@ -1240,6 +2490,10 @@ function restartMission() {
   showModeSelect();
 }
 
+document.getElementById('introNext').addEventListener('click', advanceIntro);
+document.getElementById('introSkip').addEventListener('click', skipIntro);
+document.getElementById('briefingContinue').addEventListener('click', advanceAriaBriefing);
+
 window.addEventListener('DOMContentLoaded', () => {
   ARIA.init();
   updateMuteUI();
@@ -1248,7 +2502,12 @@ window.addEventListener('DOMContentLoaded', () => {
   updatePowerAllocation();
   updateUI();
   updateBadgeCounts();
-  showModeSelect();
+  updateRadDisplay();
+  if (!hasSeenIntro()) {
+    showIntroStory();
+  } else {
+    showModeSelect();
+  }
 });
 </script>
 </body>
